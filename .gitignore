@@ -1,0 +1,41 @@
+# Python 編譯檔案
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# 環境設定
+.env
+*.env
+config/*.json
+config/*.yaml
+config/*.ini
+
+# Anaconda / Virtual env
+*.conda
+*.venv/
+venv/
+env/
+ENV/
+
+# 日誌檔案
+logs/
+*.log
+
+# 測試/回測數據
+data/
+*.csv
+*.parquet
+
+# 本地測試輸出
+output/
+results/
+backtest/
+
+# 系統檔案 (Windows / macOS)
+.DS_Store
+Thumbs.db
+desktop.ini
