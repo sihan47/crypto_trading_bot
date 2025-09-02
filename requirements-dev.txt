@@ -1,0 +1,12 @@
+-r requirements.txt
+
+# Technical indicators
+TA-Lib==0.4.30
+
+# AI / OpenAI API
+openai==1.42.0
+
+# Visualization
+matplotlib==3.9.2
+plotly==5.24.1
+vectorbt==0.28.1

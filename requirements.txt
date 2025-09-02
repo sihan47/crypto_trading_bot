@@ -1,22 +1,16 @@
-# Binance & 多交易所 API
+# Core for trading bot
 python-binance==1.0.19
 ccxt==4.2.80
 
-# 數據處理與科學運算
+# Data processing
 pandas==2.2.2
 numpy==1.26.4
 
-# 技術指標
-TA-Lib==0.4.30
+# Environment & logging
+python-dotenv==1.0.1
+schedule==1.2.1
+loguru==0.7.2
+pyyaml==6.0.2
 
 # AI / OpenAI API
 openai==1.42.0
-python-dotenv==1.0.1
-
-# 視覺化
-matplotlib==3.9.2
-plotly==5.24.1
-
-# 排程與日誌
-schedule==1.2.1
-loguru==0.7.2

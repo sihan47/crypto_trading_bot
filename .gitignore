@@ -1,4 +1,4 @@
-# Python 編譯檔案
+# Python compiled files
 __pycache__/
 *.pyc
 *.pyo
@@ -7,35 +7,38 @@ __pycache__/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# 環境設定
+# Environment files
 .env
 *.env
 config/*.json
 config/*.yaml
 config/*.ini
 
-# Anaconda / Virtual env
+# Virtual environments
 *.conda
 *.venv/
 venv/
 env/
 ENV/
+.venv/
 
-# 日誌檔案
+# Logs
 logs/
 *.log
 
-# 測試/回測數據
+# Local data (for backtest only, not needed on VPS)
 data/
+*.db
+*.sqlite
 *.csv
 *.parquet
 
-# 本地測試輸出
+# Local test outputs
 output/
 results/
 backtest/
 
-# 系統檔案 (Windows / macOS)
+# System files (Windows / macOS)
 .DS_Store
 Thumbs.db
 desktop.ini

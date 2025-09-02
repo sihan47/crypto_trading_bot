@@ -1,0 +1,25 @@
+{
+  "symbol": "BTCUSDT",
+  "timeframe": "5m",
+  "strategy": "rsi",
+  "start": "2023-01-01 00:00:00+00:00",
+  "end": "2025-06-01 00:00:00+00:00",
+  "best_params": {
+    "window": 25,
+    "lower": 25,
+    "upper": 75
+  },
+  "stats": {
+    "Total Return": -0.17046545140676608,
+    "CAGR": -0.07443005825000804,
+    "Sharpe": -0.06577001809296182,
+    "Max Drawdown": -0.4183934629184808,
+    "Win Rate": 0.5766423357664233,
+    "Profit Factor": 0.9384902055407367,
+    "Avg Trade Return": -0.00024447035734094063,
+    "Total Trades": 411
+  },
+  "fee_pct": 0.001,
+  "slippage": 0.0,
+  "init_cash": 10000.0
+}
