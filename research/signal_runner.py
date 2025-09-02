@@ -12,11 +12,13 @@ from strategies.sma_strategy import SMAParams, run_sma_strategy
 from strategies.rsi_strategy import RSIParams, run_rsi_strategy
 from strategies.macd_strategy import MACDParams, run_macd_strategy
 from strategies.bollinger_strategy import BollingerParams, run_bollinger_strategy
+from strategies.gpt_strategy import GPTParams, run_gpt_strategy
 
 REPORT_DIR = Path(__file__).resolve().parent / "signals"
 REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
 BEST_PARAMS_PATH = Path(__file__).resolve().parent / "best_params.json"
+
 
 def load_best_params():
     if BEST_PARAMS_PATH.exists():
@@ -24,7 +26,9 @@ def load_best_params():
             return json.load(f)
     return {}
 
+
 best_params = load_best_params()
+
 
 def get_params(strategy_name, symbol, timeframe, default_params):
     key = f"{symbol}_{timeframe}_{strategy_name}"
@@ -40,7 +44,7 @@ def run_strategies(symbol: str, timeframe: str, start: str = None, end: str = No
     close = ohlcv["close"]
 
     results = {}
-    equity_curves = {}  # collect for combined plot
+    equity_curves = {}  # collect for combined plot (full mode)
 
     # Helper to choose quick vs full backtest
     def run_backtest(entries, exits, strat_name: str):
@@ -92,6 +96,31 @@ def run_strategies(symbol: str, timeframe: str, start: str = None, end: str = No
     boll_perf = run_backtest(boll_out["entries"], boll_out["exits"], "bollinger")
     results["bollinger"] = {**boll_out, "stats": boll_perf}
 
+    # === GPT Meta-Strategy (consumes others' outputs + last 1h K-line) ===
+    gpt_defaults = {
+        "provider": "openai",         # mock | openai
+        "vote_threshold": 2,
+        "exit_vote_threshold": 1,
+        "hour_momentum_threshold": 0.002,
+        "weight_sma": 1.0,
+        "weight_rsi": 1.0,
+        "weight_macd": 1.0,
+        "weight_bollinger": 1.0,
+        "mode": "backtest",           # backtest | live
+        "context_hours": 1,   #  new
+    }
+    gpt_params = get_params("gpt", symbol, timeframe, gpt_defaults)
+    gpt_out = run_gpt_strategy(
+        symbol,   # ✅ new
+        ohlcv,
+        {"sma": sma_out, "rsi": rsi_out, "macd": macd_out, "bollinger": boll_out},
+        timeframe,
+        GPTParams(**gpt_params),
+    )
+
+    gpt_perf = run_backtest(gpt_out["entries"], gpt_out["exits"], "gpt")
+    results["gpt"] = {**gpt_out, "stats": gpt_perf}
+
     # === Combined equity plot ===
     if mode == "full" and equity_curves:
         plots_dir = REPORT_DIR / "plots"
@@ -126,4 +155,4 @@ def run_multi_timeframes(symbol="BTCUSDT", timeframes=["1m", "5m", "15m"], start
 
 
 if __name__ == "__main__":
-    run_multi_timeframes(symbol="BTCUSDT", timeframes=["15m", "30m"], start="2022-09-01", end="2025-09-01", mode="full")
+    run_multi_timeframes(symbol="BTCUSDT", timeframes=["15m"], start="2025-08-03", end="2025-09-01", mode="full")
