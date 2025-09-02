@@ -14,7 +14,13 @@ from strategies.bollinger_strategy import BollingerParams, run_bollinger_strateg
 PARAMS_FILE = Path(__file__).resolve().parent / "best_params.json"
 
 
-def tune_sma(close, fast_range=(5, 30, 5), slow_range=(20, 100, 10)):
+def save_params(params_dict):
+    # always overwrite with fresh dict (avoid old keys lingering)
+    with open(PARAMS_FILE, "w") as f:
+        json.dump(params_dict, f, indent=2)
+
+
+def tune_sma(close, fast_range=(5, 30, 5), slow_range=(20, 100, 20)):
     best_ret = -np.inf
     best_params = None
 
@@ -54,22 +60,17 @@ def tune_rsi(close, window_range=(10, 30, 2), lower=30, upper=70):
     return best_params
 
 
-def tune_macd(close, fast_range=(8, 16, 2), slow_range=(20, 30, 2), signal_range=(5, 15, 2)):
+def tune_macd(close, fast_range=(8, 10), slow_range=(20, 40), signal_range=(5, 6)):
     best_ret = -np.inf
     best_params = None
 
-    fast_values = list(range(*fast_range))
-    slow_values = list(range(*slow_range))
-    signal_values = list(range(*signal_range))
-    total = len(fast_values) * len(slow_values) * len(signal_values)
-
-    with tqdm(total=total, desc="Tuning MACD") as pbar:
-        for fast in fast_values:
-            for slow in slow_values:
-                if fast >= slow:
-                    pbar.update(len(signal_values))
-                    continue
-                for sig in signal_values:
+    with tqdm(total=(fast_range[1]-fast_range[0])*(slow_range[1]-slow_range[0])*(signal_range[1]-signal_range[0]), desc="Tuning MACD") as pbar:
+        for fast in range(*fast_range):
+            for slow in range(*slow_range):
+                for sig in range(*signal_range):
+                    if fast >= slow:
+                        pbar.update(1)
+                        continue
                     macd_out = run_macd_strategy(close, MACDParams(fast=fast, slow=slow, signal=sig))
                     perf = quick_backtest(close, macd_out["entries"], macd_out["exits"])
                     if perf["total_return"] > best_ret:
@@ -79,17 +80,13 @@ def tune_macd(close, fast_range=(8, 16, 2), slow_range=(20, 30, 2), signal_range
     return best_params
 
 
-def tune_bollinger(close, window_range=(10, 30, 2), std_range=(1, 4, 1)):
+def tune_bollinger(close, window_range=(10, 30), std_range=(1, 3)):
     best_ret = -np.inf
     best_params = None
 
-    win_values = list(range(*window_range))
-    std_values = list(range(*std_range))
-    total = len(win_values) * len(std_values)
-
-    with tqdm(total=total, desc="Tuning Bollinger") as pbar:
-        for w in win_values:
-            for s in std_values:
+    with tqdm(total=(window_range[1]-window_range[0])*(std_range[1]-std_range[0]), desc="Tuning Bollinger") as pbar:
+        for w in range(*window_range):
+            for s in range(*std_range):
                 boll_out = run_bollinger_strategy(close, BollingerParams(window=w, std=s))
                 perf = quick_backtest(close, boll_out["entries"], boll_out["exits"])
                 if perf["total_return"] > best_ret:
@@ -99,46 +96,36 @@ def tune_bollinger(close, window_range=(10, 30, 2), std_range=(1, 4, 1)):
     return best_params
 
 
-def save_params(strategy: str, params: dict):
-    if PARAMS_FILE.exists():
-        with open(PARAMS_FILE, "r") as f:
-            all_params = json.load(f)
-    else:
-        all_params = {}
+def run_tuning(symbol="BTCUSDT", timeframes=["1m", "5m", "15m"], start=None, end=None):
+    bests = {}
 
-    all_params[strategy] = params
+    for timeframe in timeframes:
+        print(f"\n⏳ Tuning {symbol} {timeframe}...")
+        ohlcv = get_ohlcv(symbol, start=start, end=end, timeframe=timeframe)
+        close = ohlcv["close"]
 
-    with open(PARAMS_FILE, "w") as f:
-        json.dump(all_params, f, indent=2)
+        # SMA
+        sma_params = tune_sma(close)
+        bests[f"{symbol}_{timeframe}_sma"] = sma_params
 
-    print(f"✅ Best params for {strategy} saved: {params}")
+        # RSI
+        rsi_params = tune_rsi(close)
+        bests[f"{symbol}_{timeframe}_rsi"] = rsi_params
 
+        # MACD
+        macd_params = tune_macd(close)
+        bests[f"{symbol}_{timeframe}_macd"] = macd_params
 
-def tune_all(symbol: str, timeframe: str, start: str, end: str):
-    print(f"🚀 Starting parameter tuning for {symbol} {timeframe} ({start} → {end})")
+        # Bollinger
+        boll_params = tune_bollinger(close)
+        bests[f"{symbol}_{timeframe}_bollinger"] = boll_params
 
-    ohlcv = get_ohlcv(symbol, start=start, end=end, timeframe=timeframe)
-    close = ohlcv["close"]
-
-    # SMA
-    best_sma = tune_sma(close)
-    save_params("sma", best_sma)
-
-    # RSI
-    best_rsi = tune_rsi(close)
-    save_params("rsi", best_rsi)
-
-    # MACD
-    best_macd = tune_macd(close)
-    save_params("macd", best_macd)
-
-    # Bollinger
-    best_boll = tune_bollinger(close)
-    save_params("bollinger", best_boll)
-
-    print("🎯 Parameter tuning completed!")
+        save_params(bests)
+        print(f"✅ Best params for {symbol} {timeframe} saved to {PARAMS_FILE}")
+        for k, v in bests.items():
+            if k.startswith(f"{symbol}_{timeframe}"):
+                print(k, v)
 
 
 if __name__ == "__main__":
-    # Default example run
-    tune_all("BTCUSDT", "5m", start="2024-01-01", end="2024-06-01")
+    run_tuning(symbol="BTCUSDT", timeframes=["15m", "30m"], start="2022-09-01", end="2025-09-01")

@@ -1,20 +1,38 @@
 {
-  "sma": {
-    "fast": 15,
-    "slow": 90
+  "BTCUSDT_15m_sma": {
+    "fast": 25,
+    "slow": 80
   },
-  "rsi": {
-    "window": 10,
+  "BTCUSDT_15m_rsi": {
+    "window": 26,
     "lower": 30,
     "upper": 70
   },
-  "macd": {
-    "fast": 140,
-    "slow": 280,
-    "signal": 130
+  "BTCUSDT_15m_macd": {
+    "fast": 9,
+    "slow": 39,
+    "signal": 5
   },
-  "bollinger": {
-    "window": 16,
-    "std": 3
+  "BTCUSDT_15m_bollinger": {
+    "window": 29,
+    "std": 2
+  },
+  "BTCUSDT_30m_sma": {
+    "fast": 25,
+    "slow": 80
+  },
+  "BTCUSDT_30m_rsi": {
+    "window": 26,
+    "lower": 30,
+    "upper": 70
+  },
+  "BTCUSDT_30m_macd": {
+    "fast": 9,
+    "slow": 39,
+    "signal": 5
+  },
+  "BTCUSDT_30m_bollinger": {
+    "window": 29,
+    "std": 2
   }
 }

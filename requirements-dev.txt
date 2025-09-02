@@ -11,4 +11,4 @@ matplotlib==3.9.2
 plotly==5.24.1
 vectorbt==0.28.1
 pandas_ta==0.3.14b0
-
+tabulate

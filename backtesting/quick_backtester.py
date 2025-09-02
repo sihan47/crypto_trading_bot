@@ -4,23 +4,38 @@ import pandas as pd
 
 def quick_backtest(close: pd.Series, entries: pd.Series, exits: pd.Series, fee: float = 0.001):
     """
-    Simplified backtest: assume full allocation, only entry/exit signals.
-    Calculates basic performance metrics.
+    Simplified backtest with fee: full allocation, entry/exit signals.
+    Assumes all-in, all-out trades with given entry/exit signals.
     """
-    # Daily returns
-    ret = close.pct_change().fillna(0)
+    cash = 1.0
+    position = 0
+    entry_price = None
+    equity_curve = []
 
-    # Position: cumulative entries minus exits
-    pos = entries.cumsum() - exits.cumsum()
+    for i in range(len(close)):
+        price = close.iloc[i]
 
-    # Strategy returns
-    strat_ret = pos.shift(1).fillna(0) * ret - fee * (entries.astype(int) + exits.astype(int))
+        # Exit
+        if position > 0 and exits.iloc[i]:
+            pnl = (price - entry_price) / entry_price
+            pnl_after_fee = (1 + pnl) * (1 - fee) - 1
+            cash *= (1 + pnl_after_fee)
+            position = 0
+            entry_price = None
 
-    # Equity curve
-    equity = (1 + strat_ret).cumprod()
+        # Entry
+        elif position == 0 and entries.iloc[i]:
+            position = 1
+            entry_price = price
+            cash *= (1 - fee)  # apply entry fee
+
+        equity_curve.append(cash if position == 0 else cash * (price / entry_price))
+
+    equity = pd.Series(equity_curve, index=close.index, name="equity")
 
     total_return = equity.iloc[-1] - 1
-    sharpe = strat_ret.mean() / (strat_ret.std() + 1e-9) * np.sqrt(252 * 24 * 12)  # minute freq
+    returns = equity.pct_change().fillna(0)
+    sharpe = returns.mean() / (returns.std() + 1e-9) * np.sqrt(252 * 24 * 12)
     max_dd = (equity / equity.cummax() - 1).min()
 
     return {

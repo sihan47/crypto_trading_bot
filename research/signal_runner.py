@@ -16,6 +16,23 @@ from strategies.bollinger_strategy import BollingerParams, run_bollinger_strateg
 REPORT_DIR = Path(__file__).resolve().parent / "signals"
 REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
+BEST_PARAMS_PATH = Path(__file__).resolve().parent / "best_params.json"
+
+def load_best_params():
+    if BEST_PARAMS_PATH.exists():
+        with open(BEST_PARAMS_PATH, "r") as f:
+            return json.load(f)
+    return {}
+
+best_params = load_best_params()
+
+def get_params(strategy_name, symbol, timeframe, default_params):
+    key = f"{symbol}_{timeframe}_{strategy_name}"
+    if key in best_params:
+        print(f"⚡ Using best params for {key}: {best_params[key]}")
+        return best_params[key]
+    return default_params
+
 
 def run_strategies(symbol: str, timeframe: str, start: str = None, end: str = None, mode: str = "quick"):
     # Load OHLCV data
@@ -48,22 +65,30 @@ def run_strategies(symbol: str, timeframe: str, start: str = None, end: str = No
             raise ValueError(f"Unknown mode: {mode}")
 
     # === SMA ===
-    sma_out = run_sma_strategy(close, SMAParams(fast=10, slow=50))
+    sma_defaults = {"fast": 10, "slow": 50}
+    sma_params = get_params("sma", symbol, timeframe, sma_defaults)
+    sma_out = run_sma_strategy(close, SMAParams(**sma_params))
     sma_perf = run_backtest(sma_out["entries"], sma_out["exits"], "sma")
     results["sma"] = {**sma_out, "stats": sma_perf}
 
     # === RSI ===
-    rsi_out = run_rsi_strategy(close, RSIParams(window=14, lower=30, upper=70))
+    rsi_defaults = {"window": 14, "lower": 30, "upper": 70}
+    rsi_params = get_params("rsi", symbol, timeframe, rsi_defaults)
+    rsi_out = run_rsi_strategy(close, RSIParams(**rsi_params))
     rsi_perf = run_backtest(rsi_out["entries"], rsi_out["exits"], "rsi")
     results["rsi"] = {**rsi_out, "stats": rsi_perf}
 
     # === MACD ===
-    macd_out = run_macd_strategy(close, MACDParams(fast=12, slow=26, signal=9))
+    macd_defaults = {"fast": 12, "slow": 26, "signal": 9}
+    macd_params = get_params("macd", symbol, timeframe, macd_defaults)
+    macd_out = run_macd_strategy(close, MACDParams(**macd_params))
     macd_perf = run_backtest(macd_out["entries"], macd_out["exits"], "macd")
     results["macd"] = {**macd_out, "stats": macd_perf}
 
     # === Bollinger Bands ===
-    boll_out = run_bollinger_strategy(close, BollingerParams(window=20, std=2))
+    boll_defaults = {"window": 20, "std": 2}
+    boll_params = get_params("bollinger", symbol, timeframe, boll_defaults)
+    boll_out = run_bollinger_strategy(close, BollingerParams(**boll_params))
     boll_perf = run_backtest(boll_out["entries"], boll_out["exits"], "bollinger")
     results["bollinger"] = {**boll_out, "stats": boll_perf}
 
@@ -94,5 +119,11 @@ def run_strategies(symbol: str, timeframe: str, start: str = None, end: str = No
     return results
 
 
+def run_multi_timeframes(symbol="BTCUSDT", timeframes=["1m", "5m", "15m"], start=None, end=None, mode="full"):
+    for tf in timeframes:
+        print(f"\n🚀 Running strategies for {symbol} {tf}...")
+        run_strategies(symbol, tf, start=start, end=end, mode=mode)
+
+
 if __name__ == "__main__":
-    run_strategies("BTCUSDT", "1m", start="2022-09-01", end="2025-09-01", mode="full")
+    run_multi_timeframes(symbol="BTCUSDT", timeframes=["15m", "30m"], start="2022-09-01", end="2025-09-01", mode="full")
