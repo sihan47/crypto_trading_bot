@@ -1,51 +1,81 @@
 import pandas as pd
-from backtesting.metrics import calculate_metrics
-from backtesting.plotter import plot_backtest
-from data_manager.data_manager import load_data
-
-# strategies
-from strategies.sma_strategy import SMAStrategy
-from strategies.gpt_strategy import GPTStrategy
+import numpy as np
 
 
-def run_backtest(symbol, strategy_name, start_date=None, end_date=None, verbose=False, plot=False):
-    # 1. Load historical data
-    df = load_data(symbol, "1m")
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
-    df = df.set_index("timestamp")
+class Backtester:
+    def __init__(self, close: pd.Series, entries: pd.Series, exits: pd.Series,
+                 fee: float = 0.001, slippage: float = 0.0, init_cash: float = 10000):
+        self.close = close
+        self.entries = entries.fillna(False)
+        self.exits = exits.fillna(False)
+        self.fee = fee
+        self.slippage = slippage
+        self.init_cash = init_cash
 
-    # 2. Trim by date range
-    if start_date:
-        df = df[df.index >= pd.to_datetime(start_date)]
-    if end_date:
-        df = df[df.index <= pd.to_datetime(end_date)]
+        self.equity = None
+        self.trades = []
 
-    if verbose:
-        print(f"Backtest range: {df.index.min()} → {df.index.max()} (total {len(df)} rows)")
+    def run(self):
+        cash = self.init_cash
+        position = 0
+        entry_price = None
+        entry_date = None
+        equity_curve = []
 
-    # 3. Select strategy
-    if strategy_name == "sma":
-        strategy = SMAStrategy(short_window=10, long_window=50)
-    elif strategy_name == "gpt":
-        strategy = GPTStrategy(lookback=20, model="gpt-4o-mini")
-    else:
-        raise ValueError(f"Unknown strategy: {strategy_name}")
+        for i in range(len(self.close)):
+            price = self.close.iloc[i]
+            date = self.close.index[i]
 
-    # 4. Generate signals
-    df["signal"] = strategy.generate_signals(df)
+            # Exit
+            if position > 0 and self.exits.iloc[i]:
+                pnl = (price - entry_price) / entry_price
+                fee_cost = self.fee + self.slippage
+                pnl_after_fee = (1 + pnl) * (1 - fee_cost) - 1
+                cash *= (1 + pnl_after_fee)
 
-    # 5. Position and returns
-    df["position"] = df["signal"].shift().fillna(0)
-    df["returns"] = df["close"].pct_change().fillna(0)
-    df["strategy_returns"] = (df["position"] * df["returns"]).fillna(0)
-    df["equity"] = (1 + df["strategy_returns"]).cumprod() * 10000  # initial capital 10000
+                self.trades.append({
+                    "entry_date": str(entry_date),
+                    "exit_date": str(date),
+                    "entry_price": float(entry_price),
+                    "exit_price": float(price),
+                    "return": float(pnl_after_fee)
+                })
 
+                position = 0
+                entry_price = None
+                entry_date = None
 
+            # Entry
+            elif position == 0 and self.entries.iloc[i]:
+                position = 1
+                entry_price = price
+                entry_date = date
 
-    # 6. Calculate metrics
-    stats = calculate_metrics(df)
+            equity_curve.append(cash if position == 0 else cash * (price / entry_price))
 
-    # 7. Plot result
-    plot_backtest(df, symbol, save=True, show=plot)
+        self.equity = pd.Series(equity_curve, index=self.close.index, name="equity")
+        return self
 
-    return stats
+    def stats(self):
+        if self.equity is None:
+            raise ValueError("Run the backtest first with .run()")
+
+        total_return = self.equity.iloc[-1] / self.init_cash - 1
+        returns = self.equity.pct_change().fillna(0)
+        sharpe = returns.mean() / (returns.std() + 1e-9) * np.sqrt(252 * 24 * 12)
+        max_dd = (self.equity / self.equity.cummax() - 1).min()
+        win_rate = np.mean([1 if t["return"] > 0 else 0 for t in self.trades]) if self.trades else 0
+        profit_factor = (
+            sum([t["return"] for t in self.trades if t["return"] > 0]) /
+            abs(sum([t["return"] for t in self.trades if t["return"] < 0]) or 1)
+        ) if self.trades else 0
+
+        return {
+            "total_return": float(total_return),
+            "sharpe": float(sharpe),
+            "max_dd": float(max_dd),
+            "win_rate": float(win_rate),
+            "profit_factor": float(profit_factor),
+            "trades": len(self.trades),
+            "trade_log": self.trades  # ✅ now includes detailed trades
+        }

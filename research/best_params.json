@@ -1,0 +1,20 @@
+{
+  "sma": {
+    "fast": 15,
+    "slow": 90
+  },
+  "rsi": {
+    "window": 10,
+    "lower": 30,
+    "upper": 70
+  },
+  "macd": {
+    "fast": 140,
+    "slow": 280,
+    "signal": 130
+  },
+  "bollinger": {
+    "window": 16,
+    "std": 3
+  }
+}

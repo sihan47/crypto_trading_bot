@@ -1,21 +1,29 @@
 import matplotlib.pyplot as plt
-import os
+import pandas as pd
+from pathlib import Path
 
-def plot_backtest(df, symbol, save=True, show=False, out_dir="logs"):
-    plt.figure(figsize=(12, 6))
-    plt.plot(df.index, df["equity"], label="Equity", color="blue", linewidth=1.5)
-    plt.legend()
-    plt.title(f"Equity Curve - {symbol}")
-    plt.xlabel("Time")
-    plt.ylabel("Equity (USD)")
 
-    if save:
-        os.makedirs(out_dir, exist_ok=True)
-        out_path = os.path.join(out_dir, f"backtest_equity_{symbol}.png")
-        plt.savefig(out_path)
-        print(f"✅ Backtest equity curve saved: {out_path}")
+def plot_equity_and_drawdown(equity: pd.Series, out_path: Path, title: str = "Equity Curve"):
+    """
+    Plot equity curve and drawdown chart.
+    """
+    dd = equity / equity.cummax() - 1
 
-    if show:
-        plt.show(block=True)
-    else:
-        plt.close()
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8), sharex=True,
+                                   gridspec_kw={'height_ratios': [3, 1]})
+
+    # Equity curve
+    ax1.plot(equity.index, equity.values, label="Equity")
+    ax1.set_title(title)
+    ax1.set_ylabel("Equity")
+    ax1.legend()
+
+    # Drawdown
+    ax2.fill_between(dd.index, dd.values, 0, color="red", alpha=0.4)
+    ax2.set_title("Drawdown")
+    ax2.set_ylabel("Drawdown")
+    ax2.set_xlabel("Date")
+
+    fig.tight_layout()
+    fig.savefig(out_path)
+    plt.close(fig)
