@@ -16,23 +16,5 @@
   "BTCUSDT_15m_bollinger": {
     "window": 29,
     "std": 2
-  },
-  "BTCUSDT_30m_sma": {
-    "fast": 25,
-    "slow": 80
-  },
-  "BTCUSDT_30m_rsi": {
-    "window": 26,
-    "lower": 30,
-    "upper": 70
-  },
-  "BTCUSDT_30m_macd": {
-    "fast": 9,
-    "slow": 39,
-    "signal": 5
-  },
-  "BTCUSDT_30m_bollinger": {
-    "window": 29,
-    "std": 2
   }
 }

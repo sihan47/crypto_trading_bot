@@ -1,29 +1,18 @@
 strategy:
-  name: sma       # options: sma, gpt
+  name: gpt       # options: sma, gpt
   params:
-    short_window: 5
-    long_window: 20
-    period: 14
-    overbought: 70
-    oversold: 30
-    prompt: "Given the last 20 closes of BTCUSDT, decide: BUY, SELL or HOLD."
+    context_hours: 3       # number of hours of OHLCV to include in the prompt
+    provider: openai       # options: mock, openai
+    mode: live             # options: backtest, live
 
-engine:
-  backtest_engine: native         # native / vbt_gpt
+
 data:
   symbol: BTCUSDT
-  timeframe: 1m
-  start: "2024-03-01"
-  end: "2024-09-01"
-fees:
-  taker: 0.0004                   # 0.04%
-  slippage_bps: 2                 # 2 bps
-ai:
-  model: gpt-4o-mini
-  lookback: 20
-  max_calls_per_run: 5000
-  cache: true
-vbt:
-  initial_cash: 10000
-  strategies_top_n: 8
-  score_metric: "sharpe"          # sharpe / calmar / sortino
+  timeframe: 15m
+  lookback: 200   # optional, default=200
+  start: "2022-09-01"
+  end: "2025-09-01"
+
+
+
+

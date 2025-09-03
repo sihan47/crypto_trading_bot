@@ -10,6 +10,7 @@ from strategies.sma_strategy import SMAParams, run_sma_strategy
 from strategies.rsi_strategy import RSIParams, run_rsi_strategy
 from strategies.macd_strategy import MACDParams, run_macd_strategy
 from strategies.bollinger_strategy import BollingerParams, run_bollinger_strategy
+import yaml
 
 PARAMS_FILE = Path(__file__).resolve().parent / "best_params.json"
 
@@ -127,5 +128,20 @@ def run_tuning(symbol="BTCUSDT", timeframes=["1m", "5m", "15m"], start=None, end
                 print(k, v)
 
 
+
+def run_tuning_from_config(config_file: str = "config.yaml"):
+    with open(config_file, "r") as f:
+        config = yaml.safe_load(f)
+    data_cfg = config.get("data", {})
+    symbol = data_cfg.get("symbol", "BTCUSDT")
+    timeframe = data_cfg.get("timeframe", "15m")
+    start = data_cfg.get("start", None)
+    end = data_cfg.get("end", None)
+    # Delegate to existing runner
+    return run_tuning(symbol=symbol, timeframes=[timeframe], start=start, end=end) if "run_tuning_from_config".startswith("run_tuning") else run_multi_timeframes(symbol=symbol, timeframes=[timeframe], start=start, end=end, mode="full")
+
 if __name__ == "__main__":
-    run_tuning(symbol="BTCUSDT", timeframes=["15m", "30m"], start="2022-09-01", end="2025-09-01")
+    try:
+        run_tuning_from_config()
+    except Exception:
+        run_tuning(symbol="BTCUSDT", timeframes=["15m", "30m"], start="2022-09-01", end="2025-09-01")

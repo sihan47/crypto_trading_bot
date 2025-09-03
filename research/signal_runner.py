@@ -1,3 +1,5 @@
+# research/signal_runner.py
+
 import json
 from pathlib import Path
 import matplotlib.pyplot as plt
@@ -6,6 +8,7 @@ from data_manager.data_manager import get_ohlcv
 from backtesting.quick_backtester import quick_backtest
 from backtesting.backtester import Backtester
 from backtesting.plotter import plot_equity_and_drawdown
+import yaml
 
 # strategies
 from strategies.sma_strategy import SMAParams, run_sma_strategy
@@ -96,7 +99,7 @@ def run_strategies(symbol: str, timeframe: str, start: str = None, end: str = No
     boll_perf = run_backtest(boll_out["entries"], boll_out["exits"], "bollinger")
     results["bollinger"] = {**boll_out, "stats": boll_perf}
 
-    # === GPT Meta-Strategy (consumes others' outputs + last 1h K-line) ===
+    # === GPT Meta-Strategy (consumes others' outputs + last N hours K-line) ===
     gpt_defaults = {
         "provider": "openai",         # mock | openai
         "vote_threshold": 2,
@@ -107,11 +110,24 @@ def run_strategies(symbol: str, timeframe: str, start: str = None, end: str = No
         "weight_macd": 1.0,
         "weight_bollinger": 1.0,
         "mode": "backtest",           # backtest | live
-        "context_hours": 1,   #  new
+        "context_hours": 1,
     }
+    # minimal override from config.yaml.strategy.params (if provided)
+    try:
+        with open("config.yaml", "r") as _f:
+            _cfg = yaml.safe_load(_f)
+        _params = (_cfg or {}).get("strategy", {}).get("params", {})
+        for _k in ("provider", "mode", "context_hours", "vote_threshold", "exit_vote_threshold",
+                   "hour_momentum_threshold", "weight_sma", "weight_rsi", "weight_macd", "weight_bollinger"):
+            if _k in _params and _params[_k] is not None:
+                gpt_defaults[_k] = _params[_k]
+    except Exception:
+        pass
+
+    gpt_defaults["mode"] = "backtest"
     gpt_params = get_params("gpt", symbol, timeframe, gpt_defaults)
     gpt_out = run_gpt_strategy(
-        symbol,   # ✅ new
+        symbol,
         ohlcv,
         {"sma": sma_out, "rsi": rsi_out, "macd": macd_out, "bollinger": boll_out},
         timeframe,
@@ -154,5 +170,20 @@ def run_multi_timeframes(symbol="BTCUSDT", timeframes=["1m", "5m", "15m"], start
         run_strategies(symbol, tf, start=start, end=end, mode=mode)
 
 
+def run_from_config(config_file: str = "config.yaml"):
+    with open(config_file, "r") as f:
+        config = yaml.safe_load(f)
+    data_cfg = config.get("data", {})
+    symbol = data_cfg.get("symbol", "BTCUSDT")
+    timeframe = data_cfg.get("timeframe", "15m")
+    start = data_cfg.get("start", None)
+    end = data_cfg.get("end", None)
+    # delegate to existing runner (no accidental call to run_tuning)
+    return run_multi_timeframes(symbol=symbol, timeframes=[timeframe], start=start, end=end, mode="full")
+
+
 if __name__ == "__main__":
-    run_multi_timeframes(symbol="BTCUSDT", timeframes=["15m"], start="2025-08-03", end="2025-09-01", mode="full")
+    try:
+        run_from_config()
+    except Exception:
+        run_multi_timeframes(symbol="BTCUSDT", timeframes=["15m"], start="2025-08-03", end="2025-09-01", mode="full")
