@@ -81,31 +81,11 @@ def fetch_live_ohlcv(symbol: str, interval: str, limit: int) -> pd.DataFrame:
     return df
 
 
-def split_closed_open(df: pd.DataFrame, tf: str) -> Tuple[pd.DataFrame, Optional[pd.Series]]:
-    if df.empty:
-        return df, None
-    minutes = _tf_to_minutes(tf)
-    now = pd.Timestamp.now(tz="UTC")
-    is_closed = (df.index + pd.Timedelta(minutes=minutes)) <= now
-    closed_df = df[is_closed].copy()
-    open_bar = df[~is_closed].iloc[-1] if (~is_closed).any() else None
-    return closed_df, open_bar
-
-
-def should_run_for_new_bar(closed_df: pd.DataFrame) -> bool:
-    global _last_processed_bar
-    if closed_df.empty:
-        return False
-    last_bar = closed_df.index[-1]
-    if _last_processed_bar is None or last_bar > _last_processed_bar:
-        _last_processed_bar = last_bar
-        return True
-    return False
 
 
 def run_strategy(force: bool = False):
     df_all = fetch_live_ohlcv(symbol, timeframe, limit=max(lookback + 2, 300))
-    closed_df, _ = split_closed_open(df_all, timeframe)
+    closed_df = df_all
 
     if closed_df.empty:
         logger.warning("No closed bars available.")
@@ -113,9 +93,6 @@ def run_strategy(force: bool = False):
 
     logger.info(f"Data mode: live | source: Binance | bars(closed)={len(closed_df)}")
 
-    # Only run on new closed bar unless forced
-    if not force and not should_run_for_new_bar(closed_df):
-        return
 
     # Safety: ensure enough bars for indicators
     if len(closed_df) < 60:
@@ -163,4 +140,4 @@ if __name__ == "__main__":
             run_strategy(force=False)
         except Exception as e:
             logger.exception(f"Main loop error: {e}")
-        time.sleep(10)
+        time.sleep(5*60)
