@@ -15,7 +15,6 @@ from strategies.sma_strategy import SMAParams, run_sma_strategy
 from strategies.rsi_strategy import RSIParams, run_rsi_strategy
 from strategies.macd_strategy import MACDParams, run_macd_strategy
 from strategies.bollinger_strategy import BollingerParams, run_bollinger_strategy
-from strategies.gpt_strategy import GPTParams, run_gpt_strategy
 
 REPORT_DIR = Path(__file__).resolve().parent / "signals"
 REPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -25,7 +24,7 @@ BEST_PARAMS_PATH = Path(__file__).resolve().parent / "best_params.json"
 
 def load_best_params():
     if BEST_PARAMS_PATH.exists():
-        with open(BEST_PARAMS_PATH, "r") as f:
+        with open(BEST_PARAMS_PATH, "r" , encoding="utf-8") as f:
             return json.load(f)
     return {}
 
@@ -100,42 +99,6 @@ def run_strategies(symbol: str, timeframe: str, start: str = None, end: str = No
     results["bollinger"] = {**boll_out, "stats": boll_perf}
 
     # === GPT Meta-Strategy (consumes others' outputs + last N hours K-line) ===
-    gpt_defaults = {
-        "provider": "openai",         # mock | openai
-        "vote_threshold": 2,
-        "exit_vote_threshold": 1,
-        "hour_momentum_threshold": 0.002,
-        "weight_sma": 1.0,
-        "weight_rsi": 1.0,
-        "weight_macd": 1.0,
-        "weight_bollinger": 1.0,
-        "mode": "backtest",           # backtest | live
-        "context_hours": 1,
-    }
-    # minimal override from config.yaml.strategy.params (if provided)
-    try:
-        with open("config.yaml", "r") as _f:
-            _cfg = yaml.safe_load(_f)
-        _params = (_cfg or {}).get("strategy", {}).get("params", {})
-        for _k in ("provider", "mode", "context_hours", "vote_threshold", "exit_vote_threshold",
-                   "hour_momentum_threshold", "weight_sma", "weight_rsi", "weight_macd", "weight_bollinger"):
-            if _k in _params and _params[_k] is not None:
-                gpt_defaults[_k] = _params[_k]
-    except Exception:
-        pass
-
-    gpt_defaults["mode"] = "backtest"
-    gpt_params = get_params("gpt", symbol, timeframe, gpt_defaults)
-    gpt_out = run_gpt_strategy(
-        symbol,
-        ohlcv,
-        {"sma": sma_out, "rsi": rsi_out, "macd": macd_out, "bollinger": boll_out},
-        timeframe,
-        GPTParams(**gpt_params),
-    )
-
-    gpt_perf = run_backtest(gpt_out["entries"], gpt_out["exits"], "gpt")
-    results["gpt"] = {**gpt_out, "stats": gpt_perf}
 
     # === Combined equity plot ===
     if mode == "full" and equity_curves:
@@ -186,4 +149,4 @@ if __name__ == "__main__":
     try:
         run_from_config()
     except Exception:
-        run_multi_timeframes(symbol="BTCUSDT", timeframes=["15m"], start="2025-08-03", end="2025-09-01", mode="full")
+        run_multi_timeframes(symbol="BTCUSDT", timeframes=["15m"], start="2022-08-03", end="2025-09-01", mode="full")

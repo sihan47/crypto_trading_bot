@@ -1,5 +1,5 @@
 # Core for trading bot
-python-binance==1.0.19
+python-binance==1.0.29
 ccxt==4.2.80
 
 # Data processing
