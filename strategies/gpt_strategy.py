@@ -14,6 +14,27 @@ from openai import OpenAI
 from binance.client import Client
 from trading.order_executor import get_balances
 
+
+DECISION_FRAMEWORK = """
+You must apply this exact checklist before deciding:
+
+1) Indicator votes:
+   - Count BUY/SELL from these signals: SMA, RSI, MACD, BOLLINGER.
+   - Treat HOLD as neutral.
+   - take the backtest result as reference to decide which strategy is more reliable.
+
+2) internal information is also usable:
+   - try your best to analyze the OHLCV data, and find patterns.
+   - help me to get the confidence score.
+   - help me to earn money.
+
+
+OUTPUT FORMAT (strict):
+Return as following format on a single line with fields:
+{"action":"BUY|SELL|HOLD","confidence":0-100,"reason":"≤160 chars, concrete"}
+"""
+
+
 # Load environment variables
 load_dotenv()
 
@@ -109,7 +130,8 @@ def _make_prompt(
     best_map = _load_best_params()
 
     lines = []
-    lines.append(f"You are a trading assistant for {symbol}. Decide BUY, SELL, or HOLD BTC.")
+    lines.append(f"You are a trading assistant for {symbol}. Decide BUY, SELL, or HOLD BTC. ")
+    lines.append("\nget me confedence score, and a concrete reason (≤160 chars)")
     lines.append(f"\n--- Current Position ---\n {get_balances()}")
     lines.append("\n--- Strategy signals ---")
     for name, sig in strat_signals.items():
@@ -122,6 +144,7 @@ def _make_prompt(
             f"{row['timestamp']} O:{row['open']:.2f} H:{row['high']:.2f} "
             f"L:{row['low']:.2f} C:{row['close']:.2f} V:{row['volume']:.2f}"
         )
+    lines.append(DECISION_FRAMEWORK)
     return "\n".join(lines)
 
 
@@ -129,14 +152,14 @@ def _query_openai(prompt: str, show: bool) -> str:
     """Send prompt to OpenAI GPT model and return its decision (BUY/SELL/HOLD)."""
     if show:
         print("\n=== GPT Prompt Preview ===")
-        print(prompt[:2000])
+        print(prompt)
         print("==========================\n")
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     resp = client.chat.completions.create(
         model="gpt-5-nano",
         messages=[
-            {"role": "system", "content": "Answer ONLY with one word: BUY, SELL, or HOLD. No explanation."},
+            {"role": "system", "content": "Answer : BUY, SELL, or HOLD. Confindence 0-100 and short explanation."},
             {"role": "user", "content": prompt},
         ],
     )
@@ -144,8 +167,9 @@ def _query_openai(prompt: str, show: bool) -> str:
     full_response = (resp.choices[0].message.content or "").strip().upper()
     match = re.search(r"\b(BUY|SELL|HOLD)\b", full_response)
     decision = match.group(1) if match else "HOLD"
-
     print(f"\n=== GPT Decision ===\n{decision}\n====================\n")
+    print(f"\n=== GPT Respons ===\n{full_response}\n====================\n")
+
     return decision
 
 
@@ -215,7 +239,7 @@ def run_gpt_strategy(
             print("==========================\n")
         decision = random.choice(["BUY", "SELL", "HOLD"])
         print(f"\n=== GPT Decision (mock) ===\n{decision}\n====================\n")
-
+    
     # Return a compatible structure
     idx = ohlcv.index if isinstance(ohlcv.index, pd.Index) else pd.RangeIndex(len(ohlcv))
     entries = pd.Series(False, index=idx, name="entries")

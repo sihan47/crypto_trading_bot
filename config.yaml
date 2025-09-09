@@ -1,9 +1,9 @@
 strategy:
   name: gpt       # options: sma, gpt
   params:
-    context_hours: 3       # number of hours of OHLCV to include in the prompt
+    context_hours: 24       # number of hours of OHLCV to include in the prompt
     provider: openai       # options: mock, openai
-    show_prompt: false      # show the prompt sent to the LLM
+    show_prompt: true      # show the prompt sent to the LLM
     mode: live             # options: backtest, live
 
 
