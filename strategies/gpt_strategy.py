@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from binance.client import Client
 from trading.order_executor import get_balances
+from trading.notifier import send_message
 
 
 DECISION_FRAMEWORK = """
@@ -169,6 +170,7 @@ def _query_openai(prompt: str, show: bool) -> str:
     decision = match.group(1) if match else "HOLD"
     print(f"\n=== GPT Decision ===\n{decision}\n====================\n")
     print(f"\n=== GPT Respons ===\n{full_response}\n====================\n")
+    send_message(f"\n=== GPT Respons ===\n{full_response}\n====================\n")
 
     return decision
 

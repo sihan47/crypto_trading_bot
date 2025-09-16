@@ -12,6 +12,7 @@ from loguru import logger
 
 from strategy_loader import load_strategy
 from trading.order_executor import execute_order, get_balances
+from trading.notifier import send_message
 
 # --- Environment ---
 load_dotenv()
@@ -101,7 +102,7 @@ def run_strategy(force: bool = False):
 
     balances_before = get_balances()
     logger.info(f"=== Balances BEFORE decision === {balances_before}")
-
+    send_message(f"=== Balances BEFORE decision === {balances_before}")
     # Call strategy with compatibility for optional kwargs
     try:
         result = strategy_func(closed_df, force=force)
@@ -127,7 +128,7 @@ def run_strategy(force: bool = False):
             logger.error(f"Order failed or was not created: {decision}")
         balances_after = get_balances()
         logger.info(f"=== Balances AFTER decision === {balances_after}")
-
+        send_message(f"=== Balances AFTER decision === {balances_after}")
 
 if __name__ == "__main__":
     logger.info(f"🚀 Bot started | strategy={strategy_name} | symbol={symbol} | timeframe={timeframe} | lookback={lookback}")
