@@ -14,6 +14,7 @@ from openai import OpenAI
 from binance.client import Client
 from trading.order_executor import get_balances
 from trading.notifier import send_message
+from strategies.btc_news_summary import get_gemini_news
 
 
 DECISION_FRAMEWORK = """
@@ -133,6 +134,9 @@ def _make_prompt(
     lines = []
     lines.append(f"You are a trading assistant for {symbol}. Decide BUY, SELL, or HOLD BTC. ")
     lines.append("\nget me confedence score, and a concrete reason (≤160 chars)")
+    gemini_news = get_gemini_news()
+    lines.append(f"\n--- recent 30 days BTC news summay ---")
+    lines.append(gemini_news)
     lines.append(f"\n--- Current Position ---\n {get_balances()}")
     lines.append("\n--- Strategy signals ---")
     for name, sig in strat_signals.items():
@@ -146,6 +150,7 @@ def _make_prompt(
             f"L:{row['low']:.2f} C:{row['close']:.2f} V:{row['volume']:.2f}"
         )
     lines.append(DECISION_FRAMEWORK)
+
     return "\n".join(lines)
 
 
@@ -158,7 +163,7 @@ def _query_openai(prompt: str, show: bool) -> str:
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     resp = client.chat.completions.create(
-        model="gpt-5-nano",
+        model="gpt-5-mini",
         messages=[
             {"role": "system", "content": "Answer : BUY, SELL, or HOLD. Confindence 0-100 and short explanation."},
             {"role": "user", "content": prompt},

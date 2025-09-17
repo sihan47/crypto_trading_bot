@@ -141,4 +141,4 @@ if __name__ == "__main__":
             run_strategy(force=False)
         except Exception as e:
             logger.exception(f"Main loop error: {e}")
-        time.sleep(5*60)
+        time.sleep(10*60)
