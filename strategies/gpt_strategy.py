@@ -135,7 +135,7 @@ def _make_prompt(
     lines.append(f"You are a trading assistant for {symbol}. Decide BUY, SELL, or HOLD BTC. ")
     lines.append("\nget me confedence score, and a concrete reason (≤160 chars)")
     gemini_news = get_gemini_news()
-    lines.append(f"\n--- recent 30 days BTC news summay ---")
+    lines.append(f"\n--- recent 3 days BTC news summay ---")
     lines.append(gemini_news)
     lines.append(f"\n--- Current Position ---\n {get_balances()}")
     lines.append("\n--- Strategy signals ---")
