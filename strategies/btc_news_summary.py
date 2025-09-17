@@ -14,7 +14,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 def fetch_news():
     """Fetch BTC news from NewsAPI within last 72 hours"""
     end = datetime.utcnow()
-    start = end - timedelta(hours=72)
+    start = end - timedelta(hours=720)
     url = "https://newsapi.org/v2/everything"
     params = {
         "q": "bitcoin",
@@ -36,7 +36,7 @@ def get_gemini_news():
     client = genai.Client(api_key=GEMINI_API_KEY)
 
     # 取前 15 條避免 token 爆掉
-    text_input = "\n".join(news[:15])
+    text_input = "\n".join(news[:100])
 
     prompt = f"""
     Summarize the following Bitcoin news headlines and descriptions 
