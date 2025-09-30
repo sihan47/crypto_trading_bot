@@ -21,29 +21,28 @@ fgi = get_fgi()  # {'value': 72, 'label': 'Greed', ...}
 fgi_line = f"Crypto Fear & Greed Index: {fgi['value']} ({fgi['label']})"
 
 
-DECISION_FRAMEWORK = """
+DECISION_FRAMEWORK = f"""
 You must apply this exact checklist before deciding:
 
 1) Indicator votes:
    - Count BUY/SELL from these signals: SMA, RSI, MACD, BOLLINGER.
    - Treat HOLD as neutral.
-   - take the backtest result as reference to decide which strategy is more reliable.
+   - Take the backtest result as reference to decide which strategy is more reliable.
 
-2) internal information is also usable:
-   - try your best to analyze the OHLCV data, and find patterns.
-   - help me to get the confidence score.
-   - help me to earn money.
+2) Internal information is also usable:
+   - Analyze the OHLCV data and extract concrete patterns (no hand-waving).
+   - Provide an objective confidence score (0–100).
+   - Aim to maximize profit with disciplined risk control.
 
 3) Current Market regime (use, do NOT overfit):
    - {fgi_line}.
    - If FGI <= 25 (Extreme Fear): allow slightly earlier BUY (mean-reversion bias).
    - If FGI >= 75 (Extreme Greed): be stricter on BUY; earlier EXIT or SELL is acceptable.
 
-
 OUTPUT FORMAT (strict):
-Return as following format on a single line with fields:
-{"action":"BUY|SELL|HOLD","confidence":0-100,"reason":"≤160 chars, concrete"}
-"""
+Return exactly one line in JSON (no extra text), fields:
+{{"action":"BUY|SELL|HOLD","confidence":0-100,"reason":"<=160 chars, concrete"}}
+""".strip()
 
 
 # Load environment variables
