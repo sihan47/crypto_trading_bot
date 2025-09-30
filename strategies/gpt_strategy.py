@@ -15,6 +15,10 @@ from binance.client import Client
 from trading.order_executor import get_balances
 from trading.notifier import send_message
 from strategies.btc_news_summary import get_gemini_news
+from strategies.fear_gread import get_fgi
+
+fgi = get_fgi()  # {'value': 72, 'label': 'Greed', ...}
+fgi_line = f"Crypto Fear & Greed Index: {fgi['value']} ({fgi['label']})"
 
 
 DECISION_FRAMEWORK = """
@@ -29,6 +33,11 @@ You must apply this exact checklist before deciding:
    - try your best to analyze the OHLCV data, and find patterns.
    - help me to get the confidence score.
    - help me to earn money.
+
+3) Current Market regime (use, do NOT overfit):
+   - {fgi_line}.
+   - If FGI <= 25 (Extreme Fear): allow slightly earlier BUY (mean-reversion bias).
+   - If FGI >= 75 (Extreme Greed): be stricter on BUY; earlier EXIT or SELL is acceptable.
 
 
 OUTPUT FORMAT (strict):

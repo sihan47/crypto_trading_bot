@@ -13,7 +13,7 @@ data:
   lookback: 200   # optional, default=200
   start: "2022-09-01"
   end: "2025-09-01"
-
-
-
+  
+trading:
+  order_quantity: 0.001  # BTC per trade
 

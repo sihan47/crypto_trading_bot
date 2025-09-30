@@ -43,6 +43,10 @@ data_cfg = CONFIG.get("data", {}) or {}
 symbol = data_cfg.get("symbol", "BTCUSDT")
 timeframe = data_cfg.get("timeframe", "15m")
 lookback = int(data_cfg.get("lookback", 200))
+trading_cfg = CONFIG.get("trading", {}) or {}
+order_quantity = float(trading_cfg.get("order_quantity", 0.001))
+if order_quantity <= 0:
+    raise ValueError("order_quantity must be positive")
 
 # --- Binance client (testnet for safety) ---
 api_key = os.getenv("BINANCE_API_KEY")
@@ -121,7 +125,7 @@ def run_strategy(force: bool = False):
     logger.info(f"Strategy={strategy_name} | Decision={decision or 'HOLD'} | LastBar={closed_df.index[-1]}")
 
     if decision in ("BUY", "SELL"):
-        order = execute_order(decision, symbol=symbol, quantity=0.001)
+        order = execute_order(decision, symbol=symbol, quantity=order_quantity)
         if order:
             logger.success(f"Order executed: {decision}")
         else:
@@ -131,7 +135,7 @@ def run_strategy(force: bool = False):
         send_message(f"=== Balances AFTER decision === {balances_after}")
 
 if __name__ == "__main__":
-    logger.info(f"🚀 Bot started | strategy={strategy_name} | symbol={symbol} | timeframe={timeframe} | lookback={lookback}")
+    logger.info(f"Bot started | strategy={strategy_name} | symbol={symbol} | timeframe={timeframe} | lookback={lookback} | order_qty={order_quantity}")
     logger.info(f"Initial balances: {get_balances()}")
     logger.info("First forced run")
     run_strategy(force=True)
@@ -142,3 +146,4 @@ if __name__ == "__main__":
         except Exception as e:
             logger.exception(f"Main loop error: {e}")
         time.sleep(10*60)
+

@@ -1,30 +1,26 @@
-import os
-import sqlite3
-from typing import Optional
+from pathlib import Path
+import textwrap
 
-import pandas as pd
-from binance.client import Client
-from dotenv import load_dotenv
+path = Path('data_manager/data_manager.py')
+text = path.read_text(encoding='utf-8')
 
-from backtesting.utils import resample_ohlcv
+# inject new imports after existing ones
+old_imports = "import os\nimport sqlite3\nimport pandas as pd\nfrom typing import Optional\nfrom backtesting.utils import resample_ohlcv\n"
+if old_imports not in text:
+    raise SystemExit('expected import block not found')
+new_imports = "import os\nimport sqlite3\nfrom typing import Optional, Tuple\n\nimport pandas as pd\nfrom binance.client import Client\nfrom dotenv import load_dotenv\n\nfrom backtesting.utils import resample_ohlcv\n"
+text = text.replace(old_imports, new_imports, 1)
 
-# === Paths ===
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(BASE_DIR, "data")
-os.makedirs(DATA_DIR, exist_ok=True)
+# add load_dotenv call after constants maybe
+marker = "os.makedirs(DATA_DIR, exist_ok=True)\n\nDB_PATH = os.path.join(DATA_DIR, \"local_data.db\")\n\n\n"
+if marker not in text:
+    raise SystemExit('expected DATA_DIR marker missing')
+replacement = marker + "load_dotenv()\n\n\n"
+text = text.replace(marker, replacement, 1)
 
-DB_PATH = os.path.join(DATA_DIR, "local_data.db")
-
-load_dotenv()
-
-
-# === DB Helpers ===
-def get_connection():
-    return sqlite3.connect(DB_PATH)
-
-
-
-
+# helper functions to insert before init_db maybe
+insert_point = "def init_db():\n    \"\"\"Initialize the database with klines table if not exists.\"\"\"\n"
+helpers = textwrap.dedent('''
 
 def _create_client(testnet: bool = False) -> Client:
     api_key = os.getenv("BINANCE_API_KEY")
@@ -59,30 +55,14 @@ def _to_milliseconds(date_str: Optional[str]) -> Optional[int]:
     return int(ts.timestamp() * 1000)
 
 
-def init_db():
-    """Initialize the database with klines table if not exists."""
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS klines (
-            timestamp INTEGER,
-            symbol TEXT,
-            interval TEXT,
-            open REAL,
-            high REAL,
-            low REAL,
-            close REAL,
-            volume REAL,
-            PRIMARY KEY (timestamp, symbol, interval)
-        )
-        """
-    )
-    conn.commit()
-    conn.close()
+''')
+text = text.replace(insert_point, helpers + insert_point, 1)
 
-
-# === Core Functions ===
+# replace update_data definition
+old_func = "def update_data(symbol: str, interval: str):\n    \"\"\"Download or update historical data from Binance (placeholder).\"\"\"\n    print(f\"?? update_data not implemented: would fetch {symbol} {interval} data from Binance\")\n\n\n"
+if old_func not in text:
+    raise SystemExit('old update_data function not found')
+new_func = textwrap.dedent('''
 def update_data(
     symbol: str,
     interval: str,
@@ -105,14 +85,15 @@ def update_data(
         if latest:
             start_ms = latest + 1
         else:
+            # default to roughly one year of history
             start_ms = int((pd.Timestamp.utcnow() - pd.Timedelta(days=365)).timestamp() * 1000)
 
     if end_ms is not None and end_ms <= start_ms:
         return 0
 
-    rows = []
-    inserted = 0
     batch_limit = 1000
+    inserted = 0
+    rows = []
     current_start = start_ms
 
     conn = get_connection()
@@ -129,23 +110,23 @@ def update_data(
 
             params = dict(symbol=symbol, interval=interval, limit=batch_size, startTime=current_start)
             if end_ms is not None:
-                params['endTime'] = end_ms
+                params["endTime"] = end_ms
 
             klines = client.get_klines(**params)
             if not klines:
                 break
 
-            for kline in klines:
+            for k in klines:
                 rows.append(
                     (
-                        int(kline[0]),
+                        int(k[0]),
                         symbol,
                         interval,
-                        float(kline[1]),
-                        float(kline[2]),
-                        float(kline[3]),
-                        float(kline[4]),
-                        float(kline[5]),
+                        float(k[1]),
+                        float(k[2]),
+                        float(k[3]),
+                        float(k[4]),
+                        float(k[5]),
                     )
                 )
 
@@ -172,67 +153,23 @@ def update_data(
         conn.close()
 
 
+''')
+text = text.replace(old_func, new_func, 1)
 
-def load_data(symbol: str, interval: str) -> pd.DataFrame:
-    """Load historical data for a given symbol and interval."""
-    init_db()
-    conn = get_connection()
-    query = """
-        SELECT timestamp, open, high, low, close, volume
-        FROM klines
-        WHERE symbol=? AND interval=?
-        ORDER BY timestamp
-    """
-    df = pd.read_sql_query(query, conn, params=(symbol.upper(), interval))
-    conn.close()
+# update load_data to uppercase interval? maybe existing; leave.
 
-    if df.empty:
-        raise ValueError(f"No data found for {symbol} {interval}. Did you run update first?")
+# modify CLI portion to add argparse options
+old_cli = "    parser = argparse.ArgumentParser(description=\"Data Manager for local SQLite DB\")\n    parser.add_argument(\"action\", choices=[\"update\", \"load\"], help=\"update or load\")\n    parser.add_argument(\"symbol\", type=str, help=\"Trading pair, e.g. BTCUSDT\")\n    parser.add_argument(\"interval\", type=str, help=\"Interval, e.g. 1m, 5m, 1h\")\n\n    args = parser.parse_args()\n\n    if args.action == \"update\":\n        update_data(args.symbol, args.interval)\n\n    elif args.action == \"load\":\n        df = load_data(args.symbol, args.interval)\n        print(df.head())\n        print(f\"??Loaded {len(df)} rows for {args.symbol} {args.interval}\")\n        print(f\"?? Date range: {df['timestamp'].iloc[0]} ??{df['timestamp'].iloc[-1]}\")\n"
 
-    # convert ms to datetime
-    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms", utc=True)
-    return df
-
-
-# === Unified Access for Research/Backtest ===
-def load_1m_ohlcv(symbol: str, start: Optional[str] = None, end: Optional[str] = None) -> pd.DataFrame:
-    """
-    Load raw 1m OHLCV from local SQLite using existing load_data().
-    start/end are optional ISO date strings; trimming is done after load.
-    """
-    df = load_data(symbol, "1m")
-    df = df.rename(columns={"timestamp": "date"}).set_index("date")
-    df.index = pd.to_datetime(df.index, utc=True)
-
-    if start is not None:
-        df = df[df.index >= pd.to_datetime(start, utc=True)]
-    if end is not None:
-        df = df[df.index <= pd.to_datetime(end, utc=True)]
-    return df
-
-
-def get_ohlcv(symbol: str, start: Optional[str], end: Optional[str], timeframe: str) -> pd.DataFrame:
-    """
-    Unified access: always load 1m OHLCV and resample to target timeframe.
-    Returns DataFrame with columns: ['open','high','low','close','volume'].
-    """
-    df_1m = load_1m_ohlcv(symbol, start=start, end=end)
-    df_tf = resample_ohlcv(df_1m, timeframe)
-    return df_tf
-
-
-# === CLI ===
-if __name__ == "__main__":
-    import argparse
-
+new_cli = textwrap.dedent('''
     parser = argparse.ArgumentParser(description="Data Manager for local SQLite DB")
     parser.add_argument("action", choices=["update", "load"], help="update or load")
     parser.add_argument("symbol", type=str, help="Trading pair, e.g. BTCUSDT")
     parser.add_argument("interval", type=str, help="Interval, e.g. 1m, 5m, 1h")
-    parser.add_argument("--start", type=str, default=None, help="Start date (YYYY-MM-DD or ISO timestamp)")
-    parser.add_argument("--end", type=str, default=None, help="End date (YYYY-MM-DD or ISO timestamp)")
+    parser.add_argument("--start", type=str, default=None, help="Start date/time (YYYY-MM-DD or timestamp)")
+    parser.add_argument("--end", type=str, default=None, help="End date/time (YYYY-MM-DD or timestamp)")
     parser.add_argument("--limit", type=int, default=None, help="Maximum number of klines to download")
-    parser.add_argument("--testnet", action="store_true", help="Use Binance testnet keys")
+    parser.add_argument("--testnet", action="store_true", help="Use Binance testnet (default: mainnet)")
 
     args = parser.parse_args()
 
@@ -246,8 +183,13 @@ if __name__ == "__main__":
             testnet=args.testnet,
         )
         print(f"Inserted/updated {rows} rows for {args.symbol.upper()} {args.interval}")
-    else:
+
+    elif args.action == "load":
         df = load_data(args.symbol, args.interval)
         print(df.head())
         print(f"Loaded {len(df)} rows for {args.symbol} {args.interval}")
         print(f"Date range: {df['timestamp'].iloc[0]} -> {df['timestamp'].iloc[-1]}")
+''')
+text = text.replace(old_cli, new_cli, 1)
+
+path.write_text(text, encoding='utf-8')

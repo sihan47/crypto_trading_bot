@@ -13,8 +13,13 @@ NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 
+
+
 def fetch_news():
-    """Fetch BTC news from NewsAPI within last 72 hours"""
+    """Fetch BTC news from NewsAPI within last 72 hours."""
+    if not NEWS_API_KEY:
+        raise RuntimeError("NEWS_API_KEY is not set; cannot fetch news.")
+
     end = datetime.utcnow()
     start = end - timedelta(hours=72)
     url = "https://newsapi.org/v2/everything"
@@ -24,14 +29,38 @@ def fetch_news():
         "to": end.isoformat(),
         "language": "en",
         "sortBy": "publishedAt",
-        "apiKey": NEWS_API_KEY
+        "apiKey": NEWS_API_KEY,
     }
-    r = requests.get(url, params=params).json()
-    return [a["title"] + " - " + (a["description"] or "") for a in r.get("articles", [])]
+
+    try:
+        response = requests.get(url, params=params, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+    except Exception as exc:
+        raise RuntimeError(f"NewsAPI request failed: {exc}") from exc
+
+    if data.get("status") != "ok":
+        message = data.get("message") or "Unknown error"
+        raise RuntimeError(f"NewsAPI error: {message}")
+
+    articles = data.get("articles") or []
+    items = []
+    for article in articles:
+        title = (article.get("title") or "").strip()
+        description = (article.get("description") or "").strip()
+        if title:
+            snippet = f"{title} - {description}" if description else title
+            items.append(snippet)
+    return items
 
 
 def summarize_with_gemini(news_list, model="gemini-1.5-flash", retries=3):
-    """Summarize with Gemini model, retry on failure"""
+    """Summarize with Gemini model, retry on failure."""
+    if not GEMINI_API_KEY:
+        raise RuntimeError("GEMINI_API_KEY is not set; cannot summarize news.")
+    if not news_list:
+        return None
+
     client = genai.Client(api_key=GEMINI_API_KEY)
     text_input = "\n".join(news_list[:15])
     prompt = f"""
@@ -51,26 +80,34 @@ def summarize_with_gemini(news_list, model="gemini-1.5-flash", retries=3):
             return resp.text.strip()
         except Exception as e:
             wait = 2 ** i
-            print(f"⚠️ Error with {model}: {e} | retrying in {wait}s...")
+            print(f"[WARN] Error with {model}: {e} | retrying in {wait}s...")
             time.sleep(wait)
 
     return None
 
 
 def get_gemini_news():
-    """Return summarized BTC news string, fallback to pro model if flash fails"""
-    news = fetch_news()
+    """Return summarized BTC news string, fallback to pro model if flash fails."""
+    try:
+        news = fetch_news()
+    except Exception as exc:
+        return f"[NEWS] Failed to fetch news: {exc}"
+
     if not news:
         return "[NEWS] No recent BTC news available."
 
     # Try flash first
-    summary = summarize_with_gemini(news, model="gemini-1.5-flash", retries=3)
+    try:
+        summary = summarize_with_gemini(news, model="gemini-2.5-flash-lite", retries=3)
+    except Exception as exc:
+        return f"[NEWS] Failed to summarize news: {exc}"
+
     if summary:
         return "[NEWS] " + summary
 
     # Fallback to pro if flash failed
-    print("⚠️ Falling back to gemini-1.5-pro...")
-    summary = summarize_with_gemini(news, model="gemini-1.5-pro", retries=2)
+    print("[WARN] Falling back to gemini-2.0-flash-lite...")
+    summary = summarize_with_gemini(news, model="gemini-2.0-flash-lite", retries=2)
     if summary:
         return "[NEWS] " + summary
 

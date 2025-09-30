@@ -26,7 +26,13 @@ def get_balances():
     btc = client.get_asset_balance(asset="BTC")
     return {"USDT": float(usdt["free"]), "BTC": float(btc["free"])}
 
-def execute_order(signal, symbol="BTCUSDT", quantity=0.001):
+def execute_order(signal, symbol="BTCUSDT", quantity=None):
+    if quantity is None:
+        raise ValueError('order quantity must be provided')
+    if quantity <= 0:
+        trade_logger.error(f'Invalid quantity requested: {quantity}')
+        return None
+
     balances_before = get_balances()
     try:
         if signal == "BUY":
