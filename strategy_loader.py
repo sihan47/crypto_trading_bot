@@ -143,6 +143,7 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
         # Build GPT params from config
         params = GPTCfg(
             provider=str(gpt_cfg.get("provider", "openai")),
+            model=str(gpt_cfg.get("model", "gpt-5-mini")),
             mode="live",
             context_hours=int(gpt_cfg.get("context_hours", 4)),
             weight_sma=float(gpt_cfg.get("weight_sma", 1.0)),
@@ -179,6 +180,12 @@ def load_strategy(config_path: str = "config.yaml") -> Callable:
     symbol = trading.get("symbol") or data.get("symbol") or "BTCUSDT"
     timeframe = trading.get("timeframe") or data.get("timeframe") or "15m"
 
+    ai_cfg = cfg.get("ai", {}) or {}
+    openai_cfg = {}
+    if isinstance(ai_cfg, dict):
+        candidate = ai_cfg.get("openai", {})
+        openai_cfg = candidate if isinstance(candidate, dict) else {}
+
     # Resolve strategy name
     strat_section = cfg.get("strategy")
     if isinstance(strat_section, dict):
@@ -196,6 +203,11 @@ def load_strategy(config_path: str = "config.yaml") -> Callable:
     # also allow putting gpt params directly under strategy section
     if isinstance(strat_section, dict):
         gpt_cfg = {**gpt_cfg, **(strat_section.get("params", {}) or {})}
+    gpt_cfg = dict(gpt_cfg)
+
+    default_openai_model = openai_cfg.get("model")
+    if default_openai_model and "model" not in gpt_cfg:
+        gpt_cfg["model"] = default_openai_model
 
     if strat_name == "gpt":
         return _build_gpt_runner(symbol, timeframe, best_map, gpt_cfg)

@@ -3,6 +3,7 @@ import sqlite3
 from typing import Optional
 
 import pandas as pd
+import yaml
 from binance.client import Client
 from dotenv import load_dotenv
 
@@ -14,8 +15,33 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 DB_PATH = os.path.join(DATA_DIR, "local_data.db")
+CONFIG_PATH = os.path.join(BASE_DIR, "config.yaml")
 
 load_dotenv()
+
+
+# === Config Helpers ===
+
+def _load_config() -> dict:
+    try:
+        with open(CONFIG_PATH, "r", encoding="utf-8") as fh:
+            return yaml.safe_load(fh) or {}
+    except FileNotFoundError:
+        return {}
+    except Exception as exc:  # pragma: no cover - defensive
+        print(f"Warning: failed to parse {CONFIG_PATH}: {exc}")
+        return {}
+
+
+def _load_testnet_flag(default: bool = False) -> bool:
+    value = _load_config().get("trading", {}).get("testnet")
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "on"}
+    if value is None:
+        return default
+    return bool(value)
 
 
 # === DB Helpers ===
@@ -26,7 +52,9 @@ def get_connection():
 
 
 
-def _create_client(testnet: bool = False) -> Client:
+def _create_client(testnet: Optional[bool] = None) -> Client:
+    if testnet is None:
+        testnet = _load_testnet_flag(default=False)
     api_key = os.getenv("BINANCE_API_KEY")
     secret_key = os.getenv("BINANCE_SECRET_KEY")
     if not api_key or not secret_key:
@@ -89,7 +117,7 @@ def update_data(
     start: Optional[str] = None,
     end: Optional[str] = None,
     limit: Optional[int] = None,
-    testnet: bool = False,
+    testnet: Optional[bool] = None,
 ) -> int:
     """Download or update historical klines from Binance into the local SQLite DB."""
     symbol = symbol.upper()
@@ -243,7 +271,7 @@ if __name__ == "__main__":
             start=args.start,
             end=args.end,
             limit=args.limit,
-            testnet=args.testnet,
+            testnet=True if args.testnet else None,
         )
         print(f"Inserted/updated {rows} rows for {args.symbol.upper()} {args.interval}")
     else:

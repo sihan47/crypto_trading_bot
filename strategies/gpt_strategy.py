@@ -14,6 +14,7 @@ from openai import OpenAI
 from binance.client import Client
 from trading.order_executor import get_balances
 from trading.notifier import send_message
+from trading.funding_rate import fetch_funding_rate, annualized_from_rate, FundingRateError
 from strategies.btc_news_summary import get_gemini_news
 from strategies.fear_gread import get_fgi
 
@@ -52,6 +53,7 @@ load_dotenv()
 @dataclass
 class GPTParams:
     provider: str = "openai"     # openai | mock
+    model: str = "gpt-5-mini"    # OpenAI model name
     mode: str = "live"           # live only (we do not backtest with GPT)
     context_hours: int = 4       # context window in hours (15m bars)
     weight_sma: float = 1.0
@@ -142,6 +144,23 @@ def _make_prompt(
     lines = []
     lines.append(f"You are a trading assistant for {symbol}. Decide BUY, SELL, or HOLD BTC. ")
     lines.append("\nget me confedence score, and a concrete reason (≤160 chars)")
+
+    funding_summary = ""
+    try:
+        funding_data = fetch_funding_rate(symbol)
+        period_pct = funding_data["rate"] * 100
+        annual_pct = annualized_from_rate(funding_data["rate"]) * 100
+        next_time = funding_data["next_funding_time"].isoformat()
+        funding_summary = (
+            f"Funding rate (8h): {period_pct:.4f}% | Annualized: {annual_pct:.2f}% | Next: {next_time}"
+        )
+    except FundingRateError as exc:
+        funding_summary = f"Funding rate unavailable: {exc}"
+    except Exception as exc:  # pragma: no cover - defensive
+        funding_summary = f"Funding rate fetch error: {exc}"
+
+    lines.append("\n--- Funding & Carry ---")
+    lines.append(funding_summary)
     gemini_news = get_gemini_news()
     lines.append(f"\n--- recent 3 days BTC news summay ---")
     lines.append(gemini_news)
@@ -162,7 +181,7 @@ def _make_prompt(
     return "\n".join(lines)
 
 
-def _query_openai(prompt: str, show: bool) -> str:
+def _query_openai(prompt: str, model: str, show: bool) -> str:
     """Send prompt to OpenAI GPT model and return its decision (BUY/SELL/HOLD)."""
     if show:
         print("\n=== GPT Prompt Preview ===")
@@ -171,7 +190,7 @@ def _query_openai(prompt: str, show: bool) -> str:
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     resp = client.chat.completions.create(
-        model="gpt-5-mini",
+        model=model,
         messages=[
             {"role": "system", "content": "Answer : BUY, SELL, or HOLD. Confindence 0-100 and short explanation."},
             {"role": "user", "content": prompt},
@@ -246,7 +265,7 @@ def run_gpt_strategy(
     # Decide using provider
     provider = (params.provider or "openai").lower()
     if provider == "openai":
-        decision = _query_openai(prompt, show=params.show_prompt)
+        decision = _query_openai(prompt, params.model, params.show_prompt)
     else:
         if params.show_prompt:
             print("\n=== GPT Prompt Preview (mock) ===")

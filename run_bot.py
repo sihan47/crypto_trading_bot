@@ -48,10 +48,21 @@ order_quantity = float(trading_cfg.get("order_quantity", 0.001))
 if order_quantity <= 0:
     raise ValueError("order_quantity must be positive")
 
+# --- Helpers ---
+def _parse_bool(value, default):
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "on"}
+    if value is None:
+        return default
+    return bool(value)
+
 # --- Binance client (testnet for safety) ---
 api_key = os.getenv("BINANCE_API_KEY")
 secret_key = os.getenv("BINANCE_SECRET_KEY")
-client = Client(api_key, secret_key, testnet=True)
+use_testnet = _parse_bool(trading_cfg.get("testnet"), default=True)
+client = Client(api_key, secret_key, testnet=use_testnet)
 
 # --- Strategy function from loader (no args per your repo) ---
 strategy_func = load_strategy()
@@ -84,7 +95,6 @@ def fetch_live_ohlcv(symbol: str, interval: str, limit: int) -> pd.DataFrame:
     df = df.astype({"open": float,"high": float,"low": float,"close": float,"volume": float})
     df = df.set_index("open_time").sort_index()
     return df
-
 
 
 
@@ -134,6 +144,7 @@ def run_strategy(force: bool = False):
         logger.info(f"=== Balances AFTER decision === {balances_after}")
         send_message(f"=== Balances AFTER decision === {balances_after}")
 
+
 if __name__ == "__main__":
     logger.info(f"Bot started | strategy={strategy_name} | symbol={symbol} | timeframe={timeframe} | lookback={lookback} | order_qty={order_quantity}")
     logger.info(f"Initial balances: {get_balances()}")
@@ -146,4 +157,3 @@ if __name__ == "__main__":
         except Exception as e:
             logger.exception(f"Main loop error: {e}")
         time.sleep(10*60)
-

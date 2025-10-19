@@ -101,6 +101,10 @@ Consider adding pytest-based coverage for order execution and strategy loading b
 - `trading/performance_tracker.py` can be scheduled to compute daily PnL and win-rate stats.
 - `trading/ws_manager.py` provides a reusable WebSocket manager for tighter real-time needs.
 
+
+## Utilities
+- Fetch current Binance perpetual funding rate and annualized cost: `python -m trading.funding_rate BTCUSDT`
+
 ## Practical Tips
 - Keep API keys off source control; rely on environment variables.
 - Start on Binance testnet until your strategy and risk controls are validated.

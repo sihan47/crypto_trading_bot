@@ -1,11 +1,41 @@
+from typing import Optional
 from binance import ThreadedWebsocketManager
 from binance.client import Client
 import pandas as pd
+import yaml
 from loguru import logger
-import time, threading
+import pathlib
+import threading
+import time
+
+CONFIG_PATH = pathlib.Path(__file__).resolve().parents[1] / "config.yaml"
+
+
+def _load_config() -> dict:
+    try:
+        return yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8")) or {}
+    except FileNotFoundError:
+        return {}
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.warning(f"[WS] Failed to parse {CONFIG_PATH}: {exc}")
+        return {}
+
+
+def _load_testnet_flag(default: bool = True) -> bool:
+    value = _load_config().get("trading", {}).get("testnet")
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "on"}
+    if value is None:
+        return default
+    return bool(value)
+
 
 class WSManager:
-    def __init__(self, api_key, secret_key, testnet=True):
+    def __init__(self, api_key, secret_key, testnet: Optional[bool] = None):
+        if testnet is None:
+            testnet = _load_testnet_flag()
         self.api_key = api_key
         self.secret_key = secret_key
         self.testnet = testnet
