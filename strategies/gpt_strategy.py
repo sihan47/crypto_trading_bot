@@ -18,11 +18,8 @@ from trading.funding_rate import fetch_funding_rate, annualized_from_rate, Fundi
 from strategies.btc_news_summary import get_gemini_news
 from strategies.fear_gread import get_fgi
 
-fgi = get_fgi()  # {'value': 72, 'label': 'Greed', ...}
-fgi_line = f"Crypto Fear & Greed Index: {fgi['value']} ({fgi['label']})"
 
-
-DECISION_FRAMEWORK = f"""
+DECISION_FRAMEWORK_TEMPLATE = """
 You must apply this exact checklist before deciding:
 
 1) Indicator votes:
@@ -48,6 +45,12 @@ Return exactly one line in JSON (no extra text), fields:
 
 # Load environment variables
 load_dotenv()
+
+
+def _format_decision_framework() -> str:
+    fgi = get_fgi()
+    fgi_line = f"Crypto Fear & Greed Index: {fgi['value']} ({fgi['label']})"
+    return DECISION_FRAMEWORK_TEMPLATE.format(fgi_line=fgi_line)
 
 
 @dataclass
@@ -176,7 +179,7 @@ def _make_prompt(
             f"{row['timestamp']} O:{row['open']:.2f} H:{row['high']:.2f} "
             f"L:{row['low']:.2f} C:{row['close']:.2f} V:{row['volume']:.2f}"
         )
-    lines.append(DECISION_FRAMEWORK)
+    lines.append(_format_decision_framework())
 
     return "\n".join(lines)
 

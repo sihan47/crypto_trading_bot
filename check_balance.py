@@ -33,6 +33,16 @@ def _load_config() -> Dict[str, object]:
         return {}
 
 
+def _parse_bool(value, default: bool) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "on"}
+    if value is None:
+        return default
+    return bool(value)
+
+
 def _load_account_type(default: str = "spot") -> str:
     data = _load_config()
     raw_value = (data.get("trading", {}).get("account_type") or default).strip().lower()
@@ -44,15 +54,13 @@ def _load_account_type(default: str = "spot") -> str:
 
 
 def _load_testnet_flag(default: bool = True) -> bool:
+    env_value = os.getenv("BINANCE_TESTNET")
+    if env_value is not None:
+        return _parse_bool(env_value, default)
+
     data = _load_config()
     value = data.get("trading", {}).get("testnet")
-    if isinstance(value, bool):
-        return value
-    if isinstance(value, str):
-        return value.strip().lower() in {"1", "true", "yes", "on"}
-    if value is None:
-        return default
-    return bool(value)
+    return _parse_bool(value, default)
 
 
 def _create_client(testnet: bool = True) -> Client:

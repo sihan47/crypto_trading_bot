@@ -61,7 +61,11 @@ def _parse_bool(value, default):
 # --- Binance client (testnet for safety) ---
 api_key = os.getenv("BINANCE_API_KEY")
 secret_key = os.getenv("BINANCE_SECRET_KEY")
-use_testnet = _parse_bool(trading_cfg.get("testnet"), default=True)
+testnet_env = os.getenv("BINANCE_TESTNET")
+if testnet_env is not None:
+    use_testnet = _parse_bool(testnet_env, default=True)
+else:
+    use_testnet = _parse_bool(trading_cfg.get("testnet"), default=True)
 client = Client(api_key, secret_key, testnet=use_testnet)
 
 # --- Strategy function from loader (no args per your repo) ---

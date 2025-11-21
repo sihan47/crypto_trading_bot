@@ -19,6 +19,5 @@ data:
   start: '2022-09-01'
   end: '2025-09-01'
 trading:
-  order_quantity: 0.001
+  order_quantity: 0.0005
   account_type: spot
-  testnet: fasle

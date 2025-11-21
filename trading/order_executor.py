@@ -34,8 +34,7 @@ def _load_config() -> dict[str, Any]:
         return {}
 
 
-def _load_testnet_flag(default: bool = True) -> bool:
-    value = _load_config().get("trading", {}).get("testnet")
+def _parse_bool(value, default: bool) -> bool:
     if isinstance(value, bool):
         return value
     if isinstance(value, str):
@@ -43,6 +42,15 @@ def _load_testnet_flag(default: bool = True) -> bool:
     if value is None:
         return default
     return bool(value)
+
+
+def _load_testnet_flag(default: bool = True) -> bool:
+    env_value = os.getenv("BINANCE_TESTNET")
+    if env_value is not None:
+        return _parse_bool(env_value, default)
+
+    value = _load_config().get("trading", {}).get("testnet")
+    return _parse_bool(value, default)
 
 
 # Load API keys

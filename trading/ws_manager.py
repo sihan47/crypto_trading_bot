@@ -1,12 +1,14 @@
-from typing import Optional
-from binance import ThreadedWebsocketManager
-from binance.client import Client
-import pandas as pd
-import yaml
-from loguru import logger
+import os
 import pathlib
 import threading
 import time
+from typing import Optional
+
+import pandas as pd
+import yaml
+from binance import ThreadedWebsocketManager
+from binance.client import Client
+from loguru import logger
 
 CONFIG_PATH = pathlib.Path(__file__).resolve().parents[1] / "config.yaml"
 
@@ -21,8 +23,7 @@ def _load_config() -> dict:
         return {}
 
 
-def _load_testnet_flag(default: bool = True) -> bool:
-    value = _load_config().get("trading", {}).get("testnet")
+def _parse_bool(value, default: bool) -> bool:
     if isinstance(value, bool):
         return value
     if isinstance(value, str):
@@ -30,6 +31,15 @@ def _load_testnet_flag(default: bool = True) -> bool:
     if value is None:
         return default
     return bool(value)
+
+
+def _load_testnet_flag(default: bool = True) -> bool:
+    env_value = os.getenv("BINANCE_TESTNET")
+    if env_value is not None:
+        return _parse_bool(env_value, default)
+
+    value = _load_config().get("trading", {}).get("testnet")
+    return _parse_bool(value, default)
 
 
 class WSManager:
