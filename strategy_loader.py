@@ -13,6 +13,10 @@ from strategies.sma_strategy import SMAParams, run_sma_strategy
 from strategies.rsi_strategy import RSIParams, run_rsi_strategy
 from strategies.macd_strategy import MACDParams, run_macd_strategy
 from strategies.bollinger_strategy import BollingerParams, run_bollinger_strategy
+from strategies.ema_adx_strategy import EMAADXParams, run_ema_adx_strategy
+from strategies.donchian_strategy import DonchianParams, run_donchian_strategy
+from strategies.mean_reversion_strategy import MeanReversionParams, run_mean_reversion_strategy
+from strategies.atr_regime_filter import ATRFilterParams, run_atr_regime_filter
 
 # GPT meta
 from strategies.gpt_strategy import GPTParams as GPTCfg, run_gpt_strategy
@@ -105,6 +109,43 @@ def _build_basic_runner(strat_name: str, symbol: str, timeframe: str, best_map: 
             return {"entries": out["entries"], "exits": out["exits"], "params": p, "last_signal": _signals_from_last_bar(out)}
         return _runner
 
+    if strat_name == "ema_adx":
+        defaults = {"fast": 21, "slow": 55, "adx_window": 14, "adx_threshold": 18.0}
+        def _runner(df: pd.DataFrame, **kwargs) -> Dict[str, Any]:
+            p = _best_or_default(best_map, symbol, timeframe, "ema_adx", defaults)
+            out = run_ema_adx_strategy(df, EMAADXParams(**p))
+            return {"entries": out["entries"], "exits": out["exits"], "params": p, "last_signal": _signals_from_last_bar(out)}
+        return _runner
+
+    if strat_name == "donchian":
+        defaults = {"window": 20}
+        def _runner(df: pd.DataFrame, **kwargs) -> Dict[str, Any]:
+            p = _best_or_default(best_map, symbol, timeframe, "donchian", defaults)
+            out = run_donchian_strategy(df, DonchianParams(**p))
+            return {"entries": out["entries"], "exits": out["exits"], "params": p, "last_signal": _signals_from_last_bar(out)}
+        return _runner
+
+    if strat_name == "mean_reversion":
+        defaults = {"rsi_window": 14, "rsi_lower": 32.0, "rsi_upper": 68.0, "bb_window": 20, "bb_std": 2.2}
+        def _runner(df: pd.DataFrame, **kwargs) -> Dict[str, Any]:
+            p = _best_or_default(best_map, symbol, timeframe, "mean_reversion", defaults)
+            out = run_mean_reversion_strategy(df["close"], MeanReversionParams(**p))
+            return {"entries": out["entries"], "exits": out["exits"], "params": p, "last_signal": _signals_from_last_bar(out)}
+        return _runner
+
+    if strat_name == "atr_filter":
+        defaults = {"window": 14, "percentile_window": 96, "max_atr_pct": 0.018, "max_percentile": 0.85}
+        def _runner(df: pd.DataFrame, **kwargs) -> Dict[str, Any]:
+            p = _best_or_default(best_map, symbol, timeframe, "atr_filter", defaults)
+            out = run_atr_regime_filter(df, ATRFilterParams(**p))
+            return {
+                "entries": out["entries"],
+                "exits": out["exits"],
+                "params": p,
+                "last_signal": "HOLD" if bool(out["indicators"]["allow_trade"].iloc[-1]) else "HOLD",
+            }
+        return _runner
+
     raise ValueError(f"Unknown strategy: {strat_name}")
 
 
@@ -150,7 +191,22 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
             weight_rsi=float(gpt_cfg.get("weight_rsi", 1.0)),
             weight_macd=float(gpt_cfg.get("weight_macd", 1.0)),
             weight_bollinger=float(gpt_cfg.get("weight_bollinger", 1.0)),
+            weight_ema_adx=float(gpt_cfg.get("weight_ema_adx", 1.2)),
+            weight_donchian=float(gpt_cfg.get("weight_donchian", 1.1)),
+            weight_mean_reversion=float(gpt_cfg.get("weight_mean_reversion", 1.1)),
             show_prompt=bool(gpt_cfg.get("show_prompt", False)),
+            min_confidence=int(gpt_cfg.get("min_confidence", 60)),
+            gpt_authority=float(gpt_cfg.get("gpt_authority", 0.30)),
+            gpt_trigger_gap=float(gpt_cfg.get("gpt_trigger_gap", 12.0)),
+            gpt_trigger_score=float(gpt_cfg.get("gpt_trigger_score", 58.0)),
+            atr_block_threshold=float(gpt_cfg.get("atr_block_threshold", 0.85)),
+            trend_regime_threshold=float(gpt_cfg.get("trend_regime_threshold", 0.55)),
+            breakout_regime_threshold=float(gpt_cfg.get("breakout_regime_threshold", 0.60)),
+            range_regime_threshold=float(gpt_cfg.get("range_regime_threshold", 0.60)),
+            trend_following_boost=float(gpt_cfg.get("trend_following_boost", 1.25)),
+            breakout_boost=float(gpt_cfg.get("breakout_boost", 1.20)),
+            mean_reversion_boost=float(gpt_cfg.get("mean_reversion_boost", 1.25)),
+            off_regime_penalty=float(gpt_cfg.get("off_regime_penalty", 0.72)),
         )
 
         return run_gpt_strategy(

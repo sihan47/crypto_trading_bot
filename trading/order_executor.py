@@ -53,22 +53,33 @@ def _load_testnet_flag(default: bool = True) -> bool:
     return _parse_bool(value, default)
 
 
-# Load API keys
 load_dotenv()
-api_key = os.getenv("BINANCE_API_KEY")
-secret_key = os.getenv("BINANCE_SECRET_KEY")
-if not api_key or not secret_key:
-    raise RuntimeError("BINANCE_API_KEY and BINANCE_SECRET_KEY must be set before trading")
-client = Client(api_key, secret_key, testnet=_load_testnet_flag())
+_client: Client | None = None
+
+
+def _get_client() -> Client:
+    global _client
+    if _client is not None:
+        return _client
+
+    api_key = os.getenv("BINANCE_API_KEY")
+    secret_key = os.getenv("BINANCE_SECRET_KEY")
+    if not api_key or not secret_key:
+        raise RuntimeError("BINANCE_API_KEY and BINANCE_SECRET_KEY must be set before trading")
+
+    _client = Client(api_key, secret_key, testnet=_load_testnet_flag())
+    return _client
 
 
 def get_balances():
+    client = _get_client()
     usdt = client.get_asset_balance(asset="USDT")
     btc = client.get_asset_balance(asset="BTC")
     return {"USDT": float(usdt["free"]), "BTC": float(btc["free"])}
 
 
 def execute_order(signal, symbol="BTCUSDT", quantity=None):
+    client = _get_client()
     if quantity is None:
         raise ValueError('order quantity must be provided')
     if quantity <= 0:

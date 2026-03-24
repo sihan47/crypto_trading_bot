@@ -131,12 +131,28 @@ def run_strategy(force: bool = False):
             result = strategy_func(closed_df)
 
     decision = None
+    confidence = None
+    reason = None
+    regime = None
     if isinstance(result, dict):
         decision = (result.get("last_signal") or result.get("signal") or "").upper()
+        confidence = result.get("confidence")
+        reason = result.get("reason")
+        regime = result.get("regime_label")
     elif isinstance(result, str):
         decision = result.strip().upper()
 
-    logger.info(f"Strategy={strategy_name} | Decision={decision or 'HOLD'} | LastBar={closed_df.index[-1]}")
+    extra = []
+    if regime:
+        extra.append(f"Regime={regime}")
+    if confidence is not None:
+        extra.append(f"Confidence={confidence}")
+    if reason:
+        extra.append(f"Reason={reason}")
+    extra_part = " | ".join(extra)
+    if extra_part:
+        extra_part = f" | {extra_part}"
+    logger.info(f"Strategy={strategy_name} | Decision={decision or 'HOLD'}{extra_part} | LastBar={closed_df.index[-1]}")
 
     if decision in ("BUY", "SELL"):
         order = execute_order(decision, symbol=symbol, quantity=order_quantity)
