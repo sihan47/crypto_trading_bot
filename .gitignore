@@ -10,9 +10,6 @@ __pycache__/
 # Environment files
 .env
 *.env
-config/*.json
-config/*.yaml
-config/*.ini
 
 # Virtual environments
 *.conda
