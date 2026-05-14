@@ -1,5 +1,9 @@
 # research/parameter_tuner.py
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import json
 from itertools import product
 from pathlib import Path
@@ -21,6 +25,9 @@ from strategies.sma_strategy import SMAParams, run_sma_strategy
 from strategies.rsi_strategy import RSIParams, run_rsi_strategy
 from strategies.macd_strategy import MACDParams, run_macd_strategy
 from strategies.bollinger_strategy import BollingerParams, run_bollinger_strategy
+from strategies.ema_adx_strategy import EMAADXParams, run_ema_adx_strategy
+from strategies.mean_reversion_strategy import MeanReversionParams, run_mean_reversion_strategy
+from strategies.zscore_strategy import ZScoreParams, run_zscore_strategy
 
 
 # ---------- Paths ----------
@@ -72,6 +79,12 @@ def _max_window_in_params(strat: str, params: dict) -> int:
         return params["slow"] + params["signal"]
     if strat == "bollinger":
         return params["window"]
+    if strat == "ema_adx":
+        return max(params.get("slow", 55), params.get("adx_window", 14))
+    if strat == "mean_reversion":
+        return max(params.get("rsi_window", 14), params.get("bb_window", 20))
+    if strat == "zscore":
+        return params.get("window", 100)
     return 0
 
 
@@ -171,15 +184,86 @@ def tune_bollinger(close: pd.Series) -> Tuple[Dict[str, Any], float]:
     return best_params or {"window": 20, "std": 2}, float(best_perf)
 
 
+def tune_ema_adx(ohlcv: pd.DataFrame) -> Tuple[Dict[str, Any], float]:
+    grid = {
+        "fast": [13, 21],
+        "slow": [34, 55],
+        "adx_window": [14],
+        "adx_threshold": [15.0, 20.0, 25.0],
+    }
+    combos = _param_grid_list(grid)
+    best_params, best_perf = None, -1e9
+    close = ohlcv["close"]
+    for p in _tqdm(combos, desc="Tuning EMA_ADX", total=len(combos)):
+        if p["fast"] >= p["slow"]:
+            continue
+        if len(close) < _max_window_in_params("ema_adx", p):
+            continue
+        out = run_ema_adx_strategy(ohlcv, EMAADXParams(**p))
+        perf = _evaluate(close, out["entries"], out["exits"])
+        if perf > best_perf:
+            best_perf, best_params = perf, p
+    return (
+        best_params or {"fast": 21, "slow": 55, "adx_window": 14, "adx_threshold": 18.0},
+        float(best_perf),
+    )
+
+
+def tune_mean_reversion(close: pd.Series) -> Tuple[Dict[str, Any], float]:
+    grid = {
+        "rsi_window": [14, 21],
+        "rsi_lower": [28.0, 32.0],
+        "rsi_upper": [68.0, 72.0],
+        "bb_window": [20, 30],
+        "bb_std": [2.0, 2.5],
+    }
+    combos = _param_grid_list(grid)
+    best_params, best_perf = None, -1e9
+    for p in _tqdm(combos, desc="Tuning MEAN_REVERSION", total=len(combos)):
+        if p["rsi_lower"] >= p["rsi_upper"]:
+            continue
+        if len(close) < _max_window_in_params("mean_reversion", p):
+            continue
+        out = run_mean_reversion_strategy(close, MeanReversionParams(**p))
+        perf = _evaluate(close, out["entries"], out["exits"])
+        if perf > best_perf:
+            best_perf, best_params = perf, p
+    return (
+        best_params or {"rsi_window": 14, "rsi_lower": 32.0, "rsi_upper": 68.0, "bb_window": 20, "bb_std": 2.2},
+        float(best_perf),
+    )
+
+
+def tune_zscore(close: pd.Series) -> Tuple[Dict[str, Any], float]:
+    """Z-score mean reversion — suited for ratio pairs like BNBBTC."""
+    grid = {
+        "window": [50, 100, 150, 200],
+        "entry_z": [1.0, 1.5, 2.0],
+        "exit_z": [0.0, 0.5, 1.0],
+    }
+    combos = _param_grid_list(grid)
+    best_params, best_perf = None, -1e9
+    for p in _tqdm(combos, desc="Tuning ZSCORE", total=len(combos)):
+        if p["exit_z"] >= p["entry_z"]:
+            continue
+        if len(close) < _max_window_in_params("zscore", p):
+            continue
+        out = run_zscore_strategy(close, ZScoreParams(**p))
+        perf = _evaluate(close, out["entries"], out["exits"])
+        if perf > best_perf:
+            best_perf, best_params = perf, p
+    return best_params or {"window": 100, "entry_z": 1.5, "exit_z": 0.5}, float(best_perf)
+
+
 # ---------- Orchestrator (with tqdm over timeframes) ----------
 def run_tuning(
     symbol: str = "BTCUSDT",
     timeframes: Tuple[str, ...] = ("15m",),
     start: str = "2022-09-01",
-    end: str = "2025-09-01",
+    end: str = "2026-05-01",
     fee: float = 0.0004,
     init_cash: float = 10_000.0,
-    strategies: List[str] = ("sma", "rsi", "macd", "bollinger"),
+    strategies: List[str] = ("sma", "rsi", "macd", "bollinger", "ema_adx", "mean_reversion", "zscore"),
 ) -> None:
     """
     Run parameter tuning per strategy and timeframe, persist best params and backtest metadata.
@@ -208,13 +292,39 @@ def run_tuning(
             boll_params, boll_perf = tune_bollinger(close)
             record_best(symbol, timeframe, "bollinger", boll_params, boll_perf, start, end)
 
+        if "ema_adx" in strategies:
+            ema_adx_params, ema_adx_perf = tune_ema_adx(ohlcv)
+            record_best(symbol, timeframe, "ema_adx", ema_adx_params, ema_adx_perf, start, end)
+
+        if "mean_reversion" in strategies:
+            mr_params, mr_perf = tune_mean_reversion(close)
+            record_best(symbol, timeframe, "mean_reversion", mr_params, mr_perf, start, end)
+
+        if "zscore" in strategies:
+            zs_params, zs_perf = tune_zscore(close)
+            record_best(symbol, timeframe, "zscore", zs_params, zs_perf, start, end)
+
         # No GPT tuning; GPT is a meta strategy.
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Tune strategy parameters for a symbol")
+    parser.add_argument("--symbol", type=str, default="BTCUSDT")
+    parser.add_argument("--timeframe", type=str, default="15m")
+    parser.add_argument("--start", type=str, default="2022-09-01")
+    parser.add_argument("--end", type=str, default="2025-09-01")
+    parser.add_argument(
+        "--strategies", type=str, default="sma,rsi,macd,bollinger",
+        help="Comma-separated list of strategies to tune"
+    )
+    args = parser.parse_args()
+
     run_tuning(
-        symbol="BTCUSDT",
-        timeframes=("15m",),
-        start="2022-09-01",
-        end="2025-09-01",
+        symbol=args.symbol,
+        timeframes=(args.timeframe,),
+        start=args.start,
+        end=args.end,
+        strategies=args.strategies.split(","),
     )

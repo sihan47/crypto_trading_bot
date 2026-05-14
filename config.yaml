@@ -17,7 +17,18 @@ data:
   timeframe: 15m
   lookback: 200
   start: '2022-09-01'
-  end: '2025-09-01'
+  end: '2026-05-01'
 trading:
   order_quantity: 0.0005
   account_type: spot
+
+# Multi-symbol trading: each entry overrides the global order_quantity.
+# Remove or comment out entries you don't want to trade.
+symbols:
+  - symbol: BTCUSDT
+    order_quantity: 0.0005
+  - symbol: BNBUSDT
+    order_quantity: 0.05
+  # BNBBTC: all 7 strategies backtested negative (-14% to -99%). Not trading.
+  # - symbol: BNBBTC
+  #   order_quantity: 0.05

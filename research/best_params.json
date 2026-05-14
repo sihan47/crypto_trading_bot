@@ -33,6 +33,164 @@
     "BTCUSDT_15m_bollinger": {
       "period": "2022-09-01→2025-09-24",
       "performance": "38.23%"
+    },
+    "BNBUSDT_15m_sma": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-17.33%"
+    },
+    "BNBUSDT_15m_rsi": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "80.75%"
+    },
+    "BNBUSDT_15m_macd": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-98.45%"
+    },
+    "BNBUSDT_15m_bollinger": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "48.04%"
+    },
+    "BNBBTC_15m_sma": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-14.58%"
+    },
+    "BNBBTC_15m_rsi": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-27.68%"
+    },
+    "BNBBTC_15m_macd": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-99.09%"
+    },
+    "BNBBTC_15m_bollinger": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-62.31%"
+    },
+    "BTCUSDT_15m_ema_adx": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "28.77%"
+    },
+    "BTCUSDT_15m_mean_reversion": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-17.27%"
+    },
+    "BTCUSDT_15m_zscore": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "7.41%"
+    },
+    "BNBUSDT_15m_ema_adx": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "7.89%"
+    },
+    "BNBUSDT_15m_mean_reversion": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "24.90%"
+    },
+    "BNBUSDT_15m_zscore": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "101.58%"
+    },
+    "BNBBTC_15m_ema_adx": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-46.63%"
+    },
+    "BNBBTC_15m_mean_reversion": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-15.32%"
+    },
+    "BNBBTC_15m_zscore": {
+      "period": "2022-09-01→2026-05-01",
+      "performance": "-60.53%"
     }
+  },
+  "BNBUSDT_15m_sma": {
+    "fast": 20,
+    "slow": 80
+  },
+  "BNBUSDT_15m_rsi": {
+    "window": 26,
+    "lower": 30,
+    "upper": 80
+  },
+  "BNBUSDT_15m_macd": {
+    "fast": 12,
+    "slow": 39,
+    "signal": 9
+  },
+  "BNBUSDT_15m_bollinger": {
+    "window": 20,
+    "std": 3
+  },
+  "BNBBTC_15m_sma": {
+    "fast": 25,
+    "slow": 200
+  },
+  "BNBBTC_15m_rsi": {
+    "window": 26,
+    "lower": 20,
+    "upper": 80
+  },
+  "BNBBTC_15m_macd": {
+    "fast": 12,
+    "slow": 39,
+    "signal": 9
+  },
+  "BNBBTC_15m_bollinger": {
+    "window": 29,
+    "std": 3
+  },
+  "BTCUSDT_15m_ema_adx": {
+    "fast": 21,
+    "slow": 55,
+    "adx_window": 14,
+    "adx_threshold": 20.0
+  },
+  "BTCUSDT_15m_mean_reversion": {
+    "rsi_window": 21,
+    "rsi_lower": 28.0,
+    "rsi_upper": 72.0,
+    "bb_window": 30,
+    "bb_std": 2.5
+  },
+  "BTCUSDT_15m_zscore": {
+    "window": 200,
+    "entry_z": 1.5,
+    "exit_z": 1.0
+  },
+  "BNBUSDT_15m_ema_adx": {
+    "fast": 13,
+    "slow": 55,
+    "adx_window": 14,
+    "adx_threshold": 25.0
+  },
+  "BNBUSDT_15m_mean_reversion": {
+    "rsi_window": 21,
+    "rsi_lower": 28.0,
+    "rsi_upper": 72.0,
+    "bb_window": 30,
+    "bb_std": 2.5
+  },
+  "BNBUSDT_15m_zscore": {
+    "window": 150,
+    "entry_z": 1.5,
+    "exit_z": 0.5
+  },
+  "BNBBTC_15m_ema_adx": {
+    "fast": 13,
+    "slow": 34,
+    "adx_window": 14,
+    "adx_threshold": 25.0
+  },
+  "BNBBTC_15m_mean_reversion": {
+    "rsi_window": 21,
+    "rsi_lower": 32.0,
+    "rsi_upper": 72.0,
+    "bb_window": 30,
+    "bb_std": 2.5
+  },
+  "BNBBTC_15m_zscore": {
+    "window": 100,
+    "entry_z": 2.0,
+    "exit_z": 0.0
   }
 }

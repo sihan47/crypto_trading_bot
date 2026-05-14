@@ -18,6 +18,7 @@ from strategies.bollinger_strategy import BollingerParams
 from strategies.donchian_strategy import DonchianParams, run_donchian_strategy
 from strategies.ema_adx_strategy import EMAADXParams, run_ema_adx_strategy
 from strategies.mean_reversion_strategy import MeanReversionParams, run_mean_reversion_strategy
+from strategies.zscore_strategy import ZScoreParams, run_zscore_strategy
 from trading.notifier import send_message
 from trading.funding_rate import fetch_funding_rate, annualized_from_rate, FundingRateError
 from strategies.btc_news_summary import get_gemini_news
@@ -40,6 +41,7 @@ class GPTParams:
     weight_ema_adx: float = 1.2
     weight_donchian: float = 1.1
     weight_mean_reversion: float = 1.1
+    weight_zscore: float = 1.3
     vote_threshold: int = 2
     exit_vote_threshold: int = 1
     hour_momentum_threshold: float = 0.002
@@ -262,6 +264,7 @@ def _regime_profile(market: dict[str, Any], params: GPTParams) -> dict[str, Any]
         "ema_adx": 1.0,
         "donchian": 1.0,
         "mean_reversion": 1.0,
+        "zscore": 1.0,
     }
 
     if label == "trend":
@@ -273,6 +276,7 @@ def _regime_profile(market: dict[str, Any], params: GPTParams) -> dict[str, Any]
                 "rsi": params.off_regime_penalty,
                 "bollinger": params.off_regime_penalty,
                 "mean_reversion": params.off_regime_penalty,
+                "zscore": params.off_regime_penalty,
             }
         )
     elif label == "breakout":
@@ -284,6 +288,7 @@ def _regime_profile(market: dict[str, Any], params: GPTParams) -> dict[str, Any]
                 "rsi": params.off_regime_penalty,
                 "bollinger": params.off_regime_penalty,
                 "mean_reversion": params.off_regime_penalty,
+                "zscore": params.off_regime_penalty,
             }
         )
     elif label == "range":
@@ -292,6 +297,7 @@ def _regime_profile(market: dict[str, Any], params: GPTParams) -> dict[str, Any]
                 "rsi": params.mean_reversion_boost,
                 "mean_reversion": params.mean_reversion_boost,
                 "bollinger": 1.10,
+                "zscore": params.mean_reversion_boost,
                 "sma": params.off_regime_penalty,
                 "ema_adx": params.off_regime_penalty,
                 "donchian": params.off_regime_penalty,
@@ -322,15 +328,28 @@ def _summaries_from_outputs(
     market["regime_label"] = regime["label"]
     market["regime_reason"] = regime["reason"]
 
-    ema_adx_out = run_ema_adx_strategy(ohlcv, EMAADXParams())
+    best_map_local = _load_best_params()
+
+    def _best_p(strat: str, defaults: dict) -> dict:
+        key = f"{symbol}_{timeframe}_{strat}"
+        p = best_map_local.get(key)
+        return p if isinstance(p, dict) else defaults
+
+    ema_adx_p = _best_p("ema_adx", {"fast": 21, "slow": 55, "adx_window": 14, "adx_threshold": 18.0})
+    mr_p = _best_p("mean_reversion", {"rsi_window": 14, "rsi_lower": 32.0, "rsi_upper": 68.0, "bb_window": 20, "bb_std": 2.2})
+    zs_p = _best_p("zscore", {"window": 100, "entry_z": 1.5, "exit_z": 0.5})
+
+    ema_adx_out = run_ema_adx_strategy(ohlcv, EMAADXParams(**ema_adx_p))
     donchian_out = run_donchian_strategy(ohlcv, DonchianParams())
-    mean_rev_out = run_mean_reversion_strategy(close, MeanReversionParams())
+    mean_rev_out = run_mean_reversion_strategy(close, MeanReversionParams(**mr_p))
+    zscore_out = run_zscore_strategy(close, ZScoreParams(**zs_p))
     atr_filter_out = run_atr_regime_filter(ohlcv, ATRFilterParams(max_percentile=params.atr_block_threshold))
 
     all_outputs: dict[str, Dict[str, Any]] = dict(other_results)
     all_outputs["ema_adx"] = ema_adx_out
     all_outputs["donchian"] = donchian_out
     all_outputs["mean_reversion"] = mean_rev_out
+    all_outputs["zscore"] = zscore_out
     all_outputs["atr_filter"] = atr_filter_out
 
     weights = {
@@ -341,6 +360,7 @@ def _summaries_from_outputs(
         "ema_adx": params.weight_ema_adx,
         "donchian": params.weight_donchian,
         "mean_reversion": params.weight_mean_reversion,
+        "zscore": params.weight_zscore,
     }
 
     summaries: dict[str, dict[str, Any]] = {}
@@ -507,6 +527,33 @@ def _summaries_from_outputs(
         weight=weights["mean_reversion"],
     )
 
+    zs_series = zscore_out["indicators"]["zscore"]
+    zs_value = _safe_last(zs_series, 0.0)
+    zs_entry = _safe_float(zs_p.get("entry_z"), 1.5)
+    zs_exit = _safe_float(zs_p.get("exit_z"), 0.5)
+    if zs_value < -zs_entry:
+        zs_signal = "BUY"
+        zs_conf = 55 + abs(zs_value + zs_entry) * 12
+    elif zs_value > zs_entry:
+        zs_signal = "SELL"
+        zs_conf = 55 + abs(zs_value - zs_entry) * 12
+    elif abs(zs_value) < zs_exit:
+        zs_signal = "HOLD"
+        zs_conf = 50
+    else:
+        zs_signal = "HOLD"
+        zs_conf = 42
+    summaries["zscore"] = _strategy_summary(
+        name="Z-Score",
+        category="mean_reversion",
+        signal=zs_signal,
+        confidence=zs_conf,
+        reason=f"Z-score={zs_value:.2f} vs thresholds ±{zs_entry}; suited for ratio/range markets.",
+        backtest_performance=_build_backtest_label(best_map, symbol, timeframe, "zscore"),
+        regime_score=market["range_bias"],
+        weight=weights["zscore"],
+    )
+
     allow_trade = bool(atr_filter_out["indicators"]["allow_trade"].iloc[-1])
     atr_pct = _safe_last(atr_filter_out["indicators"]["atr_pct"]) * 100
     atr_rank = _safe_last(atr_filter_out["indicators"]["atr_rank"], 1.0)
@@ -541,10 +588,11 @@ def _summaries_from_outputs(
 
 def _position_state(symbol: str) -> dict[str, Any]:
     try:
-        from trading.order_executor import get_balances
+        from trading.order_executor import get_balances, assets_from_symbol
 
-        balances = get_balances()
-        base_asset = symbol.replace("USDT", "")
+        assets = assets_from_symbol(symbol)
+        balances = get_balances(assets=assets)
+        base_asset = assets[0]
         return {
             "balances": balances,
             "in_position": _safe_float(balances.get(base_asset, 0.0)) > 0,

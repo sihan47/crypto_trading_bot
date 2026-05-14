@@ -17,6 +17,7 @@ from strategies.ema_adx_strategy import EMAADXParams, run_ema_adx_strategy
 from strategies.donchian_strategy import DonchianParams, run_donchian_strategy
 from strategies.mean_reversion_strategy import MeanReversionParams, run_mean_reversion_strategy
 from strategies.atr_regime_filter import ATRFilterParams, run_atr_regime_filter
+from strategies.zscore_strategy import ZScoreParams, run_zscore_strategy
 
 # GPT meta
 from strategies.gpt_strategy import GPTParams as GPTCfg, run_gpt_strategy
@@ -146,6 +147,14 @@ def _build_basic_runner(strat_name: str, symbol: str, timeframe: str, best_map: 
             }
         return _runner
 
+    if strat_name == "zscore":
+        defaults = {"window": 100, "entry_z": 1.5, "exit_z": 0.5}
+        def _runner(df: pd.DataFrame, **kwargs) -> Dict[str, Any]:
+            p = _best_or_default(best_map, symbol, timeframe, "zscore", defaults)
+            out = run_zscore_strategy(df["close"], ZScoreParams(**p))
+            return {"entries": out["entries"], "exits": out["exits"], "params": p, "last_signal": _signals_from_last_bar(out)}
+        return _runner
+
     raise ValueError(f"Unknown strategy: {strat_name}")
 
 
@@ -194,6 +203,7 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
             weight_ema_adx=float(gpt_cfg.get("weight_ema_adx", 1.2)),
             weight_donchian=float(gpt_cfg.get("weight_donchian", 1.1)),
             weight_mean_reversion=float(gpt_cfg.get("weight_mean_reversion", 1.1)),
+            weight_zscore=float(gpt_cfg.get("weight_zscore", 1.3)),
             show_prompt=bool(gpt_cfg.get("show_prompt", False)),
             min_confidence=int(gpt_cfg.get("min_confidence", 60)),
             gpt_authority=float(gpt_cfg.get("gpt_authority", 0.30)),
@@ -221,10 +231,12 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
     return _runner
 
 
-def load_strategy(config_path: str = "config.yaml") -> Callable:
+def load_strategy(config_path: str = "config.yaml", symbol_override: str | None = None) -> Callable:
     """
     Read config.yaml and return a callable: (df, **kwargs) -> Dict[str, Any]
     Supported names: gpt | sma | rsi | macd | bollinger
+
+    symbol_override: if provided, use this symbol instead of config's symbol.
     """
     cfg = _load_yaml(Path(config_path))
     best_map = _load_best_params()
@@ -233,7 +245,7 @@ def load_strategy(config_path: str = "config.yaml") -> Callable:
     trading = cfg.get("trading", {}) or {}
     data = cfg.get("data", {}) or {}
 
-    symbol = trading.get("symbol") or data.get("symbol") or "BTCUSDT"
+    symbol = symbol_override or trading.get("symbol") or data.get("symbol") or "BTCUSDT"
     timeframe = trading.get("timeframe") or data.get("timeframe") or "15m"
 
     ai_cfg = cfg.get("ai", {}) or {}

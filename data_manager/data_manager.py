@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import os
 import sqlite3
 from typing import Optional
@@ -279,7 +283,7 @@ if __name__ == "__main__":
             start=args.start,
             end=args.end,
             limit=args.limit,
-            testnet=True if args.testnet else None,
+            testnet=True if args.testnet else False,
         )
         print(f"Inserted/updated {rows} rows for {args.symbol.upper()} {args.interval}")
     else:
