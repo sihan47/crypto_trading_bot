@@ -5,6 +5,7 @@ strategy:
     provider: openai
     show_prompt: true
     mode: live
+    gpt_authority: 0.5
 ai:
   openai:
     model: gpt-5.4-mini
