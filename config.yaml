@@ -8,7 +8,7 @@ strategy:
     gpt_authority: 0.5
 ai:
   openai:
-    model: gpt-6.1-terra
+    model: gpt-6.1-sol
     reasoning_effort: low
     max_completion_tokens: 2048
   news:

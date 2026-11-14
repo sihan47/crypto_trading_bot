@@ -32,7 +32,7 @@ load_dotenv()
 @dataclass
 class GPTParams:
     provider: str = "openai"
-    model: str = "gpt-6.1-terra"
+    model: str = "gpt-6.1-sol"
     reasoning_effort: str = "low"
     max_completion_tokens: int = 2048
     mode: str = "live"

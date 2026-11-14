@@ -193,7 +193,7 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
         # Build GPT params from config
         params = GPTCfg(
             provider=str(gpt_cfg.get("provider", "openai")),
-            model=str(gpt_cfg.get("model", "gpt-6.1-terra")),
+            model=str(gpt_cfg.get("model", "gpt-6.1-sol")),
             reasoning_effort=str(gpt_cfg.get("reasoning_effort", "low")),
             max_completion_tokens=int(gpt_cfg.get("max_completion_tokens", 2048)),
             mode="live",
