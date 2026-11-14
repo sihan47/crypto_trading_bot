@@ -19,7 +19,7 @@ strategy:
       atr_percentile_limit: 0.85
 ai:
   openai:
-    model: gpt-6.1-sol
+    model: gpt-6.1-terra
     reasoning_effort: low
     max_completion_tokens: 2048
   news:

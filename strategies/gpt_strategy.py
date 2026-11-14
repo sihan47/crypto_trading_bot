@@ -35,7 +35,7 @@ class GPTParams:
     engine: str = "legacy"
     ensemble: dict = field(default_factory=dict)
     provider: str = "openai"
-    model: str = "gpt-6.1-sol"
+    model: str = "gpt-6.1-terra"
     reasoning_effort: str = "low"
     max_completion_tokens: int = 2048
     mode: str = "live"

@@ -64,7 +64,7 @@ class DecisionControlsTests(unittest.TestCase):
         self.assertEqual(actual['timeframe'],'4h')
         self.assertEqual(actual['params'].engine,'regime_v2')
         self.assertEqual(actual['params'].ensemble['trend_weight'],.4)
-        self.assertEqual(actual['params'].model,'gpt-6.1-sol')
+        self.assertEqual(actual['params'].model,'gpt-6.1-terra')
 
     def view(self, action='BUY'):
         return {'action':action, 'confidence':80, 'reason':'test',

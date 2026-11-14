@@ -116,7 +116,7 @@ Happy trading!
 
 Both AI stages use OpenAI. `ai.news` selects the news summarizer
 (`gpt-5-nano`, minimal reasoning, 2048 completion-token limit); `ai.openai`
-selects the decision model (`gpt-6.1-sol`, low reasoning, 2048-token limit).
+selects the decision model (`gpt-6.1-terra`, low reasoning, 2048-token limit).
 News still comes from NewsAPI, not model memory or web search. Summaries are
 cached in memory for 30 minutes across symbols. Missing news is explicitly
 marked unavailable. GPT-5 nano is deprecated but was available and tested on
@@ -140,7 +140,7 @@ See [VPS deployment instructions](scripts/DEPLOY.md).
 ## Regime ensemble candidate (2026-11-15)
 
 Current configuration uses 4h closed bars and a three-family engine:
-trend 40%, breakout 30%, range reversion 30%. Sol reviews actionable local
+trend 40%, breakout 30%, range reversion 30%. Terra reviews actionable local
 signals at a bounded 20% influence. ATR filters new entries but does not block
 exits. Evidence scores are not calibrated probabilities.
 

@@ -2,7 +2,7 @@
 
 ## Decision
 
-Candidate: 4h regime ensemble, base weights trend 40%, breakout 30%, range reversion 30%. Deploy in **shadow mode** first; no real orders. The GPT arbiter remains GPT-6.1 Sol with 20% bounded review influence. Do not interpret scores as probabilities.
+Candidate: 4h regime ensemble, base weights trend 40%, breakout 30%, range reversion 30%. Deploy in **shadow mode** first; no real orders. The GPT arbiter is GPT-6.1 Terra with 20% bounded review influence (switched back after account usage confirmed incentive-tier requests). Do not interpret scores as probabilities.
 
 ## Research basis
 
