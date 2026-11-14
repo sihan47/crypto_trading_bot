@@ -70,8 +70,8 @@ class GPTParams:
             raise ValueError("Unknown decision engine")
         if self.engine == "regime_v2":
             EnsembleParams(**self.ensemble)
-            if not 0 <= self.gpt_authority <= 0.30:
-                raise ValueError("regime_v2 GPT influence must be between 0 and 0.30")
+            if not 0 <= self.gpt_authority <= 0.40:
+                raise ValueError("regime_v2 GPT influence must be between 0 and 0.40")
 
 
 def _load_best_params() -> dict:
@@ -885,7 +885,7 @@ def _blend_with_gpt(local_view: dict[str, Any], gpt_view: dict[str, Any] | None,
     if params.engine == "regime_v2":
         action = local_view["action"]
         scores = dict(local_view["scores"])
-        authority = max(0.0, min(0.30, params.gpt_authority))
+        authority = max(0.0, min(0.40, params.gpt_authority))
         if action == "HOLD" or action not in local_view["allowed_actions"]:
             return {"action": "HOLD", "confidence": local_view["confidence"],
                     "reason": local_view["reason"], "blended_scores": scores, "gpt_used": False}

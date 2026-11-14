@@ -141,13 +141,13 @@ See [VPS deployment instructions](scripts/DEPLOY.md).
 
 Current configuration uses 4h closed bars and a three-family engine:
 trend 40%, breakout 30%, range reversion 30%. Terra reviews actionable local
-signals at a bounded 20% influence. ATR filters new entries but does not block
+signals at a bounded 40% influence. ATR filters new entries but does not block
 exits. Evidence scores are not calibrated probabilities.
 
-**The candidate runs in shadow mode** (`trading.execution_mode: shadow`). It
-logs proposed fixed-size orders without submitting them. This preserves the
-configured lot sizes and avoids deploying an unvalidated GPT overlay to real
-funds. Read [the complete research report](research/STRATEGY_REVIEW.md) for
+**The repository configuration is prepared for live mode**
+(`trading.execution_mode: live`) at the user's request. The VPS remains on the
+previous shadow deployment until the user runs the deployment command.
+Deploying this configuration enables real fixed-size market orders. Read [the complete research report](research/STRATEGY_REVIEW.md) for
 all variants, costs, limitations and forward validation requirements.
 
 The runner persists processed bars and order intentions in

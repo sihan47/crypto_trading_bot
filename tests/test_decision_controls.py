@@ -65,6 +65,7 @@ class DecisionControlsTests(unittest.TestCase):
         self.assertEqual(actual['params'].engine,'regime_v2')
         self.assertEqual(actual['params'].ensemble['trend_weight'],.4)
         self.assertEqual(actual['params'].model,'gpt-6.1-terra')
+        self.assertEqual(actual['params'].gpt_authority,.4)
 
     def view(self, action='BUY'):
         return {'action':action, 'confidence':80, 'reason':'test',
@@ -74,6 +75,14 @@ class DecisionControlsTests(unittest.TestCase):
     def test_agreement_does_not_get_stuck_in_hold(self):
         result=_blend_with_gpt(self.view(),{'action':'BUY','confidence':80},GPTParams(engine='regime_v2',gpt_authority=.2))
         self.assertEqual(result['action'],'BUY')
+
+    def test_requested_forty_percent_is_not_clamped_to_thirty(self):
+        result=_blend_with_gpt(self.view(),{'action':'BUY','confidence':100},GPTParams(engine='regime_v2',gpt_authority=.4))
+        self.assertEqual(result['confidence'],88)
+        self.assertAlmostEqual(result['blended_scores']['BUY'],.6*80+.4*100)
+        result=_blend_with_gpt(self.view(),{'action':'HOLD','confidence':100},GPTParams(engine='regime_v2',gpt_authority=.4))
+        self.assertAlmostEqual(result['blended_scores']['BUY'],48)
+        self.assertEqual(result['action'],'HOLD')
 
     def test_gpt_cannot_invent_trade_or_override_atr(self):
         result=_blend_with_gpt(self.view('HOLD'),{'action':'BUY','confidence':100},GPTParams(engine='regime_v2'))

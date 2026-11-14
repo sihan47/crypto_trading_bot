@@ -1,5 +1,7 @@
 # Strategy review ? 2026-11-15
 
+Operational update: the user subsequently requested 40% GPT review and live execution. Those settings are prepared in config.yaml; this historical evaluation used the design below and does not validate the 40% GPT overlay. VPS activation is a manual user step.
+
 ## Decision
 
 Candidate: 4h regime ensemble, base weights trend 40%, breakout 30%, range reversion 30%. Deploy in **shadow mode** first; no real orders. The GPT arbiter is GPT-6.1 Terra with 20% bounded review influence (switched back after account usage confirmed incentive-tier requests). Do not interpret scores as probabilities.
