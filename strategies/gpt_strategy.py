@@ -12,6 +12,7 @@ import re
 import pandas as pd
 from dotenv import load_dotenv
 from openai import OpenAI
+from loguru import logger
 
 from strategies.atr_regime_filter import ATRFilterParams, run_atr_regime_filter
 from strategies.bollinger_strategy import BollingerParams
@@ -21,7 +22,7 @@ from strategies.mean_reversion_strategy import MeanReversionParams, run_mean_rev
 from strategies.zscore_strategy import ZScoreParams, run_zscore_strategy
 from trading.notifier import send_message
 from trading.funding_rate import fetch_funding_rate, annualized_from_rate, FundingRateError
-from strategies.btc_news_summary import get_gemini_news
+from strategies.btc_news_summary import get_news_summary
 from strategies.fear_gread import get_fgi
 
 
@@ -31,7 +32,9 @@ load_dotenv()
 @dataclass
 class GPTParams:
     provider: str = "openai"
-    model: str = "gpt-5-mini"
+    model: str = "gpt-6.1-terra"
+    reasoning_effort: str = "low"
+    max_completion_tokens: int = 2048
     mode: str = "live"
     context_hours: int = 4
     weight_sma: float = 1.0
@@ -714,7 +717,7 @@ def _gpt_prompt(
     local_view: dict[str, Any],
     position_state: dict[str, Any],
 ) -> str:
-    news = get_gemini_news()
+    news = get_news_summary()
     fgi = get_fgi()
 
     structured_cards = {
@@ -784,13 +787,14 @@ def _extract_json(text: str) -> dict[str, Any] | None:
         return None
 
 
-def _query_openai(prompt: str, model: str, show: bool) -> dict[str, Any]:
+def _query_openai(prompt: str, model: str, show: bool, reasoning_effort: str = "low",
+                  max_completion_tokens: int = 2048, notify: bool = True) -> dict[str, Any]:
     if show:
         print("\n=== GPT Arbiter Prompt ===")
         print(prompt)
         print("==========================\n")
 
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=45, max_retries=1)
     messages = [
         {
             "role": "system",
@@ -802,18 +806,17 @@ def _query_openai(prompt: str, model: str, show: bool) -> dict[str, Any]:
         {"role": "user", "content": prompt},
     ]
 
-    try:
-        resp = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            response_format={"type": "json_object"},
-        )
-    except Exception:
-        resp = client.chat.completions.create(
-            model=model,
-            messages=messages,
-        )
+    resp = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        reasoning_effort=reasoning_effort,
+        max_completion_tokens=max_completion_tokens,
+        response_format={"type": "json_object"},
+    )
+    if resp.choices[0].finish_reason != "stop":
+        raise RuntimeError("Decision model returned incomplete output")
 
+    logger.info("DECISION model={} usage={}", model, resp.usage)
     full_response = (resp.choices[0].message.content or "").strip()
     parsed = _extract_json(full_response) or {}
     action = str(parsed.get("action", "HOLD")).upper()
@@ -821,7 +824,8 @@ def _query_openai(prompt: str, model: str, show: bool) -> dict[str, Any]:
     reason = str(parsed.get("reason", "No reason provided."))[:160]
 
     print(f"\n=== GPT Arbiter Response ===\n{full_response}\n============================\n")
-    send_message(f"\n=== GPT Arbiter Response ===\n{full_response}\n============================\n")
+    if notify:
+        send_message(f"\n=== GPT Arbiter Response ===\n{full_response}\n============================\n")
 
     return {
         "action": action if action in {"BUY", "SELL", "HOLD"} else "HOLD",
@@ -907,7 +911,8 @@ def run_gpt_strategy(
     provider = (params.provider or "openai").lower()
     if local_view["should_call_gpt"] and provider == "openai" and os.getenv("OPENAI_API_KEY"):
         prompt = _gpt_prompt(symbol, timeframe, summaries, market, local_view, position_state)
-        gpt_view = _query_openai(prompt, params.model, params.show_prompt)
+        gpt_view = _query_openai(prompt, params.model, params.show_prompt,
+                                 params.reasoning_effort, params.max_completion_tokens)
     elif local_view["should_call_gpt"] and provider != "openai":
         gpt_action = random.choice(local_view["allowed_actions"])
         gpt_view = {

@@ -5,7 +5,7 @@ Python-based trading bot that combines classic technical indicators with GPT-dri
 ## Key Features
 - Live Binance market data ingestion (REST/WebSocket) with testnet safety.
 - Modular strategy loader supporting SMA, RSI, MACD, Bollinger, and a GPT ensemble.
-- LLM prompt builder that enriches signals with Gemini-powered BTC news summaries.
+- LLM prompt builder that enriches signals with OpenAI-powered BTC news summaries.
 - Centralized order execution, logging, and Telegram notifications.
 - Research tooling for backtesting, signal analysis, and parameter tuning.
 
@@ -21,7 +21,7 @@ Python-based trading bot that combines classic technical indicators with GPT-dri
 - Binance account with testnet keys.
 - Optional integrations:
   - OpenAI API key for GPT strategy.
-  - Google Gemini API key and NewsAPI key for news summaries.
+  - NewsAPI key for news summaries.
   - Telegram Bot token and chat ID for alerts.
 
 ## Setup
@@ -40,7 +40,6 @@ BINANCE_API_KEY=...
 BINANCE_SECRET_KEY=...
 OPENAI_API_KEY=...
 NEWS_API_KEY=...
-GEMINI_API_KEY=...
 TELEGRAM_BOT_TOKEN=...
 TELEGRAM_CHAT_ID=...
 ```
@@ -112,3 +111,28 @@ Consider adding pytest-based coverage for order execution and strategy loading b
 - Review `requirements.txt` and lock additional dependencies as features expand.
 
 Happy trading!
+
+## OpenAI model configuration
+
+Both AI stages use OpenAI. `ai.news` selects the news summarizer
+(`gpt-5-nano`, minimal reasoning, 2048 completion-token limit); `ai.openai`
+selects the decision model (`gpt-6.1-terra`, low reasoning, 2048-token limit).
+News still comes from NewsAPI, not model memory or web search. Summaries are
+cached in memory for 30 minutes across symbols. Missing news is explicitly
+marked unavailable. GPT-5 nano is deprecated but was available and tested on
+2026-11-14; replace the model and reasoning setting together when migrating.
+
+`config.yaml` is currently tracked in Git. Deployment must verify the VPS
+configuration matches the intended local settings; `.env` remains local.
+The local scoring, ATR gate and GPT fusion thresholds are unchanged by this
+provider migration, so it does not by itself resolve persistent HOLD decisions.
+
+Validation (no orders or Telegram notifications):
+
+```powershell
+python -m unittest discover -s tests -p test_news_summary.py
+python scripts/check_openai.py --sample  # paid API test with synthetic news
+python scripts/check_openai.py           # paid test with live NewsAPI headlines
+```
+
+See [VPS deployment instructions](scripts/DEPLOY.md).

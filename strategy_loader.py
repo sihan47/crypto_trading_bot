@@ -193,7 +193,9 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
         # Build GPT params from config
         params = GPTCfg(
             provider=str(gpt_cfg.get("provider", "openai")),
-            model=str(gpt_cfg.get("model", "gpt-5-mini")),
+            model=str(gpt_cfg.get("model", "gpt-6.1-terra")),
+            reasoning_effort=str(gpt_cfg.get("reasoning_effort", "low")),
+            max_completion_tokens=int(gpt_cfg.get("max_completion_tokens", 2048)),
             mode="live",
             context_hours=int(gpt_cfg.get("context_hours", 4)),
             weight_sma=float(gpt_cfg.get("weight_sma", 1.0)),
@@ -272,6 +274,10 @@ def load_strategy(config_path: str = "config.yaml", symbol_override: str | None 
     if isinstance(strat_section, dict):
         gpt_cfg = {**gpt_cfg, **(strat_section.get("params", {}) or {})}
     gpt_cfg = dict(gpt_cfg)
+
+    for key in ("reasoning_effort", "max_completion_tokens"):
+        if key in openai_cfg and key not in gpt_cfg:
+            gpt_cfg[key] = openai_cfg[key]
 
     default_openai_model = openai_cfg.get("model")
     if default_openai_model and "model" not in gpt_cfg:
