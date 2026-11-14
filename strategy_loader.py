@@ -192,6 +192,8 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
 
         # Build GPT params from config
         params = GPTCfg(
+            engine=str(gpt_cfg.get("engine", "legacy")),
+            ensemble=dict(gpt_cfg.get("ensemble", {})),
             provider=str(gpt_cfg.get("provider", "openai")),
             model=str(gpt_cfg.get("model", "gpt-6.1-sol")),
             reasoning_effort=str(gpt_cfg.get("reasoning_effort", "low")),

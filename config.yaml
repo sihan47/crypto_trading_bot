@@ -5,7 +5,18 @@ strategy:
     provider: openai
     show_prompt: true
     mode: live
-    gpt_authority: 0.5
+    gpt_authority: 0.2
+    engine: regime_v2
+    ensemble:
+      trend_weight: 0.4
+      breakout_weight: 0.3
+      reversion_weight: 0.3
+      entry_threshold: 60
+      exit_threshold: 55
+      min_coverage: 0.25
+      min_margin: 10
+      max_atr_pct: 0.018
+      atr_percentile_limit: 0.85
 ai:
   openai:
     model: gpt-6.1-sol
@@ -18,11 +29,12 @@ ai:
     cache_seconds: 1800
 data:
   symbol: BTCUSDT
-  timeframe: 15m
-  lookback: 200
+  timeframe: 4h
+  lookback: 1000
   start: '2022-09-01'
   end: '2026-05-01'
 trading:
+  execution_mode: shadow
   order_quantity: 0.0005
   account_type: spot
 

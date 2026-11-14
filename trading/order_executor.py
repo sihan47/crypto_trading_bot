@@ -137,32 +137,17 @@ def execute_order(signal, symbol=None, quantity=None):
         return None
     client = _get_client()
 
-    pair_assets = assets_from_symbol(symbol)
-    pf_before = get_portfolio_value(pair_assets)
-    try:
-        if signal == "BUY":
-            order = client.create_order(
-                symbol=symbol, side=SIDE_BUY, type=ORDER_TYPE_MARKET, quantity=quantity
-            )
-            pf_after = get_portfolio_value(pair_assets)
-            trade_logger.success(
-                f"BUY {symbol} | Before total≈${pf_before['total_usdt']:.2f} {pf_before['breakdown']} "
-                f"| After total≈${pf_after['total_usdt']:.2f} {pf_after['breakdown']}"
-            )
-            return order
-        elif signal == "SELL":
-            order = client.create_order(
-                symbol=symbol, side=SIDE_SELL, type=ORDER_TYPE_MARKET, quantity=quantity
-            )
-            pf_after = get_portfolio_value(pair_assets)
-            trade_logger.success(
-                f"SELL {symbol} | Before total≈${pf_before['total_usdt']:.2f} {pf_before['breakdown']} "
-                f"| After total≈${pf_after['total_usdt']:.2f} {pf_after['breakdown']}"
-            )
-            return order
-        else:
-            trade_logger.info(f"HOLD | Total≈${pf_before['total_usdt']:.2f} {pf_before['breakdown']}")
-            return None
-    except Exception as e:
-        trade_logger.error(f"Order failed: {e}")
+    if signal not in ("BUY", "SELL"):
         return None
+    try:
+        order = client.create_order(
+            symbol=symbol,
+            side=SIDE_BUY if signal == "BUY" else SIDE_SELL,
+            type=ORDER_TYPE_MARKET,
+            quantity=quantity,
+        )
+    except Exception as exc:
+        trade_logger.error(f"Order submission unresolved: {type(exc).__name__}; reconcile before retry")
+        return None
+    trade_logger.success(f"{signal} {symbol} | order_id={order.get('orderId')} | status={order.get('status')}")
+    return order

@@ -136,3 +136,21 @@ python scripts/check_openai.py           # paid test with live NewsAPI headlines
 ```
 
 See [VPS deployment instructions](scripts/DEPLOY.md).
+
+## Regime ensemble candidate (2026-11-15)
+
+Current configuration uses 4h closed bars and a three-family engine:
+trend 40%, breakout 30%, range reversion 30%. Sol reviews actionable local
+signals at a bounded 20% influence. ATR filters new entries but does not block
+exits. Evidence scores are not calibrated probabilities.
+
+**The candidate runs in shadow mode** (`trading.execution_mode: shadow`). It
+logs proposed fixed-size orders without submitting them. This preserves the
+configured lot sizes and avoids deploying an unvalidated GPT overlay to real
+funds. Read [the complete research report](research/STRATEGY_REVIEW.md) for
+all variants, costs, limitations and forward validation requirements.
+
+The runner persists processed bars and order intentions in
+`logs/decision_state.json`. Repeated same-side trades are suppressed. An
+unresolved order outcome requires reconciliation with exchange order history;
+do not delete the journal to retry blindly. Run only one bot process.

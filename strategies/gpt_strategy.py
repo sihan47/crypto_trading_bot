@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict
 import json
@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from loguru import logger
 
+from strategies.regime_ensemble import EnsembleParams, run_regime_ensemble, decision_from_row
 from strategies.atr_regime_filter import ATRFilterParams, run_atr_regime_filter
 from strategies.bollinger_strategy import BollingerParams
 from strategies.donchian_strategy import DonchianParams, run_donchian_strategy
@@ -31,6 +32,8 @@ load_dotenv()
 
 @dataclass
 class GPTParams:
+    engine: str = "legacy"
+    ensemble: dict = field(default_factory=dict)
     provider: str = "openai"
     model: str = "gpt-6.1-sol"
     reasoning_effort: str = "low"
@@ -61,6 +64,14 @@ class GPTParams:
     breakout_boost: float = 1.20
     mean_reversion_boost: float = 1.25
     off_regime_penalty: float = 0.72
+
+    def __post_init__(self):
+        if self.engine not in {"legacy", "regime_v2"}:
+            raise ValueError("Unknown decision engine")
+        if self.engine == "regime_v2":
+            EnsembleParams(**self.ensemble)
+            if not 0 <= self.gpt_authority <= 0.30:
+                raise ValueError("regime_v2 GPT influence must be between 0 and 0.30")
 
 
 def _load_best_params() -> dict:
@@ -325,6 +336,29 @@ def _summaries_from_outputs(
     params: GPTParams,
     best_map: dict,
 ) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    if params.engine == "regime_v2":
+        ep = EnsembleParams(**params.ensemble)
+        row = run_regime_ensemble(ohlcv, ep).iloc[-1]
+        market = {
+            "last_close": float(row["close"]), "atr_pct": float(row["atr_pct"] * 100),
+            "atr_rank": float(row["atr_rank"]), "adx": float(row["adx"]),
+            "regime_label": str(row["regime"]),
+            "ensemble_row": {k: (v.item() if hasattr(v, "item") else v) for k, v in row.items()},
+        }
+        summaries = {}
+        for name, base_weight in (("trend", ep.trend_weight), ("breakout", ep.breakout_weight),
+                                  ("reversion", ep.reversion_weight)):
+            direction = float(row[name])
+            multiplier = (0.5 if name != "reversion" else 2.0) if row["regime"] == "range" else (
+                0.25 if name == "reversion" and row["regime"] == "trend" else 1.0)
+            summaries[name] = _strategy_summary(
+                name=name, category=name,
+                signal="BUY" if direction > 0 else "SELL" if direction < 0 else "HOLD",
+                confidence=float(row[name + "_conf"]), reason=f"{name} family; regime={row['regime']}",
+                backtest_performance="See research/STRATEGY_REVIEW.md; not a calibrated probability",
+                regime_score=1.0, weight=base_weight * multiplier,
+            )
+        return summaries, market
     close = ohlcv["close"]
     market = _market_features(ohlcv, timeframe, params.context_hours)
     regime = _regime_profile(market, params)
@@ -597,11 +631,12 @@ def _position_state(symbol: str) -> dict[str, Any]:
         balances = get_balances(assets=assets)
         base_asset = assets[0]
         return {
+            "available": True,
             "balances": balances,
             "in_position": _safe_float(balances.get(base_asset, 0.0)) > 0,
         }
     except Exception:
-        return {"balances": {}, "in_position": False}
+        return {"available": False, "balances": {}, "in_position": False}
 
 
 def _local_decision(
@@ -610,6 +645,8 @@ def _local_decision(
     params: GPTParams,
     in_position: bool,
 ) -> dict[str, Any]:
+    if params.engine == "regime_v2":
+        return decision_from_row(pd.Series(market["ensemble_row"]), in_position, EnsembleParams(**params.ensemble))
     buy_raw = 0.0
     sell_raw = 0.0
     max_possible = 0.0
@@ -716,6 +753,7 @@ def _gpt_prompt(
     market: dict[str, Any],
     local_view: dict[str, Any],
     position_state: dict[str, Any],
+    params: GPTParams | None = None,
 ) -> str:
     news = get_news_summary()
     fgi = get_fgi()
@@ -739,7 +777,8 @@ def _gpt_prompt(
         "symbol": symbol,
         "timeframe": timeframe,
         "allowed_actions": local_view["allowed_actions"],
-        "gpt_authority": "Approximately 30% of final decision weight. Override only when local evidence is mixed or clearly misspecified.",
+        "gpt_authority": params.gpt_authority if params else 0.30,
+        "review_mode": "Confirm or weaken the local action; never invent a trade when local action is HOLD.",
         "local_engine": {
             "action": local_view["action"],
             "confidence": local_view["confidence"],
@@ -758,7 +797,8 @@ def _gpt_prompt(
         "instructions": [
             "You are the arbiter, not the sole trader.",
             "Respect the allowed_actions list strictly.",
-            "If ATR risk gate blocks trading, answer HOLD.",
+            "ATR can block new BUY actions but must not prohibit SELL reductions. Respect allowed_actions.",
+            "Confidence is an INTEGER from 0 to 100, not a fraction from 0 to 1.",
             "Only overturn the local engine when the structured evidence materially supports it.",
             "Do not invent raw price action beyond the supplied summaries.",
             "Return exactly one JSON object with keys action, confidence, reason.",
@@ -818,7 +858,13 @@ def _query_openai(prompt: str, model: str, show: bool, reasoning_effort: str = "
 
     logger.info("DECISION model={} usage={}", model, resp.usage)
     full_response = (resp.choices[0].message.content or "").strip()
-    parsed = _extract_json(full_response) or {}
+    parsed = _extract_json(full_response)
+    if (not isinstance(parsed, dict) or parsed.get("action") not in {"BUY", "SELL", "HOLD"}
+            or isinstance(parsed.get("confidence"), bool)
+            or not isinstance(parsed.get("confidence"), (int, float))
+            or not math.isfinite(parsed["confidence"]) or not 0 <= parsed["confidence"] <= 100
+            or not isinstance(parsed.get("reason"), str) or not parsed["reason"].strip()):
+        raise ValueError("Invalid decision JSON schema")
     action = str(parsed.get("action", "HOLD")).upper()
     confidence = int(round(_clamp(_safe_float(parsed.get("confidence"), 50))))
     reason = str(parsed.get("reason", "No reason provided."))[:160]
@@ -836,6 +882,23 @@ def _query_openai(prompt: str, model: str, show: bool, reasoning_effort: str = "
 
 
 def _blend_with_gpt(local_view: dict[str, Any], gpt_view: dict[str, Any] | None, params: GPTParams) -> dict[str, Any]:
+    if params.engine == "regime_v2":
+        action = local_view["action"]
+        scores = dict(local_view["scores"])
+        authority = max(0.0, min(0.30, params.gpt_authority))
+        if action == "HOLD" or action not in local_view["allowed_actions"]:
+            return {"action": "HOLD", "confidence": local_view["confidence"],
+                    "reason": local_view["reason"], "blended_scores": scores, "gpt_used": False}
+        evidence = scores[action]
+        if gpt_view:
+            support = gpt_view["confidence"] if gpt_view["action"] == action else 0.0
+            evidence = (1 - authority) * evidence + authority * support
+        threshold = local_view["entry_threshold"] if action == "BUY" else local_view["exit_threshold"]
+        final = action if evidence >= threshold else "HOLD"
+        scores[action] = round(evidence, 2)
+        return {"action": final, "confidence": int(round(evidence)), "blended_scores": scores,
+                "reason": f"Local={action}; review score={evidence:.1f}, threshold={threshold:.1f}; final={final}.",
+                "gpt_used": bool(gpt_view)}
     local_scores = dict(local_view["scores"])
     allowed = set(local_view["allowed_actions"])
 
@@ -906,13 +969,25 @@ def run_gpt_strategy(
     position_state = _position_state(symbol)
     summaries, market = _summaries_from_outputs(symbol, timeframe, ohlcv, other_results, params, best_map)
     local_view = _local_decision(summaries, market, params, position_state["in_position"])
+    if not position_state.get("available", False):
+        local_view.update(action="HOLD", reason="Account state unavailable; no order permitted.",
+                          should_call_gpt=False, allowed_actions=["HOLD"])
 
     gpt_view = None
     provider = (params.provider or "openai").lower()
+    if (params.engine == "regime_v2" and local_view["should_call_gpt"]
+            and (provider != "openai" or not os.getenv("OPENAI_API_KEY"))):
+        local_view.update(action="HOLD", reason="Configured GPT review is unavailable.",
+                          should_call_gpt=False, allowed_actions=["HOLD"])
     if local_view["should_call_gpt"] and provider == "openai" and os.getenv("OPENAI_API_KEY"):
-        prompt = _gpt_prompt(symbol, timeframe, summaries, market, local_view, position_state)
-        gpt_view = _query_openai(prompt, params.model, params.show_prompt,
-                                 params.reasoning_effort, params.max_completion_tokens)
+        prompt = _gpt_prompt(symbol, timeframe, summaries, market, local_view, position_state, params)
+        try:
+            gpt_view = _query_openai(prompt, params.model, params.show_prompt,
+                                     params.reasoning_effort, params.max_completion_tokens)
+        except Exception as exc:
+            logger.warning("Decision review unavailable ({})", type(exc).__name__)
+            local_view.update(action="HOLD", reason="GPT review unavailable; no order permitted.",
+                              allowed_actions=["HOLD"])
     elif local_view["should_call_gpt"] and provider != "openai":
         gpt_action = random.choice(local_view["allowed_actions"])
         gpt_view = {
@@ -923,6 +998,12 @@ def run_gpt_strategy(
         }
 
     blended = _blend_with_gpt(local_view, gpt_view, params)
+    if params.engine == "regime_v2":
+        logger.info("FAMILY_DIAGNOSTICS {}", {name: {k: v[k] for k in ("signal", "confidence", "weight")}
+                                            for name, v in summaries.items()})
+    logger.info("DECISION_DIAGNOSTICS engine={} local={} scores={} coverage={} allowed={} gpt_used={} final={}",
+                params.engine, local_view["action"], local_view["scores"], local_view.get("coverage"),
+                local_view["allowed_actions"], blended["gpt_used"], blended["action"])
 
     idx = ohlcv.index if isinstance(ohlcv.index, pd.Index) else pd.RangeIndex(len(ohlcv))
     entries = pd.Series(False, index=idx, name="entries")

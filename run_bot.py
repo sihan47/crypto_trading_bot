@@ -10,6 +10,7 @@ from binance.client import Client
 from loguru import logger
 
 from strategy_loader import load_strategy
+from trading.decision_state import DecisionState, closed_bars
 from trading.order_executor import execute_order, get_portfolio_value, assets_from_symbol
 from trading.notifier import send_message
 from trading.performance_tracker import record_trade, record_snapshot, summary as perf_summary
@@ -46,6 +47,7 @@ def _parse_bool(value, default):
 
 
 CONFIG_PATH = pathlib.Path("config.yaml")
+DECISION_STATE = DecisionState(pathlib.Path("logs/decision_state.json"))
 
 
 def _load_config() -> dict:
@@ -58,6 +60,8 @@ def _build_runtime(cfg: dict) -> dict:
     strat_name = (cfg.get("strategy", {}).get("name") or cfg.get("strategy") or "gpt")
     data_c = cfg.get("data", {}) or {}
     trade_c = cfg.get("trading", {}) or {}
+    if trade_c.get("execution_mode", "shadow") not in {"live", "shadow"}:
+        raise ValueError("execution_mode must be live or shadow")
     tf = data_c.get("timeframe", "15m")
     lb = int(data_c.get("lookback", 200))
     global_qty = float(trade_c.get("order_quantity", 0.001))
@@ -158,7 +162,7 @@ def _format_portfolio(snapshot: dict) -> str:
 
 
 def fetch_live_ohlcv(symbol: str, interval: str, limit: int) -> pd.DataFrame:
-    klines = client.get_klines(symbol=symbol, interval=interval, limit=max(2, limit))
+    klines = client.get_klines(symbol=symbol, interval=interval, limit=min(1000, max(2, limit)))
     df = pd.DataFrame(
         klines,
         columns=[
@@ -179,7 +183,7 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
     strategy_func = sym_cfg["strategy_func"]
 
     df_all = fetch_live_ohlcv(symbol, timeframe, limit=max(lookback + 2, 300))
-    closed_df = df_all
+    closed_df = closed_bars(df_all, timeframe)
 
     if closed_df.empty:
         logger.warning(f"[{symbol}] No closed bars available.")
@@ -191,17 +195,15 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
         logger.warning(f"[{symbol}] Not enough bars for indicators (got {len(closed_df)}). Skipping.")
         return
 
+    if not DECISION_STATE.claim_bar(symbol, timeframe, closed_df.index[-1]):
+        logger.info(f"[{symbol}] Closed bar already evaluated: {closed_df.index[-1]}")
+        return
+
     portfolio_before = get_portfolio_value(PORTFOLIO_ASSETS)
     logger.info(f"[{symbol}] BEFORE | {_format_portfolio(portfolio_before)}")
     send_message(f"[{symbol}] BEFORE | {_format_portfolio(portfolio_before)}")
 
-    try:
-        result = strategy_func(closed_df, force=force)
-    except TypeError:
-        try:
-            result = strategy_func(closed_df, initial_run=force)
-        except TypeError:
-            result = strategy_func(closed_df)
+    result = strategy_func(closed_df, force=force)
 
     decision = None
     confidence = None
@@ -228,8 +230,27 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
     logger.info(f"[{symbol}] Strategy={strategy_name} | Decision={decision or 'HOLD'}{extra_part} | LastBar={closed_df.index[-1]}")
 
     if decision in ("BUY", "SELL"):
+        base, quote = assets_from_symbol(symbol)
+        balances = portfolio_before["breakdown"]
+        if decision == "SELL" and balances.get(base, {}).get("balance", 0) < order_quantity:
+            logger.warning(f"[{symbol}] SELL skipped: insufficient available {base} for configured lot")
+            return
+        if decision == "BUY":
+            quote_balance = balances.get(quote, {}).get("balance", 0)
+            if quote_balance < order_quantity * float(closed_df["close"].iloc[-1]) * 1.01:
+                logger.warning(f"[{symbol}] BUY skipped: insufficient quote balance including cost buffer")
+                return
+        if RUNTIME["trading_cfg"].get("execution_mode", "shadow") == "shadow":
+            would_trade = DECISION_STATE.record_shadow(symbol, decision, closed_df.index[-1])
+            logger.info(f"[{symbol}] SHADOW_ORDER side={decision} qty={order_quantity} would_trade={would_trade} bar={closed_df.index[-1]}")
+            return
+        permitted, guard_reason = DECISION_STATE.begin_order(symbol, decision, closed_df.index[-1])
+        if not permitted:
+            logger.warning(f"[{symbol}] Order suppressed: {guard_reason}")
+            return
         order = execute_order(decision, symbol=symbol, quantity=order_quantity)
         if order:
+            DECISION_STATE.complete_order(symbol, order)
             logger.success(f"[{symbol}] Order executed: {decision}")
             portfolio_after = get_portfolio_value(PORTFOLIO_ASSETS)
             delta = portfolio_after["total_usdt"] - portfolio_before["total_usdt"]
@@ -288,7 +309,7 @@ def run_all_symbols(force: bool = False):
 
 if __name__ == "__main__":
     symbols_summary = ", ".join(f"{s['symbol']}(qty={s['order_quantity']})" for s in SYMBOL_RUNNERS)
-    logger.info(f"Bot started | strategy={strategy_name} | symbols=[{symbols_summary}] | timeframe={timeframe} | lookback={lookback}")
+    logger.info(f"Bot started | execution_mode={RUNTIME['trading_cfg'].get('execution_mode', 'shadow')} | strategy={strategy_name} | symbols=[{symbols_summary}] | timeframe={timeframe} | lookback={lookback}")
     try:
         initial_portfolio = get_portfolio_value(PORTFOLIO_ASSETS)
         logger.info(f"Initial portfolio | {_format_portfolio(initial_portfolio)}")
@@ -299,5 +320,5 @@ if __name__ == "__main__":
     run_all_symbols(force=True)
 
     while True:
-        run_all_symbols(force=False)
         time.sleep(10 * 60)
+        run_all_symbols(force=False)
