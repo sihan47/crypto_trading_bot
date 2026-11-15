@@ -2,7 +2,7 @@
 # Sent over SSH by deploy_vps.ps1. Default mode is read-only.
 set -euo pipefail
 mode=${1:---check}
-[[ "$mode" == --check || "$mode" == --deploy || "$mode" == --deploy-recommended ]] || exit 2
+[[ "$mode" == --check || "$mode" == --deploy || "$mode" == --deploy-recommended || "$mode" == --deploy-btc-core ]] || exit 2
 cd /home/sihan/crypto_trading_bot
 exec 9>/tmp/crypto_bot-deploy.lock
 flock -n 9 || { echo 'Another deployment is running.'; exit 1; }
@@ -23,9 +23,10 @@ python_bin=$(readlink -f /proc/"$bot_pid"/exe)
 # Read only the config selector, never dump the process environment/secrets.
 active_config=$(tr '\0' '\n' < /proc/"$bot_pid"/environ | sed -n 's/^BOT_CONFIG=//p')
 active_config=${active_config:-config.yaml}
-[[ "$active_config" == config.yaml || "$active_config" == config.recommended.yaml ]] || { echo 'Unknown config selector; inspect manually.'; exit 1; }
+[[ "$active_config" == config.yaml || "$active_config" == config.recommended.yaml || "$active_config" == config.btc_core.yaml ]] || { echo 'Unknown config selector; inspect manually.'; exit 1; }
 target_config=$active_config
 if [[ "$mode" == --deploy-recommended ]]; then target_config=config.recommended.yaml; fi
+if [[ "$mode" == --deploy-btc-core ]]; then target_config=config.btc_core.yaml; fi
 echo "Repo: $PWD | branch: main | commit: $(git rev-parse --short HEAD)"
 echo "tmux: $pane | bot PID: $bot_pid | Python: $python_bin"
 if [[ "$mode" == --check ]]; then

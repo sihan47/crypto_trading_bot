@@ -1,0 +1,40 @@
+# Prepared for manual activation, not the active config.yaml.
+# Existing council position journals remain in use; no automatic liquidation.
+strategy:
+  name: gpt
+  params:
+    engine: council_v1
+    provider: openai
+    gpt_authority: 0.4
+    show_prompt: false
+    context_hours: 24
+ai:
+  openai:
+    model: gpt-6.1-terra
+    reasoning_effort: low
+    max_completion_tokens: 2048
+  news:
+    model: gpt-5-nano
+    reasoning_effort: minimal
+    max_completion_tokens: 2048
+    cache_seconds: 1800
+data:
+  symbol: BTCUSDT
+  timeframe: 4h
+  lookback: 1000
+trading:
+  execution_mode: live
+  account_type: spot
+  order_quantity: 0.0005
+  poll_seconds: 60
+symbols:
+  - symbol: BTCUSDT
+    order_quantity: 0.0005
+    timeframe: 4h
+    engine: council_v1
+    entry_enabled: true
+  - symbol: BNBUSDT
+    order_quantity: 0.05
+    timeframe: 4h
+    engine: council_v1
+    entry_enabled: false

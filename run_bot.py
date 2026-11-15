@@ -88,10 +88,13 @@ def _build_runtime(cfg: dict) -> dict:
             raise ValueError(f"order_quantity for {sym} must be positive")
         symbol_tf = str(entry.get("timeframe", tf))
         engine_override = entry.get("engine")
+        entry_enabled = entry.get("entry_enabled", True)
+        if type(entry_enabled) is not bool:
+            raise ValueError(f"entry_enabled for {sym} must be a YAML boolean")
         runner = load_strategy(config_path=str(CONFIG_PATH), symbol_override=sym,
                                timeframe_override=symbol_tf, engine_override=engine_override)
         runners.append({"symbol": sym, "order_quantity": qty, "strategy_func": runner,
-                        "timeframe": symbol_tf, "engine": engine_override})
+                        "timeframe": symbol_tf, "engine": engine_override, "entry_enabled": entry_enabled})
 
     if not runners:
         raise RuntimeError("No symbols configured. Check config.yaml `symbols` section.")
@@ -267,6 +270,10 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
     logger.info(f"[{symbol}] Strategy={strategy_name} | Decision={decision or 'HOLD'}{extra_part} | LastBar={closed_df.index[-1]}")
 
     if decision in ("BUY", "SELL"):
+        if decision == "BUY" and not sym_cfg.get("entry_enabled", True):
+            status['order'] = 'Exit-only profile: new entry disabled; existing position exits remain enabled'
+            logger.info(f"[{symbol}] Exit-only profile: BUY suppressed")
+            return
         if decision == "BUY":
             multiplier = entry_multiplier(result)
             if multiplier == 0:
