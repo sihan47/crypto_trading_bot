@@ -1,0 +1,297 @@
+{
+  "compression": {
+    "holdout": {
+      "return_pct": -0.9387700466475302,
+      "max_drawdown_pct": -4.339021955605027,
+      "sharpe": -0.11480488754390125,
+      "profit_factor": 0.9195759645729085,
+      "trades": 51,
+      "net_pnl_excluding_top_5pct": -637.6136807815861,
+      "top_5pct_share_of_gross_profit": 0.5065562211334236,
+      "win_rate": 0.37254901960784315,
+      "fees": 238.8055105176058,
+      "slippage_estimate": 119.40282134162032,
+      "funding": 0.0,
+      "gap_exits": 0,
+      "loss_diagnostics": {
+        "vol_regime": {
+          "high": {
+            "count": 17,
+            "sum": 75.856916191619,
+            "mean": 4.462171540683471
+          },
+          "low": {
+            "count": 34,
+            "sum": -169.73392085637556,
+            "mean": -4.992174142834576
+          }
+        },
+        "prior_day_direction": {
+          "down": {
+            "count": 19,
+            "sum": 77.1479688301688,
+            "mean": 4.060419412114147
+          },
+          "up": {
+            "count": 32,
+            "sum": -171.02497349492535,
+            "mean": -5.344530421716417
+          }
+        },
+        "session": {
+          "Asia_UTC_00_08": {
+            "count": 13,
+            "sum": -168.92941492440445,
+            "mean": -12.994570378800343
+          },
+          "EU_UTC_08_16": {
+            "count": 24,
+            "sum": 93.39405440265739,
+            "mean": 3.891418933444058
+          },
+          "US_UTC_16_24": {
+            "count": 14,
+            "sum": -18.34164414300949,
+            "mean": -1.310117438786392
+          }
+        },
+        "weekend": {
+          "false": {
+            "count": 30,
+            "sum": -154.25166421177653,
+            "mean": -5.141722140392551
+          },
+          "true": {
+            "count": 21,
+            "sum": 60.374659547019974,
+            "mean": 2.874983787953332
+          }
+        },
+        "reason": {
+          "gap_stop": {
+            "count": 3,
+            "sum": 5.00878251156837,
+            "mean": 1.66959417052279
+          },
+          "intrabar_stop": {
+            "count": 48,
+            "sum": -98.88578717632492,
+            "mean": -2.060120566173436
+          }
+        }
+      }
+    },
+    "bootstrap": {
+      "method": "Descriptive circular 7-day block bootstrap, 1000 resamples; not selection-adjusted inference.",
+      "sharpe_95pct_interval": [
+        -1.4588390197055663,
+        1.0621252325537451
+      ],
+      "valid_resamples": 1000
+    },
+    "tests": {
+      "sharpe_at_least_1_5": false,
+      "pf_at_least_1_3": false,
+      "drawdown_at_most_15pct": true,
+      "at_least_30_trades": true,
+      "positive_without_top_5pct": false,
+      "all_sensitivity_positive": false,
+      "double_cost_positive": false
+    },
+    "sensitivity_positive": 1,
+    "sensitivity_cases": 21,
+    "double_cost": {
+      "return_pct": -3.7900506424500824,
+      "max_drawdown_pct": -5.602294333648028,
+      "sharpe": -0.5984073718042573,
+      "profit_factor": 0.6835536140095174,
+      "trades": 51,
+      "net_pnl_excluding_top_5pct": -816.395058894713,
+      "top_5pct_share_of_gross_profit": 0.534258434936248,
+      "win_rate": 0.3333333333333333,
+      "fees": 406.18574646604867,
+      "slippage_estimate": 203.09310350679928,
+      "funding": 0.0,
+      "gap_exits": 0
+    }
+  },
+  "recovery": {
+    "holdout": {
+      "return_pct": -3.7888647309215595,
+      "max_drawdown_pct": -4.548273665406899,
+      "sharpe": -1.8012001620211948,
+      "profit_factor": 0.08069600988803412,
+      "trades": 11,
+      "net_pnl_excluding_top_5pct": -412.1449239505748,
+      "top_5pct_share_of_gross_profit": 1.0,
+      "win_rate": 0.09090909090909091,
+      "fees": 86.38723060986,
+      "slippage_estimate": 43.19355297850479,
+      "funding": 0.0,
+      "gap_exits": 0,
+      "loss_diagnostics": {
+        "vol_regime": {
+          "high": {
+            "count": 5,
+            "sum": -166.4943344450537,
+            "mean": -33.29886688901074
+          },
+          "low": {
+            "count": 6,
+            "sum": -212.39213864710246,
+            "mean": -35.398689774517074
+          }
+        },
+        "prior_day_direction": {
+          "down": {
+            "count": 8,
+            "sum": -346.08611279898946,
+            "mean": -43.26076409987368
+          },
+          "up": {
+            "count": 3,
+            "sum": -32.800360293166705,
+            "mean": -10.933453431055568
+          }
+        },
+        "session": {
+          "Asia_UTC_00_08": {
+            "count": 3,
+            "sum": -101.10611627460526,
+            "mean": -33.70203875820175
+          },
+          "EU_UTC_08_16": {
+            "count": 1,
+            "sum": -49.157647207463015,
+            "mean": -49.157647207463015
+          },
+          "US_UTC_16_24": {
+            "count": 7,
+            "sum": -228.6227096100879,
+            "mean": -32.660387087155414
+          }
+        },
+        "weekend": {
+          "false": {
+            "count": 5,
+            "sum": -199.1063556663687,
+            "mean": -39.82127113327374
+          },
+          "true": {
+            "count": 6,
+            "sum": -179.78011742578747,
+            "mean": -29.96335290429791
+          }
+        },
+        "reason": {
+          "intrabar_stop": {
+            "count": 8,
+            "sum": -392.6344187137813,
+            "mean": -49.079302339222664
+          },
+          "time_exit": {
+            "count": 3,
+            "sum": 13.74794562162515,
+            "mean": 4.582648540541716
+          }
+        }
+      }
+    },
+    "bootstrap": {
+      "method": "Descriptive circular 7-day block bootstrap, 1000 resamples; not selection-adjusted inference.",
+      "sharpe_95pct_interval": [
+        -2.6146619262989064,
+        -0.6977873384059435
+      ],
+      "valid_resamples": 1000
+    },
+    "tests": {
+      "sharpe_at_least_1_5": false,
+      "pf_at_least_1_3": false,
+      "drawdown_at_most_15pct": true,
+      "at_least_30_trades": false,
+      "positive_without_top_5pct": false,
+      "all_sensitivity_positive": false,
+      "double_cost_positive": false
+    },
+    "sensitivity_positive": 0,
+    "sensitivity_cases": 21,
+    "double_cost": {
+      "return_pct": -4.079956422605246,
+      "max_drawdown_pct": -4.62552671013311,
+      "sharpe": -1.9712136345583053,
+      "profit_factor": 0.04744877263310952,
+      "trades": 11,
+      "net_pnl_excluding_top_5pct": -428.31884578883614,
+      "top_5pct_share_of_gross_profit": 1.0,
+      "win_rate": 0.09090909090909091,
+      "fees": 137.68157889463615,
+      "slippage_estimate": 68.84058797383773,
+      "funding": 0.0,
+      "gap_exits": 0
+    }
+  },
+  "carry": {
+    "holdout": {
+      "return_pct": 0.019594115140919577,
+      "max_drawdown_pct": -0.23319053771319043,
+      "sharpe": 0.04200699935895705,
+      "profit_factor": 1.1446976870150765,
+      "trades": 5,
+      "net_pnl_excluding_top_5pct": -8.177138757475404,
+      "top_5pct_share_of_gross_profit": 0.6539360904177267,
+      "win_rate": 0.6,
+      "fees": 62.36853949049575,
+      "slippage_estimate": 38.97925081806086,
+      "funding": 96.04647219550571,
+      "gap_exits": 0,
+      "margin_breach_flags": 0,
+      "exit_diagnostics": {
+        "end_of_sample": {
+          "count": 1,
+          "sum": -11.023357952257356
+        },
+        "time_exit": {
+          "count": 4,
+          "sum": 12.982769466349055
+        }
+      }
+    },
+    "bootstrap": {
+      "method": "Descriptive circular 7-day block bootstrap, 1000 resamples; not selection-adjusted inference.",
+      "sharpe_95pct_interval": [
+        -1.0222717448996237,
+        1.7789477648189054
+      ],
+      "valid_resamples": 1000
+    },
+    "tests": {
+      "sharpe_at_least_1_5": false,
+      "pf_at_least_1_3": false,
+      "drawdown_at_most_15pct": true,
+      "at_least_30_trades": false,
+      "positive_without_top_5pct": false,
+      "all_sensitivity_positive": false,
+      "double_cost_positive": false,
+      "leg_delay_positive": false,
+      "no_margin_flags": true
+    },
+    "sensitivity_positive": 15,
+    "sensitivity_cases": 17,
+    "double_cost": {
+      "return_pct": -0.9885560691706319,
+      "max_drawdown_pct": -1.007260072059002,
+      "sharpe": -1.047825535284202,
+      "profit_factor": 0.0,
+      "trades": 5,
+      "net_pnl_excluding_top_5pct": -88.3822253178987,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 124.17163120628192,
+      "slippage_estimate": 77.60485484034596,
+      "funding": 95.69268244280595,
+      "gap_exits": 0,
+      "margin_breach_flags": 0
+    }
+  }
+}

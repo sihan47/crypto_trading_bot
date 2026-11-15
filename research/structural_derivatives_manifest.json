@@ -1,0 +1,15 @@
+{
+  "fundingRate.csv": {
+    "sha256": "fa816fcfad10630248ec41fca5f41e2162562f854fcfb27185a14c8828220228",
+    "bytes": 240081
+  },
+  "klines.csv": {
+    "sha256": "d6228216012cdd10d9fd2536c93f1ea32ef74b50b78bfcf91b411ed54dcd0b0e",
+    "bytes": 2679386
+  },
+  "markPriceKlines.csv": {
+    "sha256": "6a0f768d678479b63c4fe25bf72b1e724df085d9cdb31c2ce7c29b0d422d8075",
+    "bytes": 3198895
+  },
+  "source": "https://fapi.binance.com/fapi/v1/ public endpoints; symbol BTCUSDT; 2022-09-01 through 2026-11-13 UTC"
+}
