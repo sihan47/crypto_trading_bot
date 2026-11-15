@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-13",
+  "purpose": "Independent REST/archive field/time comparison; offsets are diagnostics, never fitted trading parameters.",
+  "fields": {
+    "sum_open_interest": {
+      "-5": {
+        "pairs": 288,
+        "median_relative_error": 0.0,
+        "max_relative_error": 0.0,
+        "within_1e_minus_5_fraction": 1.0
+      },
+      "0": {
+        "pairs": 288,
+        "median_relative_error": 0.00041105994267404524,
+        "max_relative_error": 0.014949874406282654,
+        "within_1e_minus_5_fraction": 0.010416666666666666
+      },
+      "5": {
+        "pairs": 287,
+        "median_relative_error": 0.0007091704264681435,
+        "max_relative_error": 0.01565788476279357,
+        "within_1e_minus_5_fraction": 0.006968641114982578
+      }
+    },
+    "sum_open_interest_value": {
+      "-5": {
+        "pairs": 288,
+        "median_relative_error": 0.0,
+        "max_relative_error": 0.0,
+        "within_1e_minus_5_fraction": 1.0
+      },
+      "0": {
+        "pairs": 288,
+        "median_relative_error": 0.0010549153405361093,
+        "max_relative_error": 0.020796208408991903,
+        "within_1e_minus_5_fraction": 0.0
+      },
+      "5": {
+        "pairs": 287,
+        "median_relative_error": 0.0015748793494899502,
+        "max_relative_error": 0.02254675540682404,
+        "within_1e_minus_5_fraction": 0.010452961672473868
+      }
+    },
+    "count_long_short_ratio": {
+      "-5": {
+        "pairs": 288,
+        "median_relative_error": 0.00013033260064288985,
+        "max_relative_error": 0.0002850234615499469,
+        "within_1e_minus_5_fraction": 0.03125
+      },
+      "0": {
+        "pairs": 288,
+        "median_relative_error": 0.001736267561019516,
+        "max_relative_error": 0.042753648951521346,
+        "within_1e_minus_5_fraction": 0.006944444444444444
+      },
+      "5": {
+        "pairs": 287,
+        "median_relative_error": 0.0033356955210326468,
+        "max_relative_error": 0.04217770106477643,
+        "within_1e_minus_5_fraction": 0.003484320557491289
+      }
+    },
+    "count_toptrader_long_short_ratio": {
+      "-5": {
+        "pairs": 288,
+        "median_relative_error": 0.00016360078347975353,
+        "max_relative_error": 0.0003081406478263889,
+        "within_1e_minus_5_fraction": 0.020833333333333332
+      },
+      "0": {
+        "pairs": 288,
+        "median_relative_error": 0.0015993796670998245,
+        "max_relative_error": 0.03733329605502289,
+        "within_1e_minus_5_fraction": 0.0
+      },
+      "5": {
+        "pairs": 287,
+        "median_relative_error": 0.0029214541788034286,
+        "max_relative_error": 0.04719241287655052,
+        "within_1e_minus_5_fraction": 0.0
+      }
+    },
+    "sum_toptrader_long_short_ratio": {
+      "-5": {
+        "pairs": 288,
+        "median_relative_error": 1.2044502861021803e-05,
+        "max_relative_error": 2.4149922720191014e-05,
+        "within_1e_minus_5_fraction": 0.4305555555555556
+      },
+      "0": {
+        "pairs": 288,
+        "median_relative_error": 0.0013403927743161625,
+        "max_relative_error": 0.03900965431329805,
+        "within_1e_minus_5_fraction": 0.006944444444444444
+      },
+      "5": {
+        "pairs": 287,
+        "median_relative_error": 0.002554020886472002,
+        "max_relative_error": 0.041426791831650156,
+        "within_1e_minus_5_fraction": 0.0
+      }
+    },
+    "sum_taker_long_short_vol_ratio": {
+      "-5": {
+        "pairs": 288,
+        "median_relative_error": 0.37348434405751674,
+        "max_relative_error": 3.700304722028379,
+        "within_1e_minus_5_fraction": 0.0
+      },
+      "0": {
+        "pairs": 288,
+        "median_relative_error": 0.00010964744670521229,
+        "max_relative_error": 0.0009676941315945683,
+        "within_1e_minus_5_fraction": 0.06597222222222222
+      },
+      "5": {
+        "pairs": 288,
+        "median_relative_error": 0.408658520834834,
+        "max_relative_error": 6.0445918638659935,
+        "within_1e_minus_5_fraction": 0.0
+      }
+    }
+  },
+  "response_ranges": {
+    "openInterestHist": {
+      "rows": 288,
+      "start": "2026-11-13 00:00:00+00:00",
+      "end": "2026-11-13 23:55:00+00:00",
+      "outside_requested_day": 0
+    },
+    "globalLongShortAccountRatio": {
+      "rows": 288,
+      "start": "2026-11-13 00:00:00+00:00",
+      "end": "2026-11-13 23:55:00+00:00",
+      "outside_requested_day": 0
+    },
+    "topLongShortAccountRatio": {
+      "rows": 288,
+      "start": "2026-11-13 00:00:00+00:00",
+      "end": "2026-11-13 23:55:00+00:00",
+      "outside_requested_day": 0
+    },
+    "topLongShortPositionRatio": {
+      "rows": 288,
+      "start": "2026-11-13 00:00:00+00:00",
+      "end": "2026-11-13 23:55:00+00:00",
+      "outside_requested_day": 0
+    },
+    "takerlongshortRatio": {
+      "rows": 288,
+      "start": "2026-11-12 23:55:00+00:00",
+      "end": "2026-11-13 23:50:00+00:00",
+      "outside_requested_day": 1
+    }
+  }
+}

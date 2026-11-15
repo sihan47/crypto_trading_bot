@@ -1,0 +1,57 @@
+{
+  "input_rows": 441947,
+  "clean_rows": 441947,
+  "invalid_timestamps": 0,
+  "invalid_or_missing_by_field": {
+    "sum_open_interest": 354,
+    "sum_open_interest_value": 372,
+    "count_toptrader_long_short_ratio": 30201,
+    "sum_toptrader_long_short_ratio": 30167,
+    "count_long_short_ratio": 38,
+    "sum_taker_long_short_vol_ratio": 1
+  },
+  "exact_duplicates_removed": 0,
+  "conflicting_timestamps_quarantined": 0,
+  "gaps_over_5_minutes": 4,
+  "max_gap_minutes": 630.0,
+  "assumed_availability_delay_minutes": 65,
+  "availability_note": "Label +5min interval uncertainty +60min publication buffer; assumption, not verified point-in-time publication log.",
+  "requested_start": "2022-09-01",
+  "requested_end_exclusive": "2026-11-14",
+  "verified_files": 1535,
+  "missing_file_dates": [],
+  "metrics_start": "2022-09-01 00:00:00+00:00",
+  "metrics_end": "2026-11-13 23:55:00+00:00",
+  "hourly_rows": 36840,
+  "core_complete_rows": 36793,
+  "hourly_missing_by_field": {
+    "sum_open_interest": 45,
+    "sum_open_interest_value": 46,
+    "count_toptrader_long_short_ratio": 2532,
+    "sum_toptrader_long_short_ratio": 2528,
+    "count_long_short_ratio": 16,
+    "sum_taker_long_short_vol_ratio": 12,
+    "funding_rate": 1,
+    "perp_spot_basis_bps": 1
+  },
+  "metric_snapshot_age_minutes_max": 65.0,
+  "yearly_core_coverage": {
+    "2022": 0.9996583532627263,
+    "2023": 0.9995433789954338,
+    "2024": 0.9956739526411658,
+    "2025": 0.9996575342465753,
+    "2026": 0.999868576685504
+  },
+  "sources": [
+    "https://data.binance.vision/data/futures/um/daily/metrics/BTCUSDT/",
+    "https://fapi.binance.com/fapi/v1/fundingRate",
+    "https://fapi.binance.com/fapi/v1/klines",
+    "https://api.binance.com/api/v3/klines"
+  ],
+  "timestamp_warning": "Community issue #491 reports label-convention changes. Uniform conservative delay used; no claim of complete independent verification.",
+  "sha256": {
+    "btc_metrics_5m.csv": "e01fa0a06835f3215226f90fa0d6626f77703c40caa4a7add17f8f27ef0e31cb",
+    "btc_hourly_research.csv": "1da07a9eeb8c5bc582894b32ec042d746fb44d5aebc9942c0701af85d635f171",
+    "metrics_download_manifest.json": "f1037390122bcdc123b4e970f3fb52f7c8b1c7d572039532026463b0159c9d9a"
+  }
+}
