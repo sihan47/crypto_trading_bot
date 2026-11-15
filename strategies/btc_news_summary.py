@@ -2,7 +2,7 @@
 import os
 import requests
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from pathlib import Path
 import yaml
@@ -15,12 +15,15 @@ load_dotenv()
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "config.yaml"
 _NEWS_CACHE = {}
+_NEWS_META = {'status':'unavailable','articles':[]}
 
 
 
 
 def fetch_news():
     """Fetch BTC news from NewsAPI within last 72 hours."""
+    _NEWS_META.clear()
+    _NEWS_META.update(status='unavailable',articles=[])
     if not NEWS_API_KEY:
         raise RuntimeError("NEWS_API_KEY is not set; cannot fetch news.")
 
@@ -48,17 +51,25 @@ def fetch_news():
 
     articles = data.get("articles") or []
     items = []
+    metadata=[]
     for article in articles:
         title = (article.get("title") or "").strip()
         description = (article.get("description") or "").strip()
         if title:
             snippet = f"{title} - {description}" if description else title
-            items.append(snippet)
+            published=article.get('publishedAt')
+            source=(article.get('source') or {}).get('name')
+            url=article.get('url')
+            items.append(f"[{published or 'publication time unknown'} | {source or 'source unknown'}] {snippet[:1200]} | {url or ''}")
+            metadata.append({'title':title[:400],'published_at':published,'source':source,'url':url})
+    _NEWS_META.update(status='available',retrieved_at=datetime.now(timezone.utc).isoformat(),articles=metadata[:15],
+                      provider='NewsAPI',coverage_note='72h article query; provider indexing may lag. Headlines are not independently verified.')
     return items
 
 
 def _news_config():
-    cfg = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8")) or {}
+    selected=Path(os.environ['BOT_CONFIG']) if os.environ.get('BOT_CONFIG') else CONFIG_PATH
+    cfg = yaml.safe_load(selected.read_text(encoding="utf-8")) or {}
     return (cfg.get("ai") or {}).get("news") or {}
 
 
@@ -111,8 +122,19 @@ def get_news_summary():
         logger.warning("News context unavailable ({})", type(exc).__name__)
         text = "[NEWS] Unavailable; do not infer current news sentiment."
         ttl = min(ttl, 60)
+        _NEWS_META.update(status='unavailable',error_type=type(exc).__name__)
     _NEWS_CACHE[key] = (time.monotonic() + ttl, text)
     return text
+
+
+def get_news_context():
+    result=dict(_NEWS_META)
+    try:
+        age=(datetime.now(timezone.utc)-datetime.fromisoformat(result['retrieved_at'])).total_seconds()
+        result['age_seconds']=max(0,int(age))
+        if age<0 or age>3600:result['status']='stale'
+    except (KeyError,ValueError,TypeError):result['status']='unavailable'
+    return result
 
 
 if __name__ == "__main__":

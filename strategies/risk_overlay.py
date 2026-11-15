@@ -1,5 +1,6 @@
 """Risk-overlay prompt and strict response adapter; no external side effects."""
 import math
+from trading.macro_calendar import macro_veto,utc
 
 OVERLAY_SYSTEM = """You are the Senior Risk & Execution Overlay for the supplied algorithmic system.
 Your decision weight is given in decision_gate (normally 40%; quantitative evidence 60%).
@@ -62,8 +63,7 @@ def proposal(local):
 
 
 def overlay_context():
-    # No live percentile/calendar connector is installed. Do not pass historical
-    # research observations off as current telemetry or invent empty calendars.
+    # Offline fallback for callers without live context; never invent coverage.
     return {'telemetry':{'status':'unavailable','squeeze_anomaly':None,'smart_money_floor':None,
                          'volatility_damping':None,'macro_trend_regime':None},
             'macro_calendar':{'status':'unavailable','coverage_hours':0,'events':None},
@@ -93,9 +93,20 @@ def adapt_response(parsed,payload):
     size=min(review['size_multiplier'],cap)
     if proposed=='SELL' and size>0:size=1.0
     action=proposed if not review['veto_triggered'] and size>0 else 'HOLD'
+    calendar=payload.get('risk_overlay_context',{}).get('macro_calendar',{})
+    events=macro_veto(calendar)
+    # Also preserve a veto known at request time if the event occurs during inference.
+    try:
+        age=(utc()-utc(calendar['as_of'])).total_seconds()
+        if 0<=age<=3600:events+=macro_veto(calendar,now=calendar['as_of'])
+    except (ValueError,KeyError,TypeError):pass
+    enforced=[]
+    if proposed=='BUY' and events:
+        action='HOLD';size=0.;enforced=sorted({e['kind']+' '+e['time_utc'] for e in events})
     if action=='HOLD':size=0.
     return {'action':action,'confidence':100 if action!='HOLD' else 0,
-            'reason':review['execution_note'][:160],'size_multiplier':size,
+            'reason':('Macro hard veto: '+', '.join(enforced))[:160] if enforced else review['execution_note'][:160],'size_multiplier':size,
+            'macro_veto_enforced':enforced,
             'risk_overlay':review,'review_support_semantics':'Binary approval vote, NOT a calibrated probability'}
 
 

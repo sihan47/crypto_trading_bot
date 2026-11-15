@@ -1,5 +1,6 @@
 import unittest
 from types import SimpleNamespace
+from datetime import datetime, timezone, timedelta
 from unittest.mock import patch
 
 from strategies import btc_news_summary as news
@@ -34,6 +35,15 @@ class NewsSummaryTests(unittest.TestCase):
         )
         with self.assertRaises(RuntimeError):
             news.summarize_with_openai(['headline'])
+
+    def test_news_provenance_and_staleness(self):
+        response=SimpleNamespace(raise_for_status=lambda:None,json=lambda:{'status':'ok','articles':[{'title':'Headline','publishedAt':'2026-11-15T10:00:00Z','source':{'name':'Publisher'},'url':'https://example.org/story'}]})
+        with patch.object(news,'NEWS_API_KEY','test'),patch.object(news.requests,'get',return_value=response):
+            items=news.fetch_news()
+        self.assertIn('https://example.org/story',items[0])
+        self.assertEqual(news.get_news_context()['articles'][0]['source'],'Publisher')
+        news._NEWS_META['retrieved_at']=(datetime.now(timezone.utc)-timedelta(hours=2)).isoformat()
+        self.assertEqual(news.get_news_context()['status'],'stale')
 
 
 if __name__ == '__main__':

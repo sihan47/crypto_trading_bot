@@ -70,7 +70,7 @@ class CouncilTests(unittest.TestCase):
     def test_prompt_preserves_all_experts_and_final_authority(self):
         cards,market=council_cards(council_features(self.prices()).iloc[-1])
         local=council_decision(cards,market,False)
-        with patch.object(gpt,'get_news_summary',return_value='none'),patch.object(gpt,'get_fgi',return_value={}),patch.object(gpt,'_funding_summary',return_value='none'):
+        with patch.object(gpt,'get_live_context',return_value={'telemetry':{'status':'unavailable'},'macro_calendar':{'status':'unavailable'},'news':{'status':'unavailable'}}),patch.object(gpt,'get_news_summary',return_value='none'),patch.object(gpt,'get_fgi',return_value={}),patch.object(gpt,'_funding_summary',return_value='none'):
             payload=json.loads(gpt._gpt_prompt('BTCUSDT','4h',cards,market,local,{'in_position':False},gpt.GPTParams(engine='council_v1',gpt_authority=.4)))
         self.assertEqual(len(payload['strategies']),6)
         self.assertIn('evidence',payload['strategies']['pullback100'])

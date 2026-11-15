@@ -12,9 +12,9 @@ Positive size multipliers reduce BUY quantity before exchange lot/notional round
 
 ## Available inputs and current limits
 
-Existing funding snapshot, fear/greed, strategy cards and news summary remain in the payload. There is currently **no connected real-time anomaly-percentile feed or authoritative macro-calendar feed**. The payload says unavailable, not a fabricated quiet calendar. The policy includes FOMC/CPI/NFP/PCE and structural-shock veto logic, but those cannot be claimed as independently monitored or deterministically enforced scheduled-event gates without those inputs. A model has no implicit live browsing in this API call.
+Existing funding snapshot, fear/greed, strategy cards and news summary remain in the payload. Live percentile telemetry and scheduled macro feeds are now connected; see [live context integration](LIVE_CONTEXT_INTEGRATION.md) for source coverage, fallbacks and deterministic BUY vetoes. Missing feeds remain explicit. A model has no implicit live browsing in this API call.
 
-The output schema accepts 0–1.5 as requested. While live telemetry/calendar are unavailable, effective execution sizing is capped at 1.0; a model's unsupported 1.5 request is recorded but not executed. The original requested news/funding interaction is conditional on evidence; mildly bearish news is not automatically assumed priced in. A risk review is not evidence that the new research candidates have been deployed.
+The output schema accepts 0–1.5 as requested. With the current live-context risk cap, effective execution sizing is capped at 1.0; a model's unsupported 1.5 request is recorded but not executed. The original requested news/funding interaction is conditional on evidence; mildly bearish news is not automatically assumed priced in. A risk review is not evidence that the new research candidates have been deployed.
 
 ## Verification and deployment state
 
