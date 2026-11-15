@@ -215,8 +215,8 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
     send_message(f"[{symbol}] BEFORE | {_format_portfolio(portfolio_before)}")
 
     engine = sym_cfg.get("engine") or RUNTIME.get("engine")
-    managed = engine in {"band_trend", "pullback_swing"}
-    scope = "band50_v1" if engine == "band_trend" else "pullback100_v1"
+    managed = engine in {"band_trend", "pullback_swing", "council_v1"}
+    scope = {"band_trend": "band50_v1", "pullback_swing": "pullback100_v1", "council_v1": "council_v1"}.get(engine, "legacy")
     state_key = f"{symbol}:{scope}" if managed else symbol
     managed_qty = amount(0)
     if managed:

@@ -44,7 +44,7 @@ class RecommendedTests(unittest.TestCase):
 
     def test_config_selects_terra_40_and_band(self):
         with patch('strategy_loader.run_gpt_strategy') as run:
-            load_strategy('config.recommended.yaml')(self.prices(),managed_position=False)
+            load_strategy('config.two_strategy.yaml')(self.prices(),managed_position=False)
             args=run.call_args.kwargs
             self.assertEqual(args['params'].engine,'band_trend')
             self.assertEqual(args['params'].model,'gpt-6.1-terra')
@@ -134,7 +134,7 @@ class RecommendedTests(unittest.TestCase):
             spec=importlib.util.spec_from_file_location('recommended_runner_test',Path(__file__).resolve().parents[1]/'run_bot.py')
             m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
             self.assertEqual([(r['symbol'],r['timeframe'],r['engine']) for r in m.SYMBOL_RUNNERS],
-                             [('BTCUSDT','4h','band_trend'),('BNBUSDT','1d','pullback_swing')])
+                             [('BTCUSDT','4h','council_v1'),('BNBUSDT','4h','council_v1')])
             with tempfile.TemporaryDirectory() as tmp:
                 m.DECISION_STATE=DecisionState(Path(tmp)/'state.json')
                 df=self.prices();df[['open','high','low','close']]=100000.
@@ -150,7 +150,7 @@ class RecommendedTests(unittest.TestCase):
                     self.assertIs(runner.call_args_list[0].kwargs['managed_position'],False)
                     self.assertIs(runner.call_args_list[1].kwargs['managed_position'],True)
                     self.assertEqual(Decimal(execute.call_args_list[1].kwargs['quantity']),Decimal('.00049'))
-                    self.assertEqual(managed_position(m.DECISION_STATE,'BTCUSDT:band50_v1'),(False,Decimal(0)))
+                    self.assertEqual(managed_position(m.DECISION_STATE,'BTCUSDT:council_v1'),(False,Decimal(0)))
 
 
 if __name__=='__main__':

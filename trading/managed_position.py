@@ -20,6 +20,9 @@ def managed_position(journal,key,mode='live'):
         raise ValueError('Unresolved exchange order; reconcile before evaluating this asset')
     if mode=='shadow':
         return state.get('shadow',{}).get(key,{}).get('side')=='BUY',Decimal('0')
+    if any(k != key and k.split(':')[0] == symbol and amount(v.get('managed_qty','0')) > 0
+           for k,v in state['orders'].items()):
+        raise ValueError('Another strategy owns a live lot; reconcile before switching engines')
     record=state['orders'].get(key,{})
     qty=amount(record.get('managed_qty','0'))
     return qty>0,qty

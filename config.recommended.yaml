@@ -4,7 +4,7 @@
 strategy:
   name: gpt
   params:
-    engine: band_trend
+    engine: council_v1
     band_trend:
       days: 50
       band: 0.01
@@ -35,8 +35,8 @@ symbols:
   - symbol: BTCUSDT
     order_quantity: 0.0005
     timeframe: 4h
-    engine: band_trend
+    engine: council_v1
   - symbol: BNBUSDT
     order_quantity: 0.05
-    timeframe: 1d
-    engine: pullback_swing
+    timeframe: 4h
+    engine: council_v1
