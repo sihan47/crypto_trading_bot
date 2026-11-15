@@ -11,6 +11,7 @@ from loguru import logger
 
 from strategy_loader import load_strategy
 from trading.decision_state import DecisionState, closed_bars
+from trading.managed_position import managed_position, market_quantity, confirm_managed_order, amount
 from trading.order_executor import execute_order, get_portfolio_value, assets_from_symbol
 from trading.notifier import send_message
 from trading.performance_tracker import record_trade, record_snapshot, summary as perf_summary
@@ -46,7 +47,7 @@ def _parse_bool(value, default):
     return bool(value)
 
 
-CONFIG_PATH = pathlib.Path("config.yaml")
+CONFIG_PATH = pathlib.Path(os.getenv("BOT_CONFIG", "config.yaml"))
 DECISION_STATE = DecisionState(pathlib.Path("logs/decision_state.json"))
 
 
@@ -62,6 +63,9 @@ def _build_runtime(cfg: dict) -> dict:
     trade_c = cfg.get("trading", {}) or {}
     if trade_c.get("execution_mode", "shadow") not in {"live", "shadow"}:
         raise ValueError("execution_mode must be live or shadow")
+    poll_seconds = int(trade_c.get("poll_seconds", 600))
+    if not 10 <= poll_seconds <= 3600:
+        raise ValueError("poll_seconds must be between 10 and 3600")
     tf = data_c.get("timeframe", "15m")
     lb = int(data_c.get("lookback", 200))
     global_qty = float(trade_c.get("order_quantity", 0.001))
@@ -78,20 +82,26 @@ def _build_runtime(cfg: dict) -> dict:
             continue
         if qty <= 0:
             raise ValueError(f"order_quantity for {sym} must be positive")
-        runner = load_strategy(symbol_override=sym)
-        runners.append({"symbol": sym, "order_quantity": qty, "strategy_func": runner})
+        symbol_tf = str(entry.get("timeframe", tf))
+        engine_override = entry.get("engine")
+        runner = load_strategy(config_path=str(CONFIG_PATH), symbol_override=sym,
+                               timeframe_override=symbol_tf, engine_override=engine_override)
+        runners.append({"symbol": sym, "order_quantity": qty, "strategy_func": runner,
+                        "timeframe": symbol_tf, "engine": engine_override})
 
     if not runners:
         raise RuntimeError("No symbols configured. Check config.yaml `symbols` section.")
 
     assets = sorted({a for s in runners for a in assets_from_symbol(s["symbol"])})
     return {
+        "poll_seconds": poll_seconds,
         "strategy_name": strat_name,
         "timeframe": tf,
         "lookback": lb,
         "symbol_runners": runners,
         "portfolio_assets": assets,
         "trading_cfg": trade_c,
+        "engine": (cfg.get("strategy", {}).get("params", {}).get("engine", "legacy") if isinstance(cfg.get("strategy"), dict) else "legacy"),
     }
 
 
@@ -181,21 +191,22 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
     symbol = sym_cfg["symbol"]
     order_quantity = sym_cfg["order_quantity"]
     strategy_func = sym_cfg["strategy_func"]
+    symbol_timeframe = sym_cfg.get("timeframe", timeframe)
 
-    df_all = fetch_live_ohlcv(symbol, timeframe, limit=max(lookback + 2, 300))
-    closed_df = closed_bars(df_all, timeframe)
+    df_all = fetch_live_ohlcv(symbol, symbol_timeframe, limit=max(lookback + 2, 300))
+    closed_df = closed_bars(df_all, symbol_timeframe)
 
     if closed_df.empty:
         logger.warning(f"[{symbol}] No closed bars available.")
         return
 
-    logger.info(f"[{symbol}] Data mode: live | source: Binance | bars={len(closed_df)}")
+    logger.info(f"[{symbol}] Data mode: live | source: Binance | timeframe={symbol_timeframe} | bars={len(closed_df)}")
 
     if len(closed_df) < 60:
         logger.warning(f"[{symbol}] Not enough bars for indicators (got {len(closed_df)}). Skipping.")
         return
 
-    if not DECISION_STATE.claim_bar(symbol, timeframe, closed_df.index[-1]):
+    if not DECISION_STATE.claim_bar(symbol, symbol_timeframe, closed_df.index[-1]):
         logger.info(f"[{symbol}] Closed bar already evaluated: {closed_df.index[-1]}")
         return
 
@@ -203,7 +214,16 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
     logger.info(f"[{symbol}] BEFORE | {_format_portfolio(portfolio_before)}")
     send_message(f"[{symbol}] BEFORE | {_format_portfolio(portfolio_before)}")
 
-    result = strategy_func(closed_df, force=force)
+    engine = sym_cfg.get("engine") or RUNTIME.get("engine")
+    managed = engine in {"band_trend", "pullback_swing"}
+    scope = "band50_v1" if engine == "band_trend" else "pullback100_v1"
+    state_key = f"{symbol}:{scope}" if managed else symbol
+    managed_qty = amount(0)
+    if managed:
+        in_position, managed_qty = managed_position(DECISION_STATE, state_key, RUNTIME["trading_cfg"].get("execution_mode", "shadow"))
+        result = strategy_func(closed_df, force=force, managed_position=in_position)
+    else:
+        result = strategy_func(closed_df, force=force)
 
     decision = None
     confidence = None
@@ -232,6 +252,14 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
     if decision in ("BUY", "SELL"):
         base, quote = assets_from_symbol(symbol)
         balances = portfolio_before["breakdown"]
+        submitted_quantity = order_quantity
+        if managed and RUNTIME["trading_cfg"].get("execution_mode", "shadow") == "live":
+            if (decision == "BUY" and in_position) or (decision == "SELL" and not in_position):
+                logger.warning(f"[{symbol}] Decision conflicts with managed position; no order")
+                return
+            desired = managed_qty if decision == "SELL" else amount(order_quantity)
+            submitted_quantity = market_quantity(client.get_symbol_info(symbol), desired, closed_df["close"].iloc[-1])
+            order_quantity = float(submitted_quantity)
         if decision == "SELL" and balances.get(base, {}).get("balance", 0) < order_quantity:
             logger.warning(f"[{symbol}] SELL skipped: insufficient available {base} for configured lot")
             return
@@ -241,16 +269,19 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
                 logger.warning(f"[{symbol}] BUY skipped: insufficient quote balance including cost buffer")
                 return
         if RUNTIME["trading_cfg"].get("execution_mode", "shadow") == "shadow":
-            would_trade = DECISION_STATE.record_shadow(symbol, decision, closed_df.index[-1])
+            would_trade = DECISION_STATE.record_shadow(state_key, decision, closed_df.index[-1])
             logger.info(f"[{symbol}] SHADOW_ORDER side={decision} qty={order_quantity} would_trade={would_trade} bar={closed_df.index[-1]}")
             return
-        permitted, guard_reason = DECISION_STATE.begin_order(symbol, decision, closed_df.index[-1])
+        permitted, guard_reason = DECISION_STATE.begin_order(state_key, decision, closed_df.index[-1])
         if not permitted:
             logger.warning(f"[{symbol}] Order suppressed: {guard_reason}")
             return
-        order = execute_order(decision, symbol=symbol, quantity=order_quantity)
+        order = execute_order(decision, symbol=symbol, quantity=submitted_quantity)
         if order:
-            DECISION_STATE.complete_order(symbol, order)
+            if managed:
+                confirm_managed_order(DECISION_STATE, state_key, order, base, submitted_quantity, decision)
+            else:
+                DECISION_STATE.complete_order(state_key, order)
             logger.success(f"[{symbol}] Order executed: {decision}")
             portfolio_after = get_portfolio_value(PORTFOLIO_ASSETS)
             delta = portfolio_after["total_usdt"] - portfolio_before["total_usdt"]
@@ -293,7 +324,7 @@ def run_all_symbols(force: bool = False):
         record_snapshot(snap, label="cycle")
         _cycle_count += 1
         # Every 6 cycles (~1 hour at 10-min cadence), refresh the summary file and log it.
-        if _cycle_count % 6 == 0:
+        if _cycle_count % max(1, 3600 // RUNTIME["poll_seconds"]) == 0:
             s = perf_summary()
             pnl = s.get("pnl_usdt")
             pnl_pct = s.get("pnl_pct")
@@ -308,7 +339,7 @@ def run_all_symbols(force: bool = False):
 
 
 if __name__ == "__main__":
-    symbols_summary = ", ".join(f"{s['symbol']}(qty={s['order_quantity']})" for s in SYMBOL_RUNNERS)
+    symbols_summary = ", ".join(f"{s['symbol']}(qty={s['order_quantity']},tf={s.get('timeframe',timeframe)},engine={s.get('engine') or RUNTIME.get('engine')})" for s in SYMBOL_RUNNERS)
     logger.info(f"Bot started | execution_mode={RUNTIME['trading_cfg'].get('execution_mode', 'shadow')} | strategy={strategy_name} | symbols=[{symbols_summary}] | timeframe={timeframe} | lookback={lookback}")
     try:
         initial_portfolio = get_portfolio_value(PORTFOLIO_ASSETS)
@@ -320,5 +351,5 @@ if __name__ == "__main__":
     run_all_symbols(force=True)
 
     while True:
-        time.sleep(10 * 60)
+        time.sleep(RUNTIME["poll_seconds"])
         run_all_symbols(force=False)

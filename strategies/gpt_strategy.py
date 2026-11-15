@@ -15,6 +15,8 @@ from openai import OpenAI
 from loguru import logger
 
 from strategies.regime_ensemble import EnsembleParams, run_regime_ensemble, decision_from_row
+from strategies.band_trend import BandParams, band_features, band_decision
+from strategies.pullback_swing import pullback_features
 from strategies.atr_regime_filter import ATRFilterParams, run_atr_regime_filter
 from strategies.bollinger_strategy import BollingerParams
 from strategies.donchian_strategy import DonchianParams, run_donchian_strategy
@@ -34,6 +36,7 @@ load_dotenv()
 class GPTParams:
     engine: str = "legacy"
     ensemble: dict = field(default_factory=dict)
+    band_trend: dict = field(default_factory=dict)
     provider: str = "openai"
     model: str = "gpt-6.1-terra"
     reasoning_effort: str = "low"
@@ -66,10 +69,13 @@ class GPTParams:
     off_regime_penalty: float = 0.72
 
     def __post_init__(self):
-        if self.engine not in {"legacy", "regime_v2"}:
+        if self.engine not in {"legacy", "regime_v2", "band_trend", "pullback_swing"}:
             raise ValueError("Unknown decision engine")
-        if self.engine == "regime_v2":
-            EnsembleParams(**self.ensemble)
+        if self.engine == "band_trend":
+            BandParams(**self.band_trend)
+        if self.engine in {"regime_v2", "band_trend", "pullback_swing"}:
+            if self.engine == "regime_v2":
+                EnsembleParams(**self.ensemble)
             if not 0 <= self.gpt_authority <= 0.40:
                 raise ValueError("regime_v2 GPT influence must be between 0 and 0.40")
 
@@ -336,6 +342,31 @@ def _summaries_from_outputs(
     params: GPTParams,
     best_map: dict,
 ) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    if params.engine == "pullback_swing":
+        if timeframe != "1d":
+            raise ValueError("Pullback swing requires daily closed bars")
+        row = pullback_features(ohlcv, 1).iloc[-1]
+        values = {k: (None if pd.isna(v) else v.item() if hasattr(v, "item") else v) for k,v in row.items()}
+        signal = "BUY" if row["entries"] else "SELL" if row["exits"] else "HOLD"
+        card = {"name": "Daily RSI2 trend pullback", "signal": signal, "confidence": 80 if signal != "HOLD" else 0,
+                "reason": "Buy RSI2 crossing below 15 above SMA100; exit RSI2 above 30 or close below SMA100.",
+                "backtest_performance": "Research only; excludes GPT and fixed-lot sizing.",
+                "regime_fit": 1., "category": "pullback", "weight": 1.}
+        return {"pullback_swing": card}, {"last_close": float(row["close"]), "band_row": values,
+                                          "regime_label": "uptrend_pullback" if row["entries"] else "waiting_or_exit"}
+    if params.engine == "band_trend":
+        if timeframe != "4h":
+            raise ValueError("Band trend requires 4h closed bars")
+        row = band_features(ohlcv, BandParams(**params.band_trend)).iloc[-1]
+        values = {k: (None if pd.isna(v) else v.item() if hasattr(v, "item") else v) for k,v in row.items()}
+        signal = "BUY" if row["entries"] else "SELL" if row["exits"] else "HOLD"
+        market = {"last_close": float(row["close"]), "band_row": values,
+                  "regime_label": "above_band" if row["entries"] else "below_band" if row["exits"] else "buffer"}
+        card = {"name": "50-day SMA buffer", "signal": signal, "confidence": 80 if signal != "HOLD" else 0,
+                "reason": "Above upper band: enter; below lower band: exit; within band: preserve position.",
+                "backtest_performance": "Research only; full-allocation results exclude GPT; not a probability.",
+                "regime_fit": 1., "category": "trend", "weight": 1.}
+        return {"band_trend": card}, market
     if params.engine == "regime_v2":
         ep = EnsembleParams(**params.ensemble)
         row = run_regime_ensemble(ohlcv, ep).iloc[-1]
@@ -645,6 +676,8 @@ def _local_decision(
     params: GPTParams,
     in_position: bool,
 ) -> dict[str, Any]:
+    if params.engine in {"band_trend", "pullback_swing"}:
+        return band_decision(pd.Series(market["band_row"]), in_position)
     if params.engine == "regime_v2":
         return decision_from_row(pd.Series(market["ensemble_row"]), in_position, EnsembleParams(**params.ensemble))
     buy_raw = 0.0
@@ -882,7 +915,7 @@ def _query_openai(prompt: str, model: str, show: bool, reasoning_effort: str = "
 
 
 def _blend_with_gpt(local_view: dict[str, Any], gpt_view: dict[str, Any] | None, params: GPTParams) -> dict[str, Any]:
-    if params.engine == "regime_v2":
+    if params.engine in {"regime_v2", "band_trend", "pullback_swing"}:
         action = local_view["action"]
         scores = dict(local_view["scores"])
         authority = max(0.0, min(0.40, params.gpt_authority))
@@ -962,11 +995,19 @@ def run_gpt_strategy(
     timeframe: str,
     params: GPTParams,
     initial_run: bool = False,
+    managed_position: bool | None = None,
 ) -> Dict[str, Any]:
     del initial_run
 
     best_map = _load_best_params()
     position_state = _position_state(symbol)
+    if params.engine in {"band_trend", "pullback_swing"}:
+        if not isinstance(managed_position, bool):
+            position_state.update(available=False, in_position=False)
+        else:
+            position_state["wallet_has_base"] = position_state["in_position"]
+            position_state["in_position"] = managed_position
+            position_state["position_scope"] = "confirmed fills in this strategy journal; unrelated holdings excluded"
     summaries, market = _summaries_from_outputs(symbol, timeframe, ohlcv, other_results, params, best_map)
     local_view = _local_decision(summaries, market, params, position_state["in_position"])
     if not position_state.get("available", False):
@@ -975,7 +1016,7 @@ def run_gpt_strategy(
 
     gpt_view = None
     provider = (params.provider or "openai").lower()
-    if (params.engine == "regime_v2" and local_view["should_call_gpt"]
+    if (params.engine in {"regime_v2", "band_trend", "pullback_swing"} and local_view["should_call_gpt"]
             and (provider != "openai" or not os.getenv("OPENAI_API_KEY"))):
         local_view.update(action="HOLD", reason="Configured GPT review is unavailable.",
                           should_call_gpt=False, allowed_actions=["HOLD"])

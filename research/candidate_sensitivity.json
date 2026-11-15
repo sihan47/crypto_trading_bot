@@ -1,0 +1,275 @@
+{
+  "purpose": "post-selection sensitivity, not blind validation or retuning",
+  "symbols": {
+    "BTCUSDT": {
+      "data_sha256": "86928bcf9b7a1633f817935715faeb43fe6f2236b1b2799ae666f806c2921fe6",
+      "results": {
+        "50d_0.01": {
+          "normal_cost": {
+            "return_pct": 313.5967684211797,
+            "max_drawdown_pct": -35.77074904954767,
+            "sharpe_daily": 1.2432739101235801,
+            "round_trips": 33,
+            "orders": 66,
+            "win_rate_pct": 30.303030303030305,
+            "exposure_pct": 57.6737053202784,
+            "fees": 2199.7338922260155,
+            "entry_signal_bars": 4499,
+            "exit_signal_bars": 3181
+          },
+          "double_cost": {
+            "return_pct": 274.6121921578609,
+            "max_drawdown_pct": -38.41251676149602,
+            "sharpe_daily": 1.1662250557362817,
+            "round_trips": 33,
+            "orders": 66,
+            "win_rate_pct": 30.303030303030305,
+            "exposure_pct": 57.6737053202784,
+            "fees": 4166.1987107174255,
+            "entry_signal_bars": 4499,
+            "exit_signal_bars": 3181
+          }
+        },
+        "40d_0.005": {
+          "normal_cost": {
+            "return_pct": 292.52505655316423,
+            "max_drawdown_pct": -32.70034949172056,
+            "sharpe_daily": 1.2046693638662835,
+            "round_trips": 53,
+            "orders": 106,
+            "win_rate_pct": 22.641509433962266,
+            "exposure_pct": 56.84794148873422,
+            "fees": 3366.832339773305,
+            "entry_signal_bars": 4591,
+            "exit_signal_bars": 3433
+          },
+          "double_cost": {
+            "return_pct": 234.8223508794415,
+            "max_drawdown_pct": -38.30796122758077,
+            "sharpe_daily": 1.0805727183767384,
+            "round_trips": 53,
+            "orders": 106,
+            "win_rate_pct": 22.641509433962266,
+            "exposure_pct": 56.84794148873422,
+            "fees": 6156.143671925415,
+            "entry_signal_bars": 4591,
+            "exit_signal_bars": 3433
+          }
+        },
+        "40d_0.015": {
+          "normal_cost": {
+            "return_pct": 348.6555626594334,
+            "max_drawdown_pct": -31.257104282450232,
+            "sharpe_daily": 1.3101641126095818,
+            "round_trips": 27,
+            "orders": 54,
+            "win_rate_pct": 37.03703703703704,
+            "exposure_pct": 57.14285714285714,
+            "fees": 1648.821868475053,
+            "entry_signal_bars": 4171,
+            "exit_signal_bars": 3019
+          },
+          "double_cost": {
+            "return_pct": 313.7472708672364,
+            "max_drawdown_pct": -32.483408701530195,
+            "sharpe_daily": 1.2461054129116553,
+            "round_trips": 27,
+            "orders": 54,
+            "win_rate_pct": 37.03703703703704,
+            "exposure_pct": 57.14285714285714,
+            "fees": 3144.376603690779,
+            "entry_signal_bars": 4171,
+            "exit_signal_bars": 3019
+          }
+        },
+        "60d_0.005": {
+          "normal_cost": {
+            "return_pct": 281.50981722683787,
+            "max_drawdown_pct": -38.4596043981205,
+            "sharpe_daily": 1.1872432891833227,
+            "round_trips": 41,
+            "orders": 82,
+            "win_rate_pct": 24.390243902439025,
+            "exposure_pct": 58.68821517046124,
+            "fees": 2285.413526953637,
+            "entry_signal_bars": 4788,
+            "exit_signal_bars": 3323
+          },
+          "double_cost": {
+            "return_pct": 237.3551956680211,
+            "max_drawdown_pct": -40.724749523328974,
+            "sharpe_daily": 1.0912488172122525,
+            "round_trips": 41,
+            "orders": 82,
+            "win_rate_pct": 24.390243902439025,
+            "exposure_pct": 58.68821517046124,
+            "fees": 4267.517335026357,
+            "entry_signal_bars": 4788,
+            "exit_signal_bars": 3323
+          }
+        },
+        "60d_0.015": {
+          "normal_cost": {
+            "return_pct": 323.2642076271099,
+            "max_drawdown_pct": -34.05666562236105,
+            "sharpe_daily": 1.2620453700560328,
+            "round_trips": 23,
+            "orders": 46,
+            "win_rate_pct": 43.47826086956522,
+            "exposure_pct": 59.32523298336676,
+            "fees": 1369.5395670218709,
+            "entry_signal_bars": 4461,
+            "exit_signal_bars": 2987
+          },
+          "double_cost": {
+            "return_pct": 295.04372999889034,
+            "max_drawdown_pct": -35.23302867067416,
+            "sharpe_daily": 1.2081491394868036,
+            "round_trips": 23,
+            "orders": 46,
+            "win_rate_pct": 43.47826086956522,
+            "exposure_pct": 59.32523298336676,
+            "fees": 2632.873701402881,
+            "entry_signal_bars": 4461,
+            "exit_signal_bars": 2987
+          }
+        }
+      }
+    },
+    "BNBUSDT": {
+      "data_sha256": "43d07484a75e1d6682a1efbf68a3352bcac253a676cf894d0a03061b411e5f9d",
+      "results": {
+        "50d_0.01": {
+          "normal_cost": {
+            "return_pct": 113.95979364777654,
+            "max_drawdown_pct": -43.758640860633434,
+            "sharpe_daily": 0.6878080527791376,
+            "round_trips": 46,
+            "orders": 92,
+            "win_rate_pct": 30.434782608695656,
+            "exposure_pct": 55.632888993747784,
+            "fees": 1497.323203731109,
+            "entry_signal_bars": 4248,
+            "exit_signal_bars": 3254
+          },
+          "double_cost": {
+            "return_pct": 86.38005132188064,
+            "max_drawdown_pct": -47.43697209309351,
+            "sharpe_daily": 0.598336364154141,
+            "round_trips": 46,
+            "orders": 92,
+            "win_rate_pct": 30.434782608695656,
+            "exposure_pct": 55.632888993747784,
+            "fees": 2779.2499040563475,
+            "entry_signal_bars": 4248,
+            "exit_signal_bars": 3254
+          }
+        },
+        "40d_0.005": {
+          "normal_cost": {
+            "return_pct": 25.132074647599502,
+            "max_drawdown_pct": -57.64430814605104,
+            "sharpe_daily": 0.34264683453473815,
+            "round_trips": 79,
+            "orders": 158,
+            "win_rate_pct": 17.72151898734177,
+            "exposure_pct": 55.25539695647045,
+            "fees": 1780.505059196259,
+            "entry_signal_bars": 4399,
+            "exit_signal_bars": 3484
+          },
+          "double_cost": {
+            "return_pct": -1.2719241990534091,
+            "max_drawdown_pct": -61.980369311720175,
+            "sharpe_daily": 0.19070332912944254,
+            "round_trips": 79,
+            "orders": 158,
+            "win_rate_pct": 17.72151898734177,
+            "exposure_pct": 55.25539695647045,
+            "fees": 3162.7264498164463,
+            "entry_signal_bars": 4399,
+            "exit_signal_bars": 3484
+          }
+        },
+        "40d_0.015": {
+          "normal_cost": {
+            "return_pct": 44.654938991342384,
+            "max_drawdown_pct": -55.09102364157543,
+            "sharpe_daily": 0.43676234326575825,
+            "round_trips": 42,
+            "orders": 84,
+            "win_rate_pct": 26.190476190476193,
+            "exposure_pct": 55.220007077975694,
+            "fees": 991.8799233358535,
+            "entry_signal_bars": 3875,
+            "exit_signal_bars": 2919
+          },
+          "double_cost": {
+            "return_pct": 27.529913754898615,
+            "max_drawdown_pct": -57.70632326690941,
+            "sharpe_daily": 0.35435687876529354,
+            "round_trips": 42,
+            "orders": 84,
+            "win_rate_pct": 23.809523809523807,
+            "exposure_pct": 55.220007077975694,
+            "fees": 1860.9691710489963,
+            "entry_signal_bars": 3875,
+            "exit_signal_bars": 2919
+          }
+        },
+        "60d_0.005": {
+          "normal_cost": {
+            "return_pct": 147.35583278201295,
+            "max_drawdown_pct": -43.26320629736551,
+            "sharpe_daily": 0.7774573237386565,
+            "round_trips": 52,
+            "orders": 104,
+            "win_rate_pct": 23.076923076923077,
+            "exposure_pct": 58.027604105225905,
+            "fees": 2099.8253748803077,
+            "entry_signal_bars": 4657,
+            "exit_signal_bars": 3393
+          },
+          "double_cost": {
+            "return_pct": 111.62749825407107,
+            "max_drawdown_pct": -47.83442616753556,
+            "sharpe_daily": 0.6769686862225629,
+            "round_trips": 52,
+            "orders": 104,
+            "win_rate_pct": 21.153846153846153,
+            "exposure_pct": 58.027604105225905,
+            "fees": 3859.921314274619,
+            "entry_signal_bars": 4657,
+            "exit_signal_bars": 3393
+          }
+        },
+        "60d_0.015": {
+          "normal_cost": {
+            "return_pct": 171.8989481544465,
+            "max_drawdown_pct": -37.31394765129949,
+            "sharpe_daily": 0.8411610338119373,
+            "round_trips": 25,
+            "orders": 50,
+            "win_rate_pct": 32.0,
+            "exposure_pct": 56.87153474106405,
+            "fees": 1025.3616036748372,
+            "entry_signal_bars": 4228,
+            "exit_signal_bars": 3120
+          },
+          "double_cost": {
+            "return_pct": 152.2524449816557,
+            "max_drawdown_pct": -38.247223005726916,
+            "sharpe_daily": 0.7923421723859563,
+            "round_trips": 25,
+            "orders": 50,
+            "win_rate_pct": 32.0,
+            "exposure_pct": 56.87153474106405,
+            "fees": 1966.5627538643425,
+            "entry_signal_bars": 4228,
+            "exit_signal_bars": 3120
+          }
+        }
+      }
+    }
+  }
+}

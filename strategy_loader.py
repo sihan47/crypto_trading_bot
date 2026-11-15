@@ -194,6 +194,7 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
         params = GPTCfg(
             engine=str(gpt_cfg.get("engine", "legacy")),
             ensemble=dict(gpt_cfg.get("ensemble", {})),
+            band_trend=dict(gpt_cfg.get("band_trend", {})),
             provider=str(gpt_cfg.get("provider", "openai")),
             model=str(gpt_cfg.get("model", "gpt-6.1-terra")),
             reasoning_effort=str(gpt_cfg.get("reasoning_effort", "low")),
@@ -230,12 +231,14 @@ def _build_gpt_runner(symbol: str, timeframe: str, best_map: dict, gpt_cfg: dict
             timeframe=timeframe,
             params=params,
             initial_run=initial_run,
+            managed_position=kwargs.get("managed_position"),
         )
 
     return _runner
 
 
-def load_strategy(config_path: str = "config.yaml", symbol_override: str | None = None) -> Callable:
+def load_strategy(config_path: str = "config.yaml", symbol_override: str | None = None,
+                  timeframe_override: str | None = None, engine_override: str | None = None) -> Callable:
     """
     Read config.yaml and return a callable: (df, **kwargs) -> Dict[str, Any]
     Supported names: gpt | sma | rsi | macd | bollinger
@@ -250,7 +253,7 @@ def load_strategy(config_path: str = "config.yaml", symbol_override: str | None 
     data = cfg.get("data", {}) or {}
 
     symbol = symbol_override or trading.get("symbol") or data.get("symbol") or "BTCUSDT"
-    timeframe = trading.get("timeframe") or data.get("timeframe") or "15m"
+    timeframe = timeframe_override or trading.get("timeframe") or data.get("timeframe") or "15m"
 
     ai_cfg = cfg.get("ai", {}) or {}
     openai_cfg = {}
@@ -276,6 +279,8 @@ def load_strategy(config_path: str = "config.yaml", symbol_override: str | None 
     if isinstance(strat_section, dict):
         gpt_cfg = {**gpt_cfg, **(strat_section.get("params", {}) or {})}
     gpt_cfg = dict(gpt_cfg)
+    if engine_override is not None:
+        gpt_cfg["engine"] = engine_override
 
     for key in ("reasoning_effort", "max_completion_tokens"):
         if key in openai_cfg and key not in gpt_cfg:

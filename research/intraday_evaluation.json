@@ -46,7 +46,69 @@
   },
   "symbols": {
     "BTCUSDT": {
+      "data_range": {
+        "first_open": "2022-08-31T16:00:00+00:00",
+        "last_open": "2026-11-13T23:45:00+00:00",
+        "bars": 147386,
+        "gaps": 1
+      },
       "periods": {
+        "full": {
+          "pullback_only": {
+            "return_pct": -92.8545880059596,
+            "max_drawdown_pct": -92.86321468020478,
+            "sharpe_daily": -7.902204099466863,
+            "round_trips": 881,
+            "orders": 1762,
+            "win_rate_pct": 11.237230419977298,
+            "exposure_pct": 1.1581832738523332,
+            "fees": 6171.914970527884,
+            "entry_signal_bars": 881,
+            "exit_signal_bars": 144880,
+            "pullback_entries": 881,
+            "squeeze_entries": 0
+          },
+          "squeeze_only": {
+            "return_pct": -50.45549376467739,
+            "max_drawdown_pct": -50.45549376467739,
+            "sharpe_daily": -2.460964668802352,
+            "round_trips": 183,
+            "orders": 366,
+            "win_rate_pct": 19.672131147540984,
+            "exposure_pct": 1.4037968328063724,
+            "fees": 2638.8131465003144,
+            "entry_signal_bars": 183,
+            "exit_signal_bars": 144518,
+            "pullback_entries": 0,
+            "squeeze_entries": 183
+          },
+          "combined": {
+            "return_pct": -96.33080637495554,
+            "max_drawdown_pct": -96.33523620183918,
+            "sharpe_daily": -7.425401580697252,
+            "round_trips": 1052,
+            "orders": 2104,
+            "win_rate_pct": 12.357414448669202,
+            "exposure_pct": 2.536197467873475,
+            "fees": 6114.787489284889,
+            "entry_signal_bars": 1052,
+            "exit_signal_bars": 142849,
+            "pullback_entries": 870,
+            "squeeze_entries": 182
+          },
+          "buy_hold": {
+            "return_pct": 238.79205184116552,
+            "max_drawdown_pct": -53.83758012582693,
+            "sharpe_daily": 0.8541863383757142,
+            "round_trips": 1,
+            "orders": 2,
+            "win_rate_pct": 100.0,
+            "exposure_pct": 99.99932150950566,
+            "fees": 43.90312829242896,
+            "entry_signal_bars": 147386,
+            "exit_signal_bars": 0
+          }
+        },
         "2023": {
           "pullback_only": {
             "return_pct": -47.136413768193755,
@@ -286,7 +348,69 @@
       }
     },
     "BNBUSDT": {
+      "data_range": {
+        "first_open": "2022-09-01T00:00:00+00:00",
+        "last_open": "2026-11-13T23:45:00+00:00",
+        "bars": 147354,
+        "gaps": 1
+      },
       "periods": {
+        "full": {
+          "pullback_only": {
+            "return_pct": -97.09626719214798,
+            "max_drawdown_pct": -97.1571261662822,
+            "sharpe_daily": -8.419713085559165,
+            "round_trips": 1260,
+            "orders": 2520,
+            "win_rate_pct": 18.015873015873016,
+            "exposure_pct": 1.615836692590632,
+            "fees": 7099.781746440736,
+            "entry_signal_bars": 1260,
+            "exit_signal_bars": 144174,
+            "pullback_entries": 1260,
+            "squeeze_entries": 0
+          },
+          "squeeze_only": {
+            "return_pct": -56.07112281104081,
+            "max_drawdown_pct": -57.0754343556938,
+            "sharpe_daily": -1.8161959060524315,
+            "round_trips": 280,
+            "orders": 560,
+            "win_rate_pct": 21.428571428571427,
+            "exposure_pct": 2.1641760658007247,
+            "fees": 3970.694716174077,
+            "entry_signal_bars": 280,
+            "exit_signal_bars": 143366,
+            "pullback_entries": 0,
+            "squeeze_entries": 280
+          },
+          "combined": {
+            "return_pct": -98.7579175902082,
+            "max_drawdown_pct": -98.78395024067991,
+            "sharpe_daily": -6.901672215125419,
+            "round_trips": 1522,
+            "orders": 3044,
+            "win_rate_pct": 18.265440210249672,
+            "exposure_pct": 3.7610108989236806,
+            "fees": 7187.098556387519,
+            "entry_signal_bars": 1522,
+            "exit_signal_bars": 141013,
+            "pullback_entries": 1242,
+            "squeeze_entries": 280
+          },
+          "buy_hold": {
+            "return_pct": 124.51657845280968,
+            "max_drawdown_pct": -60.52266284812531,
+            "sharpe_daily": 0.6334556185587527,
+            "round_trips": 1,
+            "orders": 2,
+            "win_rate_pct": 100.0,
+            "exposure_pct": 99.99932136216187,
+            "fees": 32.46414196726822,
+            "entry_signal_bars": 147354,
+            "exit_signal_bars": 0
+          }
+        },
         "2023": {
           "pullback_only": {
             "return_pct": -52.77963036090922,

@@ -2,7 +2,7 @@
 # Sent over SSH by deploy_vps.ps1. Default mode is read-only.
 set -euo pipefail
 mode=${1:---check}
-[[ "$mode" == --check || "$mode" == --deploy ]] || exit 2
+[[ "$mode" == --check || "$mode" == --deploy || "$mode" == --deploy-recommended ]] || exit 2
 cd /home/sihan/crypto_trading_bot
 exec 9>/tmp/crypto_bot-deploy.lock
 flock -n 9 || { echo 'Another deployment is running.'; exit 1; }
@@ -20,6 +20,12 @@ mapfile -d '' -t argv < /proc/"$bot_pid"/cmdline
 [[ ${#argv[@]} == 2 && ${argv[1]} == run_bot.py ]] || { echo 'Unexpected running command; stopping.'; exit 1; }
 python_bin=$(readlink -f /proc/"$bot_pid"/exe)
 [[ -x "$python_bin" ]] || exit 1
+# Read only the config selector, never dump the process environment/secrets.
+active_config=$(tr '\0' '\n' < /proc/"$bot_pid"/environ | sed -n 's/^BOT_CONFIG=//p')
+active_config=${active_config:-config.yaml}
+[[ "$active_config" == config.yaml || "$active_config" == config.recommended.yaml ]] || { echo 'Unknown config selector; inspect manually.'; exit 1; }
+target_config=$active_config
+if [[ "$mode" == --deploy-recommended ]]; then target_config=config.recommended.yaml; fi
 echo "Repo: $PWD | branch: main | commit: $(git rev-parse --short HEAD)"
 echo "tmux: $pane | bot PID: $bot_pid | Python: $python_bin"
 if [[ "$mode" == --check ]]; then
@@ -28,10 +34,12 @@ if [[ "$mode" == --check ]]; then
 fi
 git fetch origin main
 git merge-base --is-ancestor HEAD origin/main || { echo 'Remote checkout cannot fast-forward; stopping.'; exit 1; }
-if [[ $(git rev-parse HEAD) == $(git rev-parse origin/main) ]]; then
+if [[ $(git rev-parse HEAD) == $(git rev-parse origin/main) && "$target_config" == "$active_config" ]]; then
     echo 'Already up to date; leaving bot running.'
     exit 0
 fi
+git cat-file -e "origin/main:$target_config" || { echo 'Selected config missing from target commit.'; exit 1; }
+echo "Selected configuration: $target_config (activation can place real orders)"
 # Avoid accidentally deploying incompatible dependencies without installing them.
 if ! git diff --quiet HEAD origin/main -- requirements.txt requirements-dev.txt; then
     echo 'Dependencies changed. Update the environment explicitly before deployment.'
@@ -49,7 +57,7 @@ if kill -0 "$bot_pid" 2>/dev/null; then
 fi
 trap 'echo "Deployment failed after stopping bot. Inspect with: ssh -t sihan@91.98.132.183 tmux attach -t crypto_bot"' ERR
 git merge --ff-only origin/main
-printf -v command 'cd %q && %q run_bot.py' "$PWD" "$python_bin"
+printf -v command 'cd %q && BOT_CONFIG=%q %q run_bot.py' "$PWD" "$target_config" "$python_bin"
 tmux send-keys -t "$pane" -l "$command"
 tmux send-keys -t "$pane" Enter
 sleep 10

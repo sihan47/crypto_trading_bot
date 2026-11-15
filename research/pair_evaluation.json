@@ -1,0 +1,35 @@
+{
+  "method": "2023-01-01 through 2026-11-13; fixed BTC band50 and BNB daily RSI2; 15m close marks; 50/50 starting capital, no rebalance; excludes GPT",
+  "strategies": {
+    "BTCUSDT": {
+      "return_pct": 313.5967684211797,
+      "max_drawdown_15m_pct": -36.34976540245789,
+      "sharpe_daily": 1.2432739101235801,
+      "round_trips": 33,
+      "double_cost": {
+        "return_pct": 274.6121921578609,
+        "max_drawdown_15m_pct": -38.96771800395153,
+        "sharpe_daily": 1.1662250557362817
+      },
+      "rolling_window_checks": 12
+    },
+    "BNBUSDT": {
+      "return_pct": 89.60277316346186,
+      "max_drawdown_15m_pct": -12.504363289651089,
+      "sharpe_daily": 1.3188064115902565,
+      "round_trips": 57,
+      "double_cost": {
+        "return_pct": 59.8012597915599,
+        "max_drawdown_15m_pct": -15.034611945131804,
+        "sharpe_daily": 0.9861985571483269
+      },
+      "rolling_window_checks": 12
+    }
+  },
+  "equal_capital_pair": {
+    "return_pct": 201.59977079232075,
+    "max_drawdown_15m_pct": -27.197713445797444,
+    "sharpe_daily": 1.3156504489981378
+  },
+  "daily_return_correlation": 0.2307884831967889
+}

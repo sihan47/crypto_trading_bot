@@ -1,6 +1,7 @@
 ﻿import os
 import pathlib
 from typing import Any
+from decimal import Decimal
 
 import yaml
 from dotenv import load_dotenv
@@ -132,7 +133,8 @@ def execute_order(signal, symbol=None, quantity=None):
         raise ValueError('symbol must be provided (e.g. "BTCUSDT")')
     if quantity is None:
         raise ValueError('order quantity must be provided')
-    if quantity <= 0:
+    parsed_quantity = Decimal(str(quantity))
+    if not parsed_quantity.is_finite() or parsed_quantity <= 0:
         trade_logger.error(f'Invalid quantity requested: {quantity}')
         return None
     client = _get_client()
@@ -144,7 +146,8 @@ def execute_order(signal, symbol=None, quantity=None):
             symbol=symbol,
             side=SIDE_BUY if signal == "BUY" else SIDE_SELL,
             type=ORDER_TYPE_MARKET,
-            quantity=quantity,
+            quantity=format(parsed_quantity, "f"),
+            newOrderRespType="FULL",
         )
     except Exception as exc:
         trade_logger.error(f"Order submission unresolved: {type(exc).__name__}; reconcile before retry")

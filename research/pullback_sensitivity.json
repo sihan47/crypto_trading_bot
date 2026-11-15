@@ -1,0 +1,60 @@
+{
+  "purpose": "post-selection sensitivity only; retain frozen 100-day/RSI15 rule",
+  "results": {
+    "100d_rsi15": {
+      "return_pct": 89.60277316346186,
+      "max_drawdown_15m_pct": -12.504363289651089,
+      "sharpe_daily": 1.3188064115902565,
+      "round_trips": 57,
+      "double_cost": {
+        "return_pct": 59.8012597915599,
+        "max_drawdown_15m_pct": -15.034611945131804,
+        "sharpe_daily": 0.9861985571483269
+      }
+    },
+    "80d_rsi10": {
+      "return_pct": 47.53674181270719,
+      "max_drawdown_15m_pct": -11.926331932295808,
+      "sharpe_daily": 1.0934131468614783,
+      "round_trips": 37,
+      "double_cost": {
+        "return_pct": 32.0363214908086,
+        "max_drawdown_15m_pct": -12.470318271963565,
+        "sharpe_daily": 0.7989223739494061
+      }
+    },
+    "80d_rsi20": {
+      "return_pct": 41.041646540941,
+      "max_drawdown_15m_pct": -20.908429582831335,
+      "sharpe_daily": 0.6527289777116686,
+      "round_trips": 67,
+      "double_cost": {
+        "return_pct": 15.359675494788473,
+        "max_drawdown_15m_pct": -24.161488803100738,
+        "sharpe_daily": 0.31537447057942253
+      }
+    },
+    "120d_rsi10": {
+      "return_pct": 37.463804110997636,
+      "max_drawdown_15m_pct": -12.963688312720256,
+      "sharpe_daily": 0.8533435182083615,
+      "round_trips": 39,
+      "double_cost": {
+        "return_pct": 22.285739694989857,
+        "max_drawdown_15m_pct": -14.898811111418143,
+        "sharpe_daily": 0.5593554839890912
+      }
+    },
+    "120d_rsi20": {
+      "return_pct": 30.732053385070145,
+      "max_drawdown_15m_pct": -23.37995063767887,
+      "sharpe_daily": 0.5131761524066683,
+      "round_trips": 72,
+      "double_cost": {
+        "return_pct": 5.335390681876273,
+        "max_drawdown_15m_pct": -27.25999897459189,
+        "sharpe_daily": 0.16344672982569144
+      }
+    }
+  }
+}

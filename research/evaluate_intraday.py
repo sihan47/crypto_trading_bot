@@ -1,6 +1,6 @@
 """Exploratory comparison, NOT a fresh blind holdout after earlier research."""
 import json
-from dataclasses import asdict, replace
+from dataclasses import asdict
 from pathlib import Path
 import sys
 
@@ -38,7 +38,8 @@ def main():
                 f['pullback_setup']=False
             variants[name]=signals_from_features(f,params)
         results={}
-        for period,(start,end) in PERIODS.items():
+        periods={'full':(df.index[0],df.index[-1]+pd.Timedelta(minutes=15)),**PERIODS}
+        for period,(start,end) in periods.items():
             block=df.loc[(df.index>=start)&(df.index<end)]
             results[period]={}
             for name,signals in variants.items():
@@ -50,8 +51,11 @@ def main():
             results[period]['buy_hold']=simulate(block,pd.Series(True,index=block.index),pd.Series(False,index=block.index))
         block=df.loc[(df.index>=PERIODS['2026_later'][0])&(df.index<PERIODS['2026_later'][1])]
         s=variants['combined'].loc[block.index]
-        report['symbols'][symbol]={'periods':results,'double_costs':simulate(block,s['entries'],s['exits'],fee=.002,slippage=.001)}
-        print(symbol,json.dumps(results['2026_later']),flush=True)
+        report['symbols'][symbol]={
+            'data_range':{'first_open':df.index[0].isoformat(),'last_open':df.index[-1].isoformat(),
+                          'bars':len(df),'gaps':int(df.index.to_series().diff().dropna().ne(pd.Timedelta(minutes=15)).sum())},
+            'periods':results,'double_costs':simulate(block,s['entries'],s['exits'],fee=.002,slippage=.001)}
+        print(symbol,json.dumps({'data_range':report['symbols'][symbol]['data_range'],'full':results['full']}),flush=True)
     path=ROOT/'research/intraday_evaluation.json'
     path.write_text(json.dumps(report,indent=2,allow_nan=False),encoding='utf-8')
     print(path)

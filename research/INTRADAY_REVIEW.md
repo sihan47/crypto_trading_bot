@@ -46,6 +46,30 @@ filters. Passing software tests does not establish a profitable strategy.
 
 ## Reproduce
 
+### Continuous full-history run
+
+The full cached interval was also simulated continuously, without resetting
+capital each year: BTC starts 2022-08-31 16:00 UTC; BNB starts 2022-09-01
+00:00 UTC. Both end with the 2026-11-13 23:45 UTC opening candle.
+BTC has 147,386 bars and BNB 147,354; each series contains one gap.
+Indicator warm-up is included as time in cash. Buy-and-hold starts immediately.
+The same costs and full-allocation sizing apply; GPT remains excluded.
+
+| Variant | BTC return | BNB return |
+| --- | ---: | ---: |
+| Pullback only | -92.85% | -97.10% |
+| Squeeze only | -50.46% | -56.07% |
+| Combined | -96.33% | -98.76% |
+| Buy and hold | +238.79% | +124.52% |
+
+Combined BTC: 1,052 round trips, 12.36% win rate, -96.34% maximum drawdown.
+Combined BNB: 1,522 round trips, 18.27% win rate, -98.78% maximum drawdown.
+These results describe this implementation and its sizing assumptions, not
+the user's account returns or all possible pullback/breakout strategies.
+Machine-readable metrics are under each symbol's `periods.full` key.
+
+### Commands
+
 Use the existing cached public candles, or prepare them first:
 
 ```text

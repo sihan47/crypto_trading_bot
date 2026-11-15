@@ -1,0 +1,563 @@
+{
+  "protocol": "FORUM_PROTOCOL.md",
+  "symbols": {
+    "BTCUSDT": {
+      "bb_only": {
+        "full": {
+          "return_pct": -68.22684552859793,
+          "max_drawdown_pct": -68.80005415917469,
+          "sharpe_daily": -2.5647981279072627,
+          "round_trips": 516,
+          "win_rate_pct": 24.031007751937985,
+          "exposure_pct": 3.59033337756742,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "back_inside_band": 457,
+            "target": 28,
+            "stop": 31
+          }
+        },
+        "author_fee_sensitivity": {
+          "return_pct": 16.374710828624075,
+          "max_drawdown_pct": -22.47039040158735,
+          "sharpe_daily": 0.4037528184175403,
+          "round_trips": 518,
+          "win_rate_pct": 34.74903474903475,
+          "exposure_pct": 3.5947567862461476,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "back_inside_band": 463,
+            "target": 29,
+            "stop": 26
+          }
+        },
+        "years": {
+          "2023": {
+            "return_pct": -27.08451844928853,
+            "max_drawdown_pct": -27.711038204786064,
+            "sharpe_daily": -2.580785237252105,
+            "round_trips": 150,
+            "win_rate_pct": 28.666666666666668,
+            "exposure_pct": 4.467089113432666,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 128,
+              "target": 8,
+              "stop": 14
+            }
+          },
+          "2024": {
+            "return_pct": -16.649986960831665,
+            "max_drawdown_pct": -23.15376195413875,
+            "sharpe_daily": -1.4452694173628684,
+            "round_trips": 149,
+            "win_rate_pct": 26.845637583892618,
+            "exposure_pct": 3.8564435336976324,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "target": 14,
+              "back_inside_band": 124,
+              "stop": 11
+            }
+          },
+          "2025": {
+            "return_pct": -33.82736343651827,
+            "max_drawdown_pct": -35.81153762215654,
+            "sharpe_daily": -4.47787479648543,
+            "round_trips": 126,
+            "win_rate_pct": 16.666666666666664,
+            "exposure_pct": 3.1649543378995433,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 120,
+              "stop": 4,
+              "target": 2
+            }
+          },
+          "2026": {
+            "return_pct": -20.994654825322144,
+            "max_drawdown_pct": -21.951870587797117,
+            "sharpe_daily": -2.8164508134406434,
+            "round_trips": 91,
+            "win_rate_pct": 21.978021978021978,
+            "exposure_pct": 2.7635383806519456,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 85,
+              "target": 4,
+              "stop": 2
+            }
+          }
+        }
+      },
+      "bb_vwap_session": {
+        "full": {
+          "return_pct": -90.3395565626061,
+          "max_drawdown_pct": -90.61803497408712,
+          "sharpe_daily": -2.8729069865055856,
+          "round_trips": 1003,
+          "win_rate_pct": 33.79860418743769,
+          "exposure_pct": 22.42520753159051,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "back_inside_band": 451,
+            "time": 216,
+            "target": 99,
+            "stop": 237
+          }
+        },
+        "author_fee_sensitivity": {
+          "return_pct": 19.07079306523285,
+          "max_drawdown_pct": -38.88244010220876,
+          "sharpe_daily": 0.31449803299018,
+          "round_trips": 1006,
+          "win_rate_pct": 42.24652087475149,
+          "exposure_pct": 22.571180017988528,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "back_inside_band": 457,
+            "time": 220,
+            "target": 104,
+            "stop": 225
+          }
+        },
+        "years": {
+          "2023": {
+            "return_pct": -37.162491251725015,
+            "max_drawdown_pct": -40.99235040599679,
+            "sharpe_daily": -2.307570582917784,
+            "round_trips": 271,
+            "win_rate_pct": 33.94833948339483,
+            "exposure_pct": 21.664668607638294,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 126,
+              "time": 55,
+              "target": 33,
+              "stop": 57
+            }
+          },
+          "2024": {
+            "return_pct": -36.02810423696214,
+            "max_drawdown_pct": -40.819949416037296,
+            "sharpe_daily": -1.8079217120295024,
+            "round_trips": 285,
+            "win_rate_pct": 37.54385964912281,
+            "exposure_pct": 22.239298724954462,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "target": 38,
+              "back_inside_band": 125,
+              "stop": 77,
+              "time": 45
+            }
+          },
+          "2025": {
+            "return_pct": -56.39040691628647,
+            "max_drawdown_pct": -57.69240591302428,
+            "sharpe_daily": -4.313860182142406,
+            "round_trips": 251,
+            "win_rate_pct": 31.872509960159363,
+            "exposure_pct": 23.253424657534246,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 116,
+              "time": 63,
+              "stop": 58,
+              "target": 14
+            }
+          },
+          "2026": {
+            "return_pct": -44.89298995205688,
+            "max_drawdown_pct": -46.51411208948046,
+            "sharpe_daily": -3.831988627782911,
+            "round_trips": 196,
+            "win_rate_pct": 30.612244897959183,
+            "exposure_pct": 22.561777076761306,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 84,
+              "time": 53,
+              "stop": 45,
+              "target": 14
+            }
+          }
+        }
+      },
+      "bb_vwap_rolling24": {
+        "full": {
+          "return_pct": -89.51275249600921,
+          "max_drawdown_pct": -90.0982767826635,
+          "sharpe_daily": -2.558229514861695,
+          "round_trips": 1065,
+          "win_rate_pct": 34.55399061032864,
+          "exposure_pct": 25.78920983176302,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "back_inside_band": 453,
+            "time": 247,
+            "target": 107,
+            "stop": 258
+          }
+        },
+        "author_fee_sensitivity": {
+          "return_pct": 38.350710944804824,
+          "max_drawdown_pct": -24.534168494168075,
+          "sharpe_daily": 0.4744362780228757,
+          "round_trips": 1067,
+          "win_rate_pct": 42.9240862230553,
+          "exposure_pct": 26.00079621356217,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "back_inside_band": 460,
+            "time": 254,
+            "target": 108,
+            "stop": 245
+          }
+        },
+        "years": {
+          "2023": {
+            "return_pct": -43.759920902688606,
+            "max_drawdown_pct": -48.00953824134755,
+            "sharpe_daily": -2.5045913262085193,
+            "round_trips": 292,
+            "win_rate_pct": 32.87671232876712,
+            "exposure_pct": 25.472398241708056,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 127,
+              "time": 57,
+              "target": 36,
+              "stop": 72
+            }
+          },
+          "2024": {
+            "return_pct": -27.93341305416036,
+            "max_drawdown_pct": -38.33719385284774,
+            "sharpe_daily": -1.1859699426459651,
+            "round_trips": 302,
+            "win_rate_pct": 38.41059602649007,
+            "exposure_pct": 25.64321493624772,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "target": 43,
+              "back_inside_band": 125,
+              "time": 55,
+              "stop": 79
+            }
+          },
+          "2025": {
+            "return_pct": -57.24172308233976,
+            "max_drawdown_pct": -58.47656324969902,
+            "sharpe_daily": -4.28656436969103,
+            "round_trips": 266,
+            "win_rate_pct": 34.21052631578947,
+            "exposure_pct": 26.65810502283105,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 118,
+              "time": 72,
+              "stop": 63,
+              "target": 13
+            }
+          },
+          "2026": {
+            "return_pct": -39.485221946086504,
+            "max_drawdown_pct": -41.65950051336391,
+            "sharpe_daily": -3.197174800717096,
+            "round_trips": 205,
+            "win_rate_pct": 31.70731707317073,
+            "exposure_pct": 25.3220294426919,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 83,
+              "time": 63,
+              "stop": 44,
+              "target": 15
+            }
+          }
+        }
+      }
+    },
+    "BNBUSDT": {
+      "bb_only": {
+        "full": {
+          "return_pct": -68.74117097240469,
+          "max_drawdown_pct": -71.13974143136534,
+          "sharpe_daily": -2.5523280423716304,
+          "round_trips": 482,
+          "win_rate_pct": 24.688796680497926,
+          "exposure_pct": 3.049940283982837,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "back_inside_band": 410,
+            "target": 32,
+            "stop": 40
+          }
+        },
+        "author_fee_sensitivity": {
+          "return_pct": 3.3731848931900954,
+          "max_drawdown_pct": -27.405609005886987,
+          "sharpe_daily": 0.13150495038880264,
+          "round_trips": 484,
+          "win_rate_pct": 35.9504132231405,
+          "exposure_pct": 3.050677518762625,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "target": 34,
+            "back_inside_band": 411,
+            "stop": 39
+          }
+        },
+        "years": {
+          "2023": {
+            "return_pct": -27.73734687419134,
+            "max_drawdown_pct": -34.02111071141255,
+            "sharpe_daily": -2.922496359637211,
+            "round_trips": 129,
+            "win_rate_pct": 25.581395348837212,
+            "exposure_pct": 3.2539818462065417,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 110,
+              "target": 8,
+              "stop": 11
+            }
+          },
+          "2024": {
+            "return_pct": -28.55249055576905,
+            "max_drawdown_pct": -31.081262718427617,
+            "sharpe_daily": -2.4544049341692826,
+            "round_trips": 135,
+            "win_rate_pct": 25.185185185185183,
+            "exposure_pct": 2.991234061930783,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "stop": 21,
+              "back_inside_band": 101,
+              "target": 13
+            }
+          },
+          "2025": {
+            "return_pct": -25.823083349540287,
+            "max_drawdown_pct": -27.798656794883236,
+            "sharpe_daily": -3.062066743461107,
+            "round_trips": 116,
+            "win_rate_pct": 23.275862068965516,
+            "exposure_pct": 2.9081050228310503,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 105,
+              "target": 5,
+              "stop": 6
+            }
+          },
+          "2026": {
+            "return_pct": -18.37880835092368,
+            "max_drawdown_pct": -21.80926864772712,
+            "sharpe_daily": -1.8562834602542968,
+            "round_trips": 102,
+            "win_rate_pct": 24.509803921568626,
+            "exposure_pct": 3.046135646687697,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 94,
+              "target": 6,
+              "stop": 2
+            }
+          }
+        }
+      },
+      "bb_vwap_session": {
+        "full": {
+          "return_pct": -95.69886036327264,
+          "max_drawdown_pct": -95.9826070251729,
+          "sharpe_daily": -3.7613526206168753,
+          "round_trips": 974,
+          "win_rate_pct": 33.162217659137575,
+          "exposure_pct": 21.002344406599725,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "stop": 280,
+            "time": 204,
+            "back_inside_band": 406,
+            "target": 84
+          }
+        },
+        "author_fee_sensitivity": {
+          "return_pct": -56.25186226133083,
+          "max_drawdown_pct": -66.48896346077281,
+          "sharpe_daily": -0.889608410095587,
+          "round_trips": 978,
+          "win_rate_pct": 41.41104294478527,
+          "exposure_pct": 21.186653101546717,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "stop": 275,
+            "time": 207,
+            "target": 88,
+            "back_inside_band": 408
+          }
+        },
+        "years": {
+          "2023": {
+            "return_pct": -63.25480755841434,
+            "max_drawdown_pct": -66.64330905027067,
+            "sharpe_daily": -5.107585231410252,
+            "round_trips": 244,
+            "win_rate_pct": 30.737704918032787,
+            "exposure_pct": 20.06336701489981,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "stop": 71,
+              "time": 45,
+              "back_inside_band": 111,
+              "target": 17
+            }
+          },
+          "2024": {
+            "return_pct": -65.59359437793304,
+            "max_drawdown_pct": -65.90694361076626,
+            "sharpe_daily": -4.274325046185602,
+            "round_trips": 278,
+            "win_rate_pct": 31.294964028776977,
+            "exposure_pct": 18.963456284153004,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "stop": 103,
+              "back_inside_band": 100,
+              "time": 44,
+              "target": 31
+            }
+          },
+          "2025": {
+            "return_pct": -42.39265059005993,
+            "max_drawdown_pct": -43.66264698578679,
+            "sharpe_daily": -2.5739381540840136,
+            "round_trips": 242,
+            "win_rate_pct": 35.53719008264463,
+            "exposure_pct": 21.461187214611872,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 101,
+              "time": 54,
+              "stop": 65,
+              "target": 21,
+              "final_liquidation": 1
+            }
+          },
+          "2026": {
+            "return_pct": -41.69607637849432,
+            "max_drawdown_pct": -42.08855213773886,
+            "sharpe_daily": -3.1126519700859934,
+            "round_trips": 211,
+            "win_rate_pct": 35.07109004739337,
+            "exposure_pct": 23.882754994742374,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 94,
+              "time": 61,
+              "stop": 41,
+              "target": 15
+            }
+          }
+        }
+      },
+      "bb_vwap_rolling24": {
+        "full": {
+          "return_pct": -94.9251605780515,
+          "max_drawdown_pct": -95.29573383692102,
+          "sharpe_daily": -3.419322743537205,
+          "round_trips": 1030,
+          "win_rate_pct": 34.46601941747573,
+          "exposure_pct": 23.649017266038545,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "time": 229,
+            "back_inside_band": 405,
+            "target": 95,
+            "stop": 301
+          }
+        },
+        "author_fee_sensitivity": {
+          "return_pct": -40.58920873193641,
+          "max_drawdown_pct": -59.8184503470617,
+          "sharpe_daily": -0.485327281358729,
+          "round_trips": 1034,
+          "win_rate_pct": 42.359767891682786,
+          "exposure_pct": 23.84291001312278,
+          "ambiguous_bars_stop_first": 0,
+          "exit_reasons": {
+            "time": 234,
+            "target": 99,
+            "back_inside_band": 407,
+            "stop": 294
+          }
+        },
+        "years": {
+          "2023": {
+            "return_pct": -65.30025518395107,
+            "max_drawdown_pct": -68.18242448142222,
+            "sharpe_daily": -5.224425321183825,
+            "round_trips": 258,
+            "win_rate_pct": 30.23255813953488,
+            "exposure_pct": 21.621853057030314,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "time": 50,
+              "back_inside_band": 110,
+              "target": 20,
+              "stop": 78
+            }
+          },
+          "2024": {
+            "return_pct": -59.40231427385337,
+            "max_drawdown_pct": -59.772049311474774,
+            "sharpe_daily": -3.4600674973747303,
+            "round_trips": 292,
+            "win_rate_pct": 33.9041095890411,
+            "exposure_pct": 21.815232240437158,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "stop": 104,
+              "back_inside_band": 100,
+              "time": 53,
+              "target": 35
+            }
+          },
+          "2025": {
+            "return_pct": -46.2708268737139,
+            "max_drawdown_pct": -47.81217669079616,
+            "sharpe_daily": -2.6833068470743684,
+            "round_trips": 265,
+            "win_rate_pct": 36.22641509433962,
+            "exposure_pct": 25.09132420091324,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 101,
+              "time": 61,
+              "stop": 78,
+              "target": 24,
+              "final_liquidation": 1
+            }
+          },
+          "2026": {
+            "return_pct": -33.80631576698542,
+            "max_drawdown_pct": -34.63482701553624,
+            "sharpe_daily": -2.363271359093212,
+            "round_trips": 216,
+            "win_rate_pct": 37.5,
+            "exposure_pct": 26.41298633017876,
+            "ambiguous_bars_stop_first": 0,
+            "exit_reasons": {
+              "back_inside_band": 94,
+              "time": 65,
+              "stop": 41,
+              "target": 16
+            }
+          }
+        }
+      }
+    }
+  }
+}
