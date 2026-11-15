@@ -52,15 +52,15 @@ def read_prices(d):
     return raw.loc[raw.volume>0]
 
 
-def bootstrap(eq,seed=20261115,reps=2000):
+def bootstrap(eq,seed=20261115,reps=2000,block_days=7):
     daily=eq.resample('D').last().ffill().pct_change();daily.iloc[0]=eq.resample('D').last().iloc[0]/10000-1
     x=daily.to_numpy();rng=np.random.default_rng(seed);n=len(x);out=[]
     for _ in range(reps):
-        starts=rng.integers(0,n,size=int(np.ceil(n/7)))
-        y=x[((starts[:,None]+np.arange(7))%n).ravel()[:n]]
+        starts=rng.integers(0,n,size=int(np.ceil(n/block_days)))
+        y=x[((starts[:,None]+np.arange(block_days))%n).ravel()[:n]]
         out.append([np.prod(1+y)-1,y.mean()/y.std(ddof=1)*np.sqrt(365) if y.std()>0 else 0])
     a=np.asarray(out)
-    return {'method':'Circular 7-day moving-block bootstrap of daily returns, 2000 draws; descriptive, no selection-bias correction',
+    return {'method':f'Circular {block_days}-day moving-block bootstrap of daily returns, {reps} draws; descriptive, no selection-bias correction',
             'return_95pct':(np.quantile(a[:,0],[.025,.975])*100).tolist(),
             'sharpe_95pct':np.quantile(a[:,1],[.025,.975]).tolist(),
             'positive_return_fraction':float((a[:,0]>0).mean())}

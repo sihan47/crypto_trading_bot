@@ -59,7 +59,8 @@ def signals(d,p=Spec()):
     return {'A':a,'B':b,'C':c}
 
 
-def simulate(raw,f,kind,p=Spec(),cost_factor=1.,maker_fee=.001,penetration=.0005):
+def simulate(raw,f,kind,p=Spec(),cost_factor=1.,maker_fee=.001,penetration=.0005,
+             no_time_stop=False,chandelier=False,chandelier_multiple=3.):
     """Cash spot, next-bar decisions, stop-first ambiguity, no same-bar maker TP.
 
     Limit fills are conditional OHLC scenarios, not reconstructed queue positions.
@@ -67,11 +68,13 @@ def simulate(raw,f,kind,p=Spec(),cost_factor=1.,maker_fee=.001,penetration=.0005
     """
     context=f.reindex(raw.index,method='ffill',tolerance=pd.Timedelta(minutes=45))
     events=f.signal.reindex(raw.index,fill_value=False).to_numpy(bool)
+    exit_events=f.get('exit_signal',pd.Series(False,index=f.index)).reindex(raw.index,fill_value=False).to_numpy(bool)
     cols={col:context[col].to_numpy() for col in context}
     o=raw.open.to_numpy();low=raw.low.to_numpy();high=raw.high.to_numpy();close=raw.close.to_numpy()
     volume=raw.volume.to_numpy();times=raw.index;cash=10000.;qty=0.;pending=None;ledger=[];equity=[]
     fee=.001*cost_factor;slip=.0005*cost_factor
     hold={'A':168,'B':4,'C':12}[kind]*p.holding
+    if no_time_stop:hold=float('inf')
     stop=0.;target=np.nan;peak=0.;entry_cost=0.;entry_fee=0.;entry_i=0;entry_ref=0.;ctx={};order_count=0;filled=0
     def exit_position(i,reference,reason):
         nonlocal cash,qty
@@ -89,6 +92,7 @@ def simulate(raw,f,kind,p=Spec(),cost_factor=1.,maker_fee=.001,penetration=.0005
             if qty:exit_position(i,o[i],'data_gap');exited=True
         if qty:
             if o[i]<=stop:exit_position(i,o[i],'gap_stop');exited=True
+            elif i and exit_events[i-1]:exit_position(i,o[i],'regime_exit');exited=True
             elif (times[i]-times[entry_i]).total_seconds()/3600>=hold:
                 exit_position(i,o[i],'time_exit');exited=True
         if not qty and not pending and not exited and not gap and i and events[i-1]:
@@ -108,7 +112,8 @@ def simulate(raw,f,kind,p=Spec(),cost_factor=1.,maker_fee=.001,penetration=.0005
                 rate=(maker_fee*cost_factor+slip) if kind=='B' else fee
                 risk_per=price*(1+rate)-candidate*(1-slip)*(1-fee)
                 cap=p.liquidity*(.1 if kind=='B' else 1)*volume[i-1]*close[i-1]
-                qty=min(cash*p.risk/risk_per,cash/(price*(1+rate)),cap/price) if risk_per>0 else 0
+                risk_scale=cols['risk_scale'][i-1] if 'risk_scale' in cols else 1.
+                qty=min(cash*p.risk*risk_scale/risk_per,cash/(price*(1+rate)),cap/price) if risk_per>0 and np.isfinite(risk_scale) and 0<risk_scale<=1 else 0
                 if qty>0:
                     entry_fee=qty*price*rate;entry_cost=qty*price+entry_fee;cash-=entry_cost
                     entry_ref=price;entry_i=i;stop=candidate;target=tgt;peak=price;ctx=info;filled+=1;new_fill=True
@@ -117,8 +122,11 @@ def simulate(raw,f,kind,p=Spec(),cost_factor=1.,maker_fee=.001,penetration=.0005
             if low[i]<=stop:exit_position(i,min(o[i],stop),'intrabar_stop')
             elif kind=='B' and not new_fill and high[i]>=target:exit_position(i,target,'center_exit')
         if qty and kind=='A':
-            peak=max(peak,close[i]);sigma=cols['sigma'][i]
-            if np.isfinite(sigma):stop=max(stop,peak*np.exp(-p.trail*sigma))
+            peak=max(peak,high[i] if chandelier else close[i]);sigma=cols['sigma'][i]
+            if chandelier:
+                atr=cols['daily_atr'][i]
+                if np.isfinite(atr):stop=max(stop,peak-chandelier_multiple*atr)
+            elif np.isfinite(sigma):stop=max(stop,peak*np.exp(-p.trail*sigma))
         equity.append(cash+qty*close[i])
     if qty:exit_position(len(raw)-1,close[-1],'fold_end');equity[-1]=cash
     return pd.Series(equity,index=times),pd.DataFrame(ledger),{'orders':order_count,'fills':filled}

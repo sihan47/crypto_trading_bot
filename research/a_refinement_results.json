@@ -1,0 +1,451 @@
+{
+  "start": "2023-09-01 00:00:00+00:00",
+  "end": "2025-08-10 12:00:00+00:00",
+  "arms": {
+    "control": {
+      "return_pct": 8.031250060647066,
+      "sharpe": 0.9968832732646502,
+      "sortino": 1.800600864941321,
+      "max_dd_pct": -4.3548042299582645,
+      "profit_factor": 1.5629765840274061,
+      "win_rate": 0.4166666666666667,
+      "avg_trade_pnl": 9.561011976960742,
+      "trades": 84,
+      "net_without_best_5pct": -387.9682007755339,
+      "top3_gross_profit_share": 0.35298935451353736,
+      "net_without_top3": 16.06671824542832,
+      "max_holding_hours": 168.0,
+      "trades_over_7days": 0,
+      "exit_reasons": {
+        "gap_stop": {
+          "count": 4,
+          "sum": -114.10898310138873
+        },
+        "intrabar_stop": {
+          "count": 73,
+          "sum": -161.6732902232078
+        },
+        "time_exit": {
+          "count": 7,
+          "sum": 1078.9072793892988
+        }
+      },
+      "bootstrap_7d": {
+        "method": "Circular 7-day moving-block bootstrap of daily returns, 2000 draws; descriptive, no selection-bias correction",
+        "return_95pct": [
+          -3.8658714856858247,
+          22.789076190158816
+        ],
+        "sharpe_95pct": [
+          -0.5615339005385843,
+          2.333105889267268
+        ],
+        "positive_return_fraction": 0.8965
+      },
+      "bootstrap_28d": {
+        "method": "Circular 28-day moving-block bootstrap of daily returns, 2000 draws; descriptive, no selection-bias correction",
+        "return_95pct": [
+          -4.82934915949303,
+          25.837269227025754
+        ],
+        "sharpe_95pct": [
+          -0.7399471972501767,
+          2.5297126360672584
+        ],
+        "positive_return_fraction": 0.852
+      },
+      "reporting_windows": [
+        {
+          "start": "2023-09-01 00:00:00+00:00",
+          "end": "2023-11-29 23:45:00+00:00",
+          "return_pct": 1.3256491239827195
+        },
+        {
+          "start": "2023-11-30 00:00:00+00:00",
+          "end": "2024-02-27 23:45:00+00:00",
+          "return_pct": 3.705648164777231
+        },
+        {
+          "start": "2024-02-28 00:00:00+00:00",
+          "end": "2024-05-27 23:45:00+00:00",
+          "return_pct": -0.3074539985076119
+        },
+        {
+          "start": "2024-05-28 00:00:00+00:00",
+          "end": "2024-08-25 23:45:00+00:00",
+          "return_pct": -0.47364726088500175
+        },
+        {
+          "start": "2024-08-26 00:00:00+00:00",
+          "end": "2024-11-23 23:45:00+00:00",
+          "return_pct": 6.159414770021954
+        },
+        {
+          "start": "2024-11-24 00:00:00+00:00",
+          "end": "2025-02-21 23:45:00+00:00",
+          "return_pct": -3.1416248863056717
+        },
+        {
+          "start": "2025-02-22 00:00:00+00:00",
+          "end": "2025-05-22 23:45:00+00:00",
+          "return_pct": 0.7360656938510068
+        },
+        {
+          "start": "2025-05-23 00:00:00+00:00",
+          "end": "2025-08-10 11:45:00+00:00",
+          "return_pct": 0.03365565967872186
+        }
+      ],
+      "double_cost": {
+        "return_pct": 3.9420620912920423,
+        "sharpe": 0.5419993077468418,
+        "sortino": 0.9214588816343349,
+        "max_dd_pct": -5.006919558932433,
+        "profit_factor": 1.266367319260035,
+        "win_rate": 0.35714285714285715,
+        "avg_trade_pnl": 4.6929310610620485,
+        "trades": 84,
+        "net_without_best_5pct": -636.6456313239216
+      },
+      "forced_fold_liquidation": {
+        "return_pct": 7.8908088761833195,
+        "sharpe": 0.9801555875270666,
+        "max_dd_pct": -4.51386947431458,
+        "trades": 85
+      }
+    },
+    "sizing_only": {
+      "return_pct": 2.0369130686527903,
+      "sharpe": 0.4111612785714938,
+      "sortino": 0.6451093065547129,
+      "max_dd_pct": -3.3636866018372014,
+      "profit_factor": 1.2080094869518545,
+      "win_rate": 0.4166666666666667,
+      "avg_trade_pnl": 2.424896510300976,
+      "trades": 84,
+      "net_without_best_5pct": -376.5759978433305,
+      "top3_gross_profit_share": 0.3265236338901446,
+      "net_without_top3": -182.5638741451175,
+      "max_holding_hours": 168.0,
+      "trades_over_7days": 0,
+      "exit_reasons": {
+        "gap_stop": {
+          "count": 4,
+          "sum": -67.96088260746194
+        },
+        "intrabar_stop": {
+          "count": 73,
+          "sum": -251.7821845728957
+        },
+        "time_exit": {
+          "count": 7,
+          "sum": 523.4343740456396
+        }
+      },
+      "bootstrap_7d": {
+        "method": "Circular 7-day moving-block bootstrap of daily returns, 2000 draws; descriptive, no selection-bias correction",
+        "return_95pct": [
+          -4.849036313959568,
+          9.792101918548237
+        ],
+        "sharpe_95pct": [
+          -1.017825937305677,
+          1.8426237783654256
+        ],
+        "positive_return_fraction": 0.7055
+      },
+      "bootstrap_28d": {
+        "method": "Circular 28-day moving-block bootstrap of daily returns, 2000 draws; descriptive, no selection-bias correction",
+        "return_95pct": [
+          -4.9818461364590485,
+          11.180977794848104
+        ],
+        "sharpe_95pct": [
+          -1.0853486507420327,
+          1.9153626343604075
+        ],
+        "positive_return_fraction": 0.671
+      },
+      "reporting_windows": [
+        {
+          "start": "2023-09-01 00:00:00+00:00",
+          "end": "2023-11-29 23:45:00+00:00",
+          "return_pct": 0.1911364261508508
+        },
+        {
+          "start": "2023-11-30 00:00:00+00:00",
+          "end": "2024-02-27 23:45:00+00:00",
+          "return_pct": 1.8018323572417616
+        },
+        {
+          "start": "2024-02-28 00:00:00+00:00",
+          "end": "2024-05-27 23:45:00+00:00",
+          "return_pct": -0.34403278794057357
+        },
+        {
+          "start": "2024-05-28 00:00:00+00:00",
+          "end": "2024-08-25 23:45:00+00:00",
+          "return_pct": -0.23706113862600464
+        },
+        {
+          "start": "2024-08-26 00:00:00+00:00",
+          "end": "2024-11-23 23:45:00+00:00",
+          "return_pct": 2.8348930623580904
+        },
+        {
+          "start": "2024-11-24 00:00:00+00:00",
+          "end": "2025-02-21 23:45:00+00:00",
+          "return_pct": -2.5714495939686666
+        },
+        {
+          "start": "2025-02-22 00:00:00+00:00",
+          "end": "2025-05-22 23:45:00+00:00",
+          "return_pct": 0.3225061661688011
+        },
+        {
+          "start": "2025-05-23 00:00:00+00:00",
+          "end": "2025-08-10 11:45:00+00:00",
+          "return_pct": 0.10937646094213438
+        }
+      ],
+      "double_cost": {
+        "return_pct": -0.28821539838504995,
+        "sharpe": -0.048283511324261744,
+        "sortino": -0.0719481981983721,
+        "max_dd_pct": -3.81341696726043,
+        "profit_factor": 0.9717559570368863,
+        "win_rate": 0.35714285714285715,
+        "avg_trade_pnl": -0.3431135695061754,
+        "trades": 84,
+        "net_without_best_5pct": -534.5073264020234
+      },
+      "forced_fold_liquidation": {
+        "return_pct": 1.9712982142891855,
+        "sharpe": 0.3984021268574942,
+        "max_dd_pct": -3.3995205999071687,
+        "trades": 85
+      }
+    },
+    "full": {
+      "return_pct": 2.825471271854618,
+      "sharpe": 1.388685747577155,
+      "sortino": 2.3469028620891152,
+      "max_dd_pct": -1.1397249943296606,
+      "profit_factor": 2.199092489797596,
+      "win_rate": 0.3,
+      "avg_trade_pnl": 4.709118786424336,
+      "trades": 60,
+      "net_without_best_5pct": -55.49667836300233,
+      "top3_gross_profit_share": 0.6523659329054354,
+      "net_without_top3": -55.49667836300233,
+      "max_holding_hours": 802.5,
+      "trades_over_7days": 13,
+      "exit_reasons": {
+        "intrabar_stop": {
+          "count": 7,
+          "sum": 176.58437656554528
+        },
+        "regime_exit": {
+          "count": 53,
+          "sum": 105.96275061991486
+        }
+      },
+      "bootstrap_7d": {
+        "method": "Circular 7-day moving-block bootstrap of daily returns, 2000 draws; descriptive, no selection-bias correction",
+        "return_95pct": [
+          -0.3234405847971683,
+          6.45284105722213
+        ],
+        "sharpe_95pct": [
+          -0.150584003081331,
+          2.921031530049407
+        ],
+        "positive_return_fraction": 0.9585
+      },
+      "bootstrap_28d": {
+        "method": "Circular 28-day moving-block bootstrap of daily returns, 2000 draws; descriptive, no selection-bias correction",
+        "return_95pct": [
+          -0.4468255048007641,
+          7.0301230251977636
+        ],
+        "sharpe_95pct": [
+          -0.22519844747008805,
+          3.0086542554784077
+        ],
+        "positive_return_fraction": 0.954
+      },
+      "reporting_windows": [
+        {
+          "start": "2023-09-01 00:00:00+00:00",
+          "end": "2023-11-29 23:45:00+00:00",
+          "return_pct": 0.29503639500894074
+        },
+        {
+          "start": "2023-11-30 00:00:00+00:00",
+          "end": "2024-02-27 23:45:00+00:00",
+          "return_pct": 2.185238229364339
+        },
+        {
+          "start": "2024-02-28 00:00:00+00:00",
+          "end": "2024-05-27 23:45:00+00:00",
+          "return_pct": 0.12338450292765923
+        },
+        {
+          "start": "2024-05-28 00:00:00+00:00",
+          "end": "2024-08-25 23:45:00+00:00",
+          "return_pct": -0.04011756040052106
+        },
+        {
+          "start": "2024-08-26 00:00:00+00:00",
+          "end": "2024-11-23 23:45:00+00:00",
+          "return_pct": 1.005427704436035
+        },
+        {
+          "start": "2024-11-24 00:00:00+00:00",
+          "end": "2025-02-21 23:45:00+00:00",
+          "return_pct": -0.8017788370769385
+        },
+        {
+          "start": "2025-02-22 00:00:00+00:00",
+          "end": "2025-05-22 23:45:00+00:00",
+          "return_pct": 0.1257565217477108
+        },
+        {
+          "start": "2025-05-23 00:00:00+00:00",
+          "end": "2025-08-10 11:45:00+00:00",
+          "return_pct": -0.0742443273940574
+        }
+      ],
+      "double_cost": {
+        "return_pct": 2.0980265050190683,
+        "sharpe": 1.0464239615804027,
+        "sortino": 1.7108283066076087,
+        "max_dd_pct": -1.301672835716794,
+        "profit_factor": 1.7598518284995883,
+        "win_rate": 0.25,
+        "avg_trade_pnl": 3.496710841698636,
+        "trades": 60,
+        "net_without_best_5pct": -115.11007159454249
+      },
+      "forced_fold_liquidation": {
+        "return_pct": 2.2493491631857765,
+        "sharpe": 1.195914525623943,
+        "max_dd_pct": -1.1424670780642687,
+        "trades": 62
+      }
+    }
+  },
+  "sensitivity": {
+    "scale_0.8": {
+      "return_pct": 2.585671250413757,
+      "sharpe": 1.350251209143281,
+      "sortino": 2.257506320213936,
+      "max_dd_pct": -1.0799503488936546,
+      "profit_factor": 2.1948952693482173,
+      "win_rate": 0.3,
+      "avg_trade_pnl": 4.3094520840228805,
+      "trades": 60,
+      "net_without_best_5pct": -50.66214480667577
+    },
+    "scale_1.2": {
+      "return_pct": 3.065344070740328,
+      "sharpe": 1.411447441688698,
+      "sortino": 2.410911483347872,
+      "max_dd_pct": -1.1994758796817662,
+      "profit_factor": 2.202465410986618,
+      "win_rate": 0.3,
+      "avg_trade_pnl": 5.108906784567327,
+      "trades": 60,
+      "net_without_best_5pct": -60.34092038982112
+    },
+    "multiple_0.8": {
+      "return_pct": 3.8796128636885863,
+      "sharpe": 1.5326912812861,
+      "sortino": 2.6925169969576133,
+      "max_dd_pct": -1.2810817652227913,
+      "profit_factor": 2.395407885809925,
+      "win_rate": 0.31746031746031744,
+      "avg_trade_pnl": 6.158115656648492,
+      "trades": 63,
+      "net_without_best_5pct": -69.80653613790793
+    },
+    "multiple_1.2": {
+      "return_pct": 2.4059625880650914,
+      "sharpe": 1.1048769438563966,
+      "sortino": 1.684494149067125,
+      "max_dd_pct": -1.0034877462651859,
+      "profit_factor": 2.216998365855548,
+      "win_rate": 0.3103448275862069,
+      "avg_trade_pnl": 4.148211358732752,
+      "trades": 58,
+      "net_without_best_5pct": -54.3924209671645
+    },
+    "days_0.8": {
+      "return_pct": 3.0870412323391605,
+      "sharpe": 1.4737302888547499,
+      "sortino": 2.5436711293770213,
+      "max_dd_pct": -1.1094279474825441,
+      "profit_factor": 2.302309758411937,
+      "win_rate": 0.3,
+      "avg_trade_pnl": 5.14506872056524,
+      "trades": 60,
+      "net_without_best_5pct": -52.2591683843512
+    },
+    "days_1.2": {
+      "return_pct": 2.738474586915096,
+      "sharpe": 1.3622503276398545,
+      "sortino": 2.2866203083296717,
+      "max_dd_pct": -1.1407911431190132,
+      "profit_factor": 2.1876658936221904,
+      "win_rate": 0.3114754098360656,
+      "avg_trade_pnl": 4.489302601500065,
+      "trades": 61,
+      "net_without_best_5pct": -86.20878265259802
+    },
+    "negative_z_0.8": {
+      "return_pct": 2.3615326405313386,
+      "sharpe": 1.1620949878216673,
+      "sortino": 1.9321755419625066,
+      "max_dd_pct": -1.1953466765347587,
+      "profit_factor": 1.8938830143927667,
+      "win_rate": 0.30158730158730157,
+      "avg_trade_pnl": 3.748464508779745,
+      "trades": 63,
+      "net_without_best_5pct": -134.97236392361404
+    },
+    "negative_z_1.2": {
+      "return_pct": 2.6610479699539002,
+      "sharpe": 1.308407039765883,
+      "sortino": 2.218492082420241,
+      "max_dd_pct": -1.1991292104566065,
+      "profit_factor": 2.0944092132503855,
+      "win_rate": 0.3333333333333333,
+      "avg_trade_pnl": 4.43507994992308,
+      "trades": 60,
+      "net_without_best_5pct": -69.60213561240931
+    },
+    "joint_0.8": {
+      "return_pct": 3.6564117051298917,
+      "sharpe": 1.4992768353830692,
+      "sortino": 2.7135186586240216,
+      "max_dd_pct": -1.228482433749456,
+      "profit_factor": 2.37253839658827,
+      "win_rate": 0.2878787878787879,
+      "avg_trade_pnl": 5.5400177350451605,
+      "trades": 66,
+      "net_without_best_5pct": -99.58916308531695
+    },
+    "joint_1.2": {
+      "return_pct": 2.4907269769515405,
+      "sharpe": 1.182429429006269,
+      "sortino": 1.8992502741302806,
+      "max_dd_pct": -1.0785185110124496,
+      "profit_factor": 2.2192873474420587,
+      "win_rate": 0.3448275862068966,
+      "avg_trade_pnl": 4.294356856812964,
+      "trades": 58,
+      "net_without_best_5pct": -47.10213456387456
+    }
+  },
+  "method": "Frozen three-arm discovery-only evaluation. Continuous positions across 90d reporting boundaries; only final sample liquidation. No OOS or production change. Spot 10bp fees +5bp slippage each side."
+}
