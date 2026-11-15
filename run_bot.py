@@ -15,6 +15,7 @@ from trading.managed_position import managed_position, market_quantity, confirm_
 from trading.order_executor import execute_order, get_portfolio_value, assets_from_symbol
 from trading.notifier import send_message
 from trading.heartbeat import Heartbeat
+from strategies.risk_overlay import entry_multiplier
 from trading.performance_tracker import record_trade, record_snapshot, summary as perf_summary
 
 # --- Environment ---
@@ -266,6 +267,13 @@ def run_one_symbol(sym_cfg: dict, force: bool = False):
     logger.info(f"[{symbol}] Strategy={strategy_name} | Decision={decision or 'HOLD'}{extra_part} | LastBar={closed_df.index[-1]}")
 
     if decision in ("BUY", "SELL"):
+        if decision == "BUY":
+            multiplier = entry_multiplier(result)
+            if multiplier == 0:
+                logger.info(f"[{symbol}] Risk overlay veto; no order")
+                return
+            order_quantity *= multiplier
+            logger.info(f"[{symbol}] Risk overlay entry size multiplier={multiplier:.3f}")
         base, quote = assets_from_symbol(symbol)
         balances = portfolio_before["breakdown"]
         submitted_quantity = order_quantity
