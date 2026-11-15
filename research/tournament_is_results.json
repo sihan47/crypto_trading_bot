@@ -1,0 +1,1746 @@
+{
+  "spec": {
+    "risk": 0.005,
+    "stop_vol": 2.0,
+    "trail": 2.0,
+    "deviation": 1.0,
+    "impulse": 1.0,
+    "tail": 0.1,
+    "holding": 1.0,
+    "liquidity": 0.001
+  },
+  "discovery_end": "2025-08-10 12:00:00+00:00",
+  "method": "Frozen parameters; initial 365d calibration/history, successive 90d forward evaluation windows inside previously explored IS. Cash spot only; no funding. No final OOS validation.",
+  "archetypes": {
+    "A": {
+      "return_pct": 5.1043892489151865,
+      "sharpe": 0.9900680090830883,
+      "sortino": 1.7114643233525002,
+      "max_dd_pct": -2.4650361130629905,
+      "profit_factor": 1.7839294720626016,
+      "win_rate": 0.5416666666666666,
+      "avg_trade_pnl": 10.63414426857316,
+      "trades": 48,
+      "net_without_best_5pct": -52.65584950821551,
+      "orders": 48,
+      "fills": 48,
+      "folds": [
+        {
+          "fold": 1,
+          "start": "2023-09-01 00:00:00+00:00",
+          "end_exclusive": "2023-11-30 00:00:00+00:00",
+          "return_pct": -0.1639838160255258,
+          "sharpe": -0.3182616701531624,
+          "sortino": -0.44249122873899277,
+          "max_dd_pct": -0.973077152405688,
+          "profit_factor": 0.835142372540553,
+          "win_rate": 0.5,
+          "avg_trade_pnl": -2.733063600425396,
+          "trades": 6,
+          "net_without_best_5pct": -86.98190674048453,
+          "orders": 6,
+          "fills": 6
+        },
+        {
+          "fold": 2,
+          "start": "2023-11-30 00:00:00+00:00",
+          "end_exclusive": "2024-02-28 00:00:00+00:00",
+          "return_pct": 2.2771347167855893,
+          "sharpe": 3.1267150606769096,
+          "sortino": 6.978218784785161,
+          "max_dd_pct": -0.9299407732379472,
+          "profit_factor": 3.9705688339926217,
+          "win_rate": 0.7142857142857143,
+          "avg_trade_pnl": 32.53049595407975,
+          "trades": 7,
+          "net_without_best_5pct": -4.985314043210906,
+          "orders": 7,
+          "fills": 7
+        },
+        {
+          "fold": 3,
+          "start": "2024-02-28 00:00:00+00:00",
+          "end_exclusive": "2024-05-28 00:00:00+00:00",
+          "return_pct": 0.5794524250253286,
+          "sharpe": 0.8138843352386925,
+          "sortino": 1.5959172449542867,
+          "max_dd_pct": -1.0378097497410144,
+          "profit_factor": 2.052670058879462,
+          "win_rate": 0.625,
+          "avg_trade_pnl": 7.243155312816732,
+          "trades": 8,
+          "net_without_best_5pct": -6.076194853405752,
+          "orders": 8,
+          "fills": 8
+        },
+        {
+          "fold": 4,
+          "start": "2024-05-28 00:00:00+00:00",
+          "end_exclusive": "2024-08-26 00:00:00+00:00",
+          "return_pct": 0.0,
+          "sharpe": null,
+          "sortino": null,
+          "max_dd_pct": 0.0,
+          "profit_factor": null,
+          "win_rate": null,
+          "avg_trade_pnl": null,
+          "trades": 0,
+          "net_without_best_5pct": 0.0,
+          "orders": 0,
+          "fills": 0
+        },
+        {
+          "fold": 5,
+          "start": "2024-08-26 00:00:00+00:00",
+          "end_exclusive": "2024-11-24 00:00:00+00:00",
+          "return_pct": 2.4358995051339205,
+          "sharpe": 3.6314370230064617,
+          "sortino": 10.108744217259341,
+          "max_dd_pct": -0.6657979441121786,
+          "profit_factor": 33.474992760229455,
+          "win_rate": 0.8,
+          "avg_trade_pnl": 48.717990102678144,
+          "trades": 5,
+          "net_without_best_5pct": 112.88734036616597,
+          "orders": 5,
+          "fills": 5
+        },
+        {
+          "fold": 6,
+          "start": "2024-11-24 00:00:00+00:00",
+          "end_exclusive": "2025-02-22 00:00:00+00:00",
+          "return_pct": -1.6709058220292228,
+          "sharpe": -2.278528985771678,
+          "sortino": -2.7556316414756834,
+          "max_dd_pct": -1.8297793305400156,
+          "profit_factor": 0.35514667439952385,
+          "win_rate": 0.3333333333333333,
+          "avg_trade_pnl": -13.924215183576996,
+          "trades": 12,
+          "net_without_best_5pct": -212.44881771276988,
+          "orders": 12,
+          "fills": 12
+        },
+        {
+          "fold": 7,
+          "start": "2025-02-22 00:00:00+00:00",
+          "end_exclusive": "2025-05-23 00:00:00+00:00",
+          "return_pct": 0.4353396626384676,
+          "sharpe": 1.3997941186817169,
+          "sortino": 2.2806168728887637,
+          "max_dd_pct": -0.508246934170109,
+          "profit_factor": 5.781148717658962,
+          "win_rate": 0.5,
+          "avg_trade_pnl": 21.76698313192412,
+          "trades": 2,
+          "net_without_best_5pct": -9.105336151343181,
+          "orders": 2,
+          "fills": 2
+        },
+        {
+          "fold": 8,
+          "start": "2025-05-23 00:00:00+00:00",
+          "end_exclusive": "2025-08-10 12:00:00+00:00",
+          "return_pct": 1.1637719708825989,
+          "sharpe": 1.303563011003494,
+          "sortino": 2.4060658479006753,
+          "max_dd_pct": -1.7369713557669808,
+          "profit_factor": 1.9358172111723266,
+          "win_rate": 0.5,
+          "avg_trade_pnl": 14.547149636031932,
+          "trades": 8,
+          "net_without_best_5pct": -72.79844135641599,
+          "orders": 8,
+          "fills": 8
+        }
+      ],
+      "worst_drawdown": {
+        "peak": "2024-11-22 07:30:00+00:00",
+        "trough": "2025-07-01 23:00:00+00:00",
+        "drawdown_pct": -2.4650361130629905
+      },
+      "regime_pnl": [
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "count": 21,
+          "sum": -66.15638621671053,
+          "mean": -3.150304105557644
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "count": 27,
+          "sum": 576.5953111082222,
+          "mean": 21.355381892897118
+        }
+      ],
+      "drawdown_trades": [
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2024-11-17 09:00:00+00:00",
+          "exit_time": "2024-11-23 23:45:00+00:00",
+          "net_pnl": 91.35919625754585,
+          "reason": "fold_end",
+          "hours": 158.75,
+          "entry_notional": 1298.5765020537497,
+          "fees": 2.691203403768814,
+          "entry_price": 91030.60255499999,
+          "exit_price": 97623.5638,
+          "fold": 5
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2024-11-29 14:00:00+00:00",
+          "exit_time": "2024-11-30 22:45:00+00:00",
+          "net_pnl": -16.267007328217215,
+          "reason": "intrabar_stop",
+          "hours": 32.75,
+          "entry_notional": 1464.5822295476664,
+          "fees": 2.9158132650321473,
+          "entry_price": 97271.961675,
+          "exit_price": 96385.22632410697,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2024-12-01 23:00:00+00:00",
+          "exit_time": "2024-12-02 08:15:00+00:00",
+          "net_pnl": -44.48055194022138,
+          "reason": "intrabar_stop",
+          "hours": 9.25,
+          "entry_notional": 1730.5345418435256,
+          "fees": 3.420008540287118,
+          "entry_price": 97611.34128,
+          "exit_price": 95295.3085062863,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2024-12-11 17:00:00+00:00",
+          "exit_time": "2024-12-18 04:15:00+00:00",
+          "net_pnl": 26.733219214400176,
+          "reason": "intrabar_stop",
+          "hours": 155.25,
+          "entry_notional": 920.0275103406491,
+          "fees": 1.8686568967924908,
+          "entry_price": 100626.288,
+          "exit_price": 103754.56469885605,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2024-12-18 05:00:00+00:00",
+          "exit_time": "2024-12-18 23:45:00+00:00",
+          "net_pnl": -37.12238760889381,
+          "reason": "intrabar_stop",
+          "hours": 18.75,
+          "entry_notional": 939.2635167197598,
+          "fees": 1.8432478937243504,
+          "entry_price": 103919.934,
+          "exit_price": 100016.656798751,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2024-12-24 18:00:00+00:00",
+          "exit_time": "2024-12-26 09:30:00+00:00",
+          "net_pnl": -36.68145041686767,
+          "reason": "intrabar_stop",
+          "hours": 39.5,
+          "entry_notional": 1019.274212678476,
+          "fees": 2.0038708457858703,
+          "entry_price": 98846.868735,
+          "exit_price": 95483.91682934681,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-01-02 13:00:00+00:00",
+          "exit_time": "2025-01-07 15:00:00+00:00",
+          "net_pnl": 18.555208443976348,
+          "reason": "intrabar_stop",
+          "hours": 122.0,
+          "entry_notional": 1353.1394491576377,
+          "fees": 2.7275616684276796,
+          "entry_price": 96898.43500499999,
+          "exit_price": 98422.49604523272,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-01-07 16:00:00+00:00",
+          "exit_time": "2025-01-08 17:15:00+00:00",
+          "net_pnl": -49.62200439131754,
+          "reason": "intrabar_stop",
+          "hours": 25.25,
+          "entry_notional": 1052.6378443684455,
+          "fees": 2.057711395741315,
+          "entry_price": 98001.23612999999,
+          "exit_price": 93572.9709539435,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-01-15 01:00:00+00:00",
+          "exit_time": "2025-01-19 22:45:00+00:00",
+          "net_pnl": 47.718128188896536,
+          "reason": "intrabar_stop",
+          "hours": 117.75,
+          "entry_notional": 1002.7532136802294,
+          "fees": 2.05527983538474,
+          "entry_price": 96937.80468,
+          "exit_price": 101749.48200946739,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-01-24 01:00:00+00:00",
+          "exit_time": "2025-01-26 00:45:00+00:00",
+          "net_pnl": 3.8047389324815266,
+          "reason": "intrabar_stop",
+          "hours": 47.75,
+          "entry_notional": 515.6240027457791,
+          "fees": 1.0360888332572968,
+          "entry_price": 103498.34331,
+          "exit_price": 104470.01579098424,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-01-30 01:00:00+00:00",
+          "exit_time": "2025-01-31 19:15:00+00:00",
+          "net_pnl": -16.69448358766929,
+          "reason": "intrabar_stop",
+          "hours": 42.25,
+          "entry_notional": 904.582651517168,
+          "fees": 1.7942650845311978,
+          "entry_price": 104078.063025,
+          "exit_price": 102363.69687188519,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-02-04 05:00:00+00:00",
+          "exit_time": "2025-02-06 18:30:00+00:00",
+          "net_pnl": -30.710938944764834,
+          "reason": "intrabar_stop",
+          "hours": 61.5,
+          "entry_notional": 699.7131969944495,
+          "fees": 1.370085540584719,
+          "entry_price": 100103.13655499999,
+          "exit_price": 95905.54321593628,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-02-21 11:00:00+00:00",
+          "exit_time": "2025-02-21 19:15:00+00:00",
+          "net_pnl": -41.01642095347363,
+          "reason": "intrabar_stop",
+          "hours": 8.25,
+          "entry_notional": 1560.0115562223293,
+          "fees": 3.0820887802714565,
+          "entry_price": 98661.306,
+          "exit_price": 96262.18867326107,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-05-16 00:00:00+00:00",
+          "exit_time": "2025-05-19 04:00:00+00:00",
+          "net_pnl": -9.419010261023553,
+          "reason": "intrabar_stop",
+          "hours": 76.0,
+          "entry_notional": 1206.401253657112,
+          "fees": 2.40578928633954,
+          "entry_price": 103815.591855,
+          "exit_price": 103212.07649550447,
+          "fold": 7
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-05-19 22:00:00+00:00",
+          "exit_time": "2025-05-22 23:45:00+00:00",
+          "net_pnl": 54.452699092132924,
+          "reason": "fold_end",
+          "hours": 73.75,
+          "entry_notional": 974.6370351420409,
+          "fees": 2.005732501878093,
+          "entry_price": 105527.407335,
+          "exit_price": 111640.36189500001,
+          "fold": 7
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-05-27 18:00:00+00:00",
+          "exit_time": "2025-05-28 19:30:00+00:00",
+          "net_pnl": -34.65339821347654,
+          "reason": "intrabar_stop",
+          "hours": 25.5,
+          "entry_notional": 1122.3613483585875,
+          "fees": 2.212281580083782,
+          "entry_price": 110287.57623,
+          "exit_price": 107099.78637165886,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-08 04:00:00+00:00",
+          "exit_time": "2025-06-12 04:15:00+00:00",
+          "net_pnl": 38.06257776426593,
+          "reason": "intrabar_stop",
+          "hours": 96.25,
+          "entry_notional": 2476.329052121661,
+          "fees": 4.995716398405993,
+          "entry_price": 105524.325795,
+          "exit_price": 107359.17785454588,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-12 05:00:00+00:00",
+          "exit_time": "2025-06-13 00:00:00+00:00",
+          "net_pnl": -45.960747396327704,
+          "reason": "intrabar_stop",
+          "hours": 19.0,
+          "entry_notional": 1549.9895816834312,
+          "fees": 3.057075491461996,
+          "entry_price": 107819.012565,
+          "exit_price": 104834.58505989941,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-16 18:00:00+00:00",
+          "exit_time": "2025-06-17 11:15:00+00:00",
+          "net_pnl": -37.19293642498115,
+          "reason": "intrabar_stop",
+          "hours": 17.25,
+          "entry_notional": 1625.2495968504,
+          "fees": 3.216522780055875,
+          "entry_price": 107808.88750499999,
+          "exit_price": 105555.10484689775,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-06-24 02:00:00+00:00",
+          "exit_time": "2025-06-30 14:00:00+00:00",
+          "net_pnl": 12.451648801471023,
+          "reason": "intrabar_stop",
+          "hours": 156.0,
+          "entry_notional": 888.6787216234582,
+          "fees": 1.7916006927411285,
+          "entry_price": 105503.475375,
+          "exit_price": 107194.42654296248,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-07-01 02:00:00+00:00",
+          "exit_time": "2025-07-04 14:00:00+00:00",
+          "net_pnl": 3.0546568082848884,
+          "reason": "intrabar_stop",
+          "hours": 84.0,
+          "entry_notional": 1912.4703796823758,
+          "fees": 3.8318272434164533,
+          "entry_price": 107273.61,
+          "exit_price": 107659.88422012996,
+          "fold": 8
+        }
+      ],
+      "exit_diagnostics": {
+        "fold_end": {
+          "count": 2,
+          "sum": 145.81189534967876
+        },
+        "gap_stop": {
+          "count": 1,
+          "sum": -26.101398168272226
+        },
+        "intrabar_stop": {
+          "count": 42,
+          "sum": -172.36634668962213
+        },
+        "time_exit": {
+          "count": 3,
+          "sum": 563.0947743997272
+        }
+      }
+    },
+    "B": {
+      "return_pct": -3.018486637984663,
+      "sharpe": -1.2407840135088795,
+      "sortino": -1.3083113098256791,
+      "max_dd_pct": -3.7015540050653772,
+      "profit_factor": 0.45310175003533293,
+      "win_rate": 0.49122807017543857,
+      "avg_trade_pnl": -5.295590592955592,
+      "trades": 57,
+      "net_without_best_5pct": -370.0536962813244,
+      "orders": 79,
+      "fills": 57,
+      "folds": [
+        {
+          "fold": 1,
+          "start": "2023-09-01 00:00:00+00:00",
+          "end_exclusive": "2023-11-30 00:00:00+00:00",
+          "return_pct": 0.058485089505766474,
+          "sharpe": 1.392041792409391,
+          "sortino": 5.39307761034673,
+          "max_dd_pct": -0.07096305325838825,
+          "profit_factor": 2.5721697745908534,
+          "win_rate": 0.5,
+          "avg_trade_pnl": 1.4621272376432017,
+          "trades": 4,
+          "net_without_best_5pct": -2.146726958277384,
+          "orders": 6,
+          "fills": 4
+        },
+        {
+          "fold": 2,
+          "start": "2023-11-30 00:00:00+00:00",
+          "end_exclusive": "2024-02-28 00:00:00+00:00",
+          "return_pct": 0.00871872493759529,
+          "sharpe": 0.06851245292652267,
+          "sortino": 0.08958117916614403,
+          "max_dd_pct": -0.16790527575690772,
+          "profit_factor": 1.0303374113360726,
+          "win_rate": 0.6666666666666666,
+          "avg_trade_pnl": 0.14531208229304107,
+          "trades": 6,
+          "net_without_best_5pct": -12.167040022067113,
+          "orders": 8,
+          "fills": 6
+        },
+        {
+          "fold": 3,
+          "start": "2024-02-28 00:00:00+00:00",
+          "end_exclusive": "2024-05-28 00:00:00+00:00",
+          "return_pct": 0.4954452607448534,
+          "sharpe": 3.678264329404049,
+          "sortino": 19.87793010673819,
+          "max_dd_pct": -0.16554958631467276,
+          "profit_factor": 4.847204046788223,
+          "win_rate": 0.8333333333333334,
+          "avg_trade_pnl": 8.257421012414321,
+          "trades": 6,
+          "net_without_best_5pct": 29.82704936750065,
+          "orders": 6,
+          "fills": 6
+        },
+        {
+          "fold": 4,
+          "start": "2024-05-28 00:00:00+00:00",
+          "end_exclusive": "2024-08-26 00:00:00+00:00",
+          "return_pct": -0.34321501178116165,
+          "sharpe": -1.5765050833530199,
+          "sortino": -1.8820930939448977,
+          "max_dd_pct": -0.5121718748811954,
+          "profit_factor": 0.47348989742338843,
+          "win_rate": 0.5,
+          "avg_trade_pnl": -3.432150117811227,
+          "trades": 10,
+          "net_without_best_5pct": -45.17462971063844,
+          "orders": 11,
+          "fills": 10
+        },
+        {
+          "fold": 5,
+          "start": "2024-08-26 00:00:00+00:00",
+          "end_exclusive": "2024-11-24 00:00:00+00:00",
+          "return_pct": -0.12377748441846359,
+          "sharpe": -0.7942818350897212,
+          "sortino": -1.070430889688459,
+          "max_dd_pct": -0.5327159378557433,
+          "profit_factor": 0.5310305221887337,
+          "win_rate": 0.5,
+          "avg_trade_pnl": -2.062958073640933,
+          "trades": 6,
+          "net_without_best_5pct": -19.00996961559349,
+          "orders": 8,
+          "fills": 6
+        },
+        {
+          "fold": 6,
+          "start": "2024-11-24 00:00:00+00:00",
+          "end_exclusive": "2025-02-22 00:00:00+00:00",
+          "return_pct": -1.4703274125633436,
+          "sharpe": -2.174691238160629,
+          "sortino": -2.1764889513547128,
+          "max_dd_pct": -1.6022557827477746,
+          "profit_factor": 0.03451922191989325,
+          "win_rate": 0.14285714285714285,
+          "avg_trade_pnl": -21.00467732233366,
+          "trades": 7,
+          "net_without_best_5pct": -152.28966189126572,
+          "orders": 13,
+          "fills": 7
+        },
+        {
+          "fold": 7,
+          "start": "2025-02-22 00:00:00+00:00",
+          "end_exclusive": "2025-05-23 00:00:00+00:00",
+          "return_pct": 0.274031233238925,
+          "sharpe": 1.2327656912842948,
+          "sortino": 1.809790154725473,
+          "max_dd_pct": -0.35398512341356936,
+          "profit_factor": 1.3924582166632153,
+          "win_rate": 0.6666666666666666,
+          "avg_trade_pnl": 3.044791480432347,
+          "trades": 9,
+          "net_without_best_5pct": -2.3370755830032977,
+          "orders": 13,
+          "fills": 9
+        },
+        {
+          "fold": 8,
+          "start": "2025-05-23 00:00:00+00:00",
+          "end_exclusive": "2025-08-10 12:00:00+00:00",
+          "return_pct": -1.9322307684397466,
+          "sharpe": -5.503234063312751,
+          "sortino": -5.32086157145511,
+          "max_dd_pct": -1.9322307684397466,
+          "profit_factor": 0.01129712290099573,
+          "win_rate": 0.2222222222222222,
+          "avg_trade_pnl": -21.46923076044169,
+          "trades": 9,
+          "net_without_best_5pct": -195.27887193929865,
+          "orders": 14,
+          "fills": 9
+        }
+      ],
+      "worst_drawdown": {
+        "peak": "2024-06-17 14:15:00+00:00",
+        "trough": "2025-07-31 23:30:00+00:00",
+        "drawdown_pct": -3.7015540050653772
+      },
+      "regime_pnl": [
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "count": 10,
+          "sum": 31.106157276121767,
+          "mean": 3.110615727612177
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "count": 9,
+          "sum": -39.2461719283636,
+          "mean": -4.360685769818178
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "count": 17,
+          "sum": -62.30880276792777,
+          "mean": -3.6652236922310455
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "count": 21,
+          "sum": -231.3998463782992,
+          "mean": -11.019040303728534
+        }
+      ],
+      "drawdown_trades": [
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2024-06-17 14:00:00+00:00",
+          "exit_time": "2024-06-17 14:30:00+00:00",
+          "net_pnl": 10.914230252375086,
+          "reason": "center_exit",
+          "hours": 0.5,
+          "entry_notional": 3366.0034946338596,
+          "fees": 8.434357324161185,
+          "entry_price": 65167.40999500001,
+          "exit_price": 65542.00774614152,
+          "fold": 4
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2024-06-23 21:00:00+00:00",
+          "exit_time": "2024-06-23 23:30:00+00:00",
+          "net_pnl": -4.317184537805911,
+          "reason": "intrabar_stop",
+          "hours": 2.5,
+          "entry_notional": 599.7857706396329,
+          "fees": 1.4966438859472238,
+          "entry_price": 63708.139995000005,
+          "exit_price": 63408.54736125251,
+          "fold": 4
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2024-06-24 01:00:00+00:00",
+          "exit_time": "2024-06-24 01:30:00+00:00",
+          "net_pnl": 1.255285332861325,
+          "reason": "center_exit",
+          "hours": 0.5,
+          "entry_notional": 1711.219404776214,
+          "fees": 4.2835873846580546,
+          "entry_price": 63048.46000000001,
+          "exit_price": 63252.53517236008,
+          "fold": 4
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2024-06-24 03:00:00+00:00",
+          "exit_time": "2024-06-24 05:30:00+00:00",
+          "net_pnl": -33.86279208061516,
+          "reason": "intrabar_stop",
+          "hours": 2.5,
+          "entry_notional": 3508.447620651033,
+          "fees": 8.746002261808778,
+          "entry_price": 62849.49953000001,
+          "exit_price": 62399.56330731835,
+          "fold": 4
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2024-06-28 20:00:00+00:00",
+          "exit_time": "2024-06-29 00:00:00+00:00",
+          "net_pnl": 8.126710132907311,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 3183.186059044337,
+          "fees": 7.9740659236674185,
+          "entry_price": 60093.66813500001,
+          "exit_price": 60397.62608,
+          "fold": 4
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2024-07-23 18:00:00+00:00",
+          "exit_time": "2024-07-23 22:00:00+00:00",
+          "net_pnl": -7.268676239508633,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 2056.436314098335,
+          "fees": 5.138961070076404,
+          "entry_price": 65907.319855,
+          "exit_price": 65839.064,
+          "fold": 4
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2024-08-11 12:00:00+00:00",
+          "exit_time": "2024-08-11 15:00:00+00:00",
+          "net_pnl": -10.967469560586204,
+          "reason": "intrabar_stop",
+          "hours": 3.0,
+          "entry_notional": 846.8246824858636,
+          "fees": 2.108202439093166,
+          "entry_price": 60638.81542500001,
+          "exit_price": 60004.427369370846,
+          "fold": 4
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2024-08-18 04:00:00+00:00",
+          "exit_time": "2024-08-18 08:00:00+00:00",
+          "net_pnl": 1.6854951297033351,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 1144.4373851609357,
+          "fees": 2.865644602634678,
+          "entry_price": 59307.75129,
+          "exit_price": 59543.603305000004,
+          "fold": 4
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2024-08-29 19:00:00+00:00",
+          "exit_time": "2024-08-29 23:00:00+00:00",
+          "net_pnl": -4.241837033315578,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 2588.1011577449744,
+          "fees": 6.47248354086999,
+          "entry_price": 59131.4195,
+          "exit_price": 59182.384005,
+          "fold": 5
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2024-09-15 17:00:00+00:00",
+          "exit_time": "2024-09-15 18:45:00+00:00",
+          "net_pnl": 0.9125518315159432,
+          "reason": "center_exit",
+          "hours": 1.75,
+          "entry_notional": 1044.3810731190626,
+          "fees": 2.614479714343516,
+          "entry_price": 59920.074975,
+          "exit_price": 60122.43405647582,
+          "fold": 5
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2024-09-16 01:00:00+00:00",
+          "exit_time": "2024-09-16 02:45:00+00:00",
+          "net_pnl": -18.386599701665535,
+          "reason": "intrabar_stop",
+          "hours": 1.75,
+          "entry_notional": 1545.4870681108723,
+          "fees": 3.8491802508263415,
+          "entry_price": 58637.02682000001,
+          "exit_price": 58085.46539200668,
+          "fold": 5
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2024-09-22 02:00:00+00:00",
+          "exit_time": "2024-09-22 06:00:00+00:00",
+          "net_pnl": -3.8225642411760807,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 909.4669256468371,
+          "fees": 2.2721168667426594,
+          "entry_price": 63014.477000000006,
+          "exit_price": 62907.05074,
+          "fold": 5
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2024-10-07 23:00:00+00:00",
+          "exit_time": "2024-10-08 03:00:00+00:00",
+          "net_pnl": 6.646668797024093,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 2624.3894762420337,
+          "fees": 6.5741945539560644,
+          "entry_price": 62439.84446000001,
+          "exit_price": 62754.397105000004,
+          "fold": 5
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2024-10-21 03:00:00+00:00",
+          "exit_time": "2024-10-21 04:45:00+00:00",
+          "net_pnl": 6.487068232243423,
+          "reason": "center_exit",
+          "hours": 1.75,
+          "entry_notional": 3094.965700669242,
+          "fees": 7.751652972878226,
+          "entry_price": 68675.645,
+          "exit_price": 68991.59466061351,
+          "fold": 5
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2024-12-09 02:00:00+00:00",
+          "exit_time": "2024-12-09 06:00:00+00:00",
+          "net_pnl": -6.189844324512224,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 1804.5358829331078,
+          "fees": 4.5096595225307885,
+          "entry_price": 99478.77573,
+          "exit_price": 99386.152065,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-01-26 22:00:00+00:00",
+          "exit_time": "2025-01-26 23:00:00+00:00",
+          "net_pnl": -10.106552257860127,
+          "reason": "intrabar_stop",
+          "hours": 1.0,
+          "entry_notional": 1192.8297469312477,
+          "fees": 2.9749427578280874,
+          "entry_price": 104504.911405,
+          "exit_price": 103880.10453638084,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-01-27 00:00:00+00:00",
+          "exit_time": "2025-01-27 00:45:00+00:00",
+          "net_pnl": -42.29604127556351,
+          "reason": "intrabar_stop",
+          "hours": 0.75,
+          "entry_notional": 4298.95497009357,
+          "fees": 10.715807191149514,
+          "entry_price": 102568.69,
+          "exit_price": 101815.21775791667,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-01-27 01:00:00+00:00",
+          "exit_time": "2025-01-27 02:00:00+00:00",
+          "net_pnl": -49.75393419488193,
+          "reason": "intrabar_stop",
+          "hours": 1.0,
+          "entry_notional": 4527.195528250345,
+          "fees": 11.279514400831813,
+          "entry_price": 101677.136,
+          "exit_price": 100813.03176825,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-01-27 05:15:00+00:00",
+          "exit_time": "2025-01-27 06:30:00+00:00",
+          "net_pnl": -43.49776643622852,
+          "reason": "intrabar_stop",
+          "hours": 1.25,
+          "entry_notional": 3300.2612546392957,
+          "fees": 8.215370740902916,
+          "entry_price": 100359.83498,
+          "exit_price": 99286.90919126,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-02-01 23:00:00+00:00",
+          "exit_time": "2025-02-02 00:15:00+00:00",
+          "net_pnl": 5.261851246323308,
+          "reason": "center_exit",
+          "hours": 1.25,
+          "entry_notional": 2046.1515271808462,
+          "fees": 5.125766435634073,
+          "entry_price": 100616.576545,
+          "exit_price": 101127.37279627121,
+          "fold": 6
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-02-16 14:00:00+00:00",
+          "exit_time": "2025-02-16 15:15:00+00:00",
+          "net_pnl": -0.5883600920103464,
+          "reason": "center_exit",
+          "hours": 1.25,
+          "entry_notional": 2736.273827847082,
+          "fees": 6.846943152678373,
+          "entry_price": 96793.948815,
+          "exit_price": 97015.34221585905,
+          "fold": 6
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2025-03-09 11:15:00+00:00",
+          "exit_time": "2025-03-09 13:45:00+00:00",
+          "net_pnl": -32.02296850249277,
+          "reason": "intrabar_stop",
+          "hours": 2.5,
+          "entry_notional": 2583.4120685107137,
+          "fees": 6.432940142917209,
+          "entry_price": 84801.67795000001,
+          "exit_price": 83961.67361227502,
+          "fold": 7
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2025-03-09 16:00:00+00:00",
+          "exit_time": "2025-03-09 16:15:00+00:00",
+          "net_pnl": 13.646086899779009,
+          "reason": "center_exit",
+          "hours": 0.25,
+          "entry_notional": 3331.870858422377,
+          "fees": 8.351674907863586,
+          "entry_price": 83038.869795,
+          "exit_price": 83587.11111531072,
+          "fold": 7
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2025-03-09 17:00:00+00:00",
+          "exit_time": "2025-03-09 18:15:00+00:00",
+          "net_pnl": 15.478739078972227,
+          "reason": "center_exit",
+          "hours": 1.25,
+          "entry_notional": 3146.8721997354296,
+          "fees": 7.890549788205752,
+          "entry_price": 82454.761995,
+          "exit_price": 83067.08719578113,
+          "fold": 7
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2025-03-09 23:00:00+00:00",
+          "exit_time": "2025-03-10 01:00:00+00:00",
+          "net_pnl": 29.330404630261345,
+          "reason": "center_exit",
+          "hours": 2.0,
+          "entry_notional": 2406.751347623279,
+          "fees": 6.05226103472318,
+          "entry_price": 80318.010905,
+          "exit_price": 81498.79982593884,
+          "fold": 7
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2025-03-16 11:00:00+00:00",
+          "exit_time": "2025-03-16 11:15:00+00:00",
+          "net_pnl": -7.464916775394193,
+          "reason": "intrabar_stop",
+          "hours": 0.25,
+          "entry_notional": 766.0719932335152,
+          "fees": 1.909624690999393,
+          "entry_price": 83625.14651,
+          "exit_price": 83018.72554882834,
+          "fold": 7
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2025-04-03 00:00:00+00:00",
+          "exit_time": "2025-04-03 04:00:00+00:00",
+          "net_pnl": 19.143899243725407,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 2077.3785911826885,
+          "fees": 5.217808185385833,
+          "entry_price": 82475.031855,
+          "exit_price": 83442.228015,
+          "fold": 7
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "high",
+          "entry_time": "2025-04-06 23:00:00+00:00",
+          "exit_time": "2025-04-06 23:45:00+00:00",
+          "net_pnl": 14.21552192702661,
+          "reason": "center_exit",
+          "hours": 0.75,
+          "entry_notional": 2667.267758222297,
+          "fees": 6.689073991474244,
+          "entry_price": 78024.62817000001,
+          "exit_price": 78636.14282523366,
+          "fold": 7
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2025-05-05 02:00:00+00:00",
+          "exit_time": "2025-05-05 05:30:00+00:00",
+          "net_pnl": 4.073069258111986,
+          "reason": "center_exit",
+          "hours": 3.5,
+          "entry_notional": 1328.2265371503931,
+          "fees": 3.327967379513608,
+          "entry_price": 93882.0355,
+          "exit_price": 94405.15739593882,
+          "fold": 7
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-05-18 18:00:00+00:00",
+          "exit_time": "2025-05-18 19:45:00+00:00",
+          "net_pnl": -29.374303827977105,
+          "reason": "intrabar_stop",
+          "hours": 1.75,
+          "entry_notional": 2734.036263953018,
+          "fees": 6.812528884939508,
+          "entry_price": 104784.251665,
+          "exit_price": 103919.55256250084,
+          "fold": 7
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-05 18:00:00+00:00",
+          "exit_time": "2025-06-05 19:15:00+00:00",
+          "net_pnl": -21.56344628755321,
+          "reason": "intrabar_stop",
+          "hours": 1.25,
+          "entry_notional": 1693.4458409326091,
+          "fees": 4.216267423467437,
+          "entry_price": 103188.41998,
+          "exit_price": 102131.38707417667,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-11 18:00:00+00:00",
+          "exit_time": "2025-06-11 22:00:00+00:00",
+          "net_pnl": -18.4761358347408,
+          "reason": "time_exit",
+          "hours": 4.0,
+          "entry_notional": 2690.075705360827,
+          "fees": 6.713426554121448,
+          "entry_price": 108930.22764000001,
+          "exit_price": 108453.915915,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-15 21:00:00+00:00",
+          "exit_time": "2025-06-15 22:15:00+00:00",
+          "net_pnl": 2.033023908557652,
+          "reason": "center_exit",
+          "hours": 1.25,
+          "entry_notional": 1277.7167423365206,
+          "fees": 3.199524404154013,
+          "entry_price": 104677.16523500001,
+          "exit_price": 105105.84266105316,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-16 23:00:00+00:00",
+          "exit_time": "2025-06-17 00:00:00+00:00",
+          "net_pnl": -49.25613801608969,
+          "reason": "intrabar_stop",
+          "hours": 1.0,
+          "entry_notional": 3827.7356134580664,
+          "fees": 9.529612508137213,
+          "entry_price": 107646.159995,
+          "exit_price": 106528.9438775025,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-20 17:00:00+00:00",
+          "exit_time": "2025-06-20 17:30:00+00:00",
+          "net_pnl": -45.66503358552157,
+          "reason": "intrabar_stop",
+          "hours": 0.5,
+          "entry_notional": 3561.81343502045,
+          "fees": 8.86773629025586,
+          "entry_price": 103618.774695,
+          "exit_price": 102548.28323681917,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-06-21 19:00:00+00:00",
+          "exit_time": "2025-06-21 21:15:00+00:00",
+          "net_pnl": -34.96447189519173,
+          "reason": "intrabar_stop",
+          "hours": 2.25,
+          "entry_notional": 3738.8092378709684,
+          "fees": 9.321380002785016,
+          "entry_price": 102593.89739000001,
+          "exit_price": 101890.24428255502,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2025-06-29 15:00:00+00:00",
+          "exit_time": "2025-06-29 16:45:00+00:00",
+          "net_pnl": -8.076126985892266,
+          "reason": "intrabar_stop",
+          "hours": 1.75,
+          "entry_notional": 1132.1223767889917,
+          "fees": 2.8250548698564435,
+          "entry_price": 107894.10596,
+          "exit_price": 107393.66559868668,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-07-06 19:30:00+00:00",
+          "exit_time": "2025-07-06 20:00:00+00:00",
+          "net_pnl": 0.15032784543885577,
+          "reason": "center_exit",
+          "hours": 0.5,
+          "entry_notional": 469.939507032032,
+          "fees": 1.176175270696215,
+          "entry_price": 108409.75800500001,
+          "exit_price": 108715.76735229092,
+          "fold": 8
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2025-07-31 21:45:00+00:00",
+          "exit_time": "2025-07-31 23:30:00+00:00",
+          "net_pnl": -15.264824379246873,
+          "reason": "intrabar_stop",
+          "hours": 1.75,
+          "entry_notional": 1385.9738325154908,
+          "fees": 3.4531228797892695,
+          "entry_price": 116455.743,
+          "exit_price": 115463.27081766668,
+          "fold": 8
+        }
+      ],
+      "exit_diagnostics": {
+        "center_exit": {
+          "count": 23,
+          "sum": 202.3719758074594
+        },
+        "intrabar_stop": {
+          "count": 21,
+          "sum": -507.6209360221578
+        },
+        "time_exit": {
+          "count": 13,
+          "sum": 3.400296416229626
+        }
+      }
+    },
+    "C": {
+      "return_pct": -0.5459196082719386,
+      "sharpe": -0.7318230394836637,
+      "sortino": -0.7476273221219676,
+      "max_dd_pct": -0.9587700695984913,
+      "profit_factor": 0.16613469640967254,
+      "win_rate": 0.3333333333333333,
+      "avg_trade_pnl": -18.197320275731716,
+      "trades": 3,
+      "net_without_best_5pct": -65.46856020048031,
+      "orders": 3,
+      "fills": 3,
+      "folds": [
+        {
+          "fold": 1,
+          "start": "2023-09-01 00:00:00+00:00",
+          "end_exclusive": "2023-11-30 00:00:00+00:00",
+          "return_pct": 0.0,
+          "sharpe": null,
+          "sortino": null,
+          "max_dd_pct": 0.0,
+          "profit_factor": null,
+          "win_rate": null,
+          "avg_trade_pnl": null,
+          "trades": 0,
+          "net_without_best_5pct": 0.0,
+          "orders": 0,
+          "fills": 0
+        },
+        {
+          "fold": 2,
+          "start": "2023-11-30 00:00:00+00:00",
+          "end_exclusive": "2024-02-28 00:00:00+00:00",
+          "return_pct": -0.15546291658774525,
+          "sharpe": -2.0138409955990952,
+          "sortino": -2.0138409955990952,
+          "max_dd_pct": -0.17156755361980025,
+          "profit_factor": 0.0,
+          "win_rate": 0.0,
+          "avg_trade_pnl": -15.546291658774635,
+          "trades": 1,
+          "net_without_best_5pct": 0.0,
+          "orders": 1,
+          "fills": 1
+        },
+        {
+          "fold": 3,
+          "start": "2024-02-28 00:00:00+00:00",
+          "end_exclusive": "2024-05-28 00:00:00+00:00",
+          "return_pct": -0.5000000000000004,
+          "sharpe": -2.013840995599095,
+          "sortino": -2.0138409955990952,
+          "max_dd_pct": -0.6491158828982213,
+          "profit_factor": 0.0,
+          "win_rate": 0.0,
+          "avg_trade_pnl": -49.999999999999545,
+          "trades": 1,
+          "net_without_best_5pct": 0.0,
+          "orders": 1,
+          "fills": 1
+        },
+        {
+          "fold": 4,
+          "start": "2024-05-28 00:00:00+00:00",
+          "end_exclusive": "2024-08-26 00:00:00+00:00",
+          "return_pct": 0.0,
+          "sharpe": null,
+          "sortino": null,
+          "max_dd_pct": 0.0,
+          "profit_factor": null,
+          "win_rate": null,
+          "avg_trade_pnl": null,
+          "trades": 0,
+          "net_without_best_5pct": 0.0,
+          "orders": 0,
+          "fills": 0
+        },
+        {
+          "fold": 5,
+          "start": "2024-08-26 00:00:00+00:00",
+          "end_exclusive": "2024-11-24 00:00:00+00:00",
+          "return_pct": 0.10948276160980264,
+          "sharpe": 2.0138409955990952,
+          "sortino": null,
+          "max_dd_pct": -0.3299645631154924,
+          "profit_factor": null,
+          "win_rate": 1.0,
+          "avg_trade_pnl": 10.948276160978821,
+          "trades": 1,
+          "net_without_best_5pct": 0.0,
+          "orders": 1,
+          "fills": 1
+        },
+        {
+          "fold": 6,
+          "start": "2024-11-24 00:00:00+00:00",
+          "end_exclusive": "2025-02-22 00:00:00+00:00",
+          "return_pct": 0.0,
+          "sharpe": null,
+          "sortino": null,
+          "max_dd_pct": 0.0,
+          "profit_factor": null,
+          "win_rate": null,
+          "avg_trade_pnl": null,
+          "trades": 0,
+          "net_without_best_5pct": 0.0,
+          "orders": 0,
+          "fills": 0
+        },
+        {
+          "fold": 7,
+          "start": "2025-02-22 00:00:00+00:00",
+          "end_exclusive": "2025-05-23 00:00:00+00:00",
+          "return_pct": 0.0,
+          "sharpe": null,
+          "sortino": null,
+          "max_dd_pct": 0.0,
+          "profit_factor": null,
+          "win_rate": null,
+          "avg_trade_pnl": null,
+          "trades": 0,
+          "net_without_best_5pct": 0.0,
+          "orders": 0,
+          "fills": 0
+        },
+        {
+          "fold": 8,
+          "start": "2025-05-23 00:00:00+00:00",
+          "end_exclusive": "2025-08-10 12:00:00+00:00",
+          "return_pct": 0.0,
+          "sharpe": null,
+          "sortino": null,
+          "max_dd_pct": 0.0,
+          "profit_factor": null,
+          "win_rate": null,
+          "avg_trade_pnl": null,
+          "trades": 0,
+          "net_without_best_5pct": 0.0,
+          "orders": 0,
+          "fills": 0
+        }
+      ],
+      "worst_drawdown": {
+        "peak": "2023-12-11 10:00:00+00:00",
+        "trough": "2024-08-28 07:45:00+00:00",
+        "drawdown_pct": -0.9587700695984913
+      },
+      "regime_pnl": [
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "count": 1,
+          "sum": 10.876599373285167,
+          "mean": 10.876599373285167
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "count": 1,
+          "sum": -15.546291658774635,
+          "mean": -15.546291658774635
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "count": 1,
+          "sum": -49.92226854170568,
+          "mean": -49.92226854170568
+        }
+      ],
+      "drawdown_trades": [
+        {
+          "regime": "bull",
+          "vol_regime": "high",
+          "entry_time": "2023-12-11 04:00:00+00:00",
+          "exit_time": "2023-12-11 16:00:00+00:00",
+          "net_pnl": -15.546291658774635,
+          "reason": "time_exit",
+          "hours": 12.0,
+          "entry_notional": 1040.7648948000276,
+          "fees": 2.0680515494907716,
+          "entry_price": 42330.724785,
+          "exit_price": 41782.528285,
+          "fold": 2
+        },
+        {
+          "regime": "bull",
+          "vol_regime": "low",
+          "entry_time": "2024-04-02 04:00:00+00:00",
+          "exit_time": "2024-04-02 09:00:00+00:00",
+          "net_pnl": -49.92226854170568,
+          "reason": "intrabar_stop",
+          "hours": 5.0,
+          "entry_notional": 3689.4589715920692,
+          "fees": 7.336332006649081,
+          "entry_price": 66737.321985,
+          "exit_price": 65967.0,
+          "fold": 3
+        },
+        {
+          "regime": "bear",
+          "vol_regime": "low",
+          "entry_time": "2024-08-28 00:00:00+00:00",
+          "exit_time": "2024-08-28 12:00:00+00:00",
+          "net_pnl": 10.876599373285167,
+          "reason": "time_exit",
+          "hours": 12.0,
+          "entry_notional": 1896.2525387639384,
+          "fees": 3.807188865766929,
+          "entry_price": 59444.7075,
+          "exit_price": 59905.022505,
+          "fold": 5
+        }
+      ],
+      "exit_diagnostics": {
+        "intrabar_stop": {
+          "count": 1,
+          "sum": -49.92226854170568
+        },
+        "time_exit": {
+          "count": 2,
+          "sum": -4.669692285489468
+        }
+      }
+    }
+  },
+  "sensitivity": {
+    "risk_0.8": {
+      "A": {
+        "return_pct": 4.076078792045479,
+        "sharpe": 0.9900159932549073,
+        "max_dd_pct": -1.975564275296604,
+        "trades": 48
+      },
+      "B": {
+        "return_pct": -3.0376928438869077,
+        "sharpe": -1.3999222458951457,
+        "max_dd_pct": -3.5797000604356977,
+        "trades": 57
+      },
+      "C": {
+        "return_pct": -0.4367454830217832,
+        "sharpe": -0.7318230394836724,
+        "max_dd_pct": -0.7674686063775193,
+        "trades": 3
+      }
+    },
+    "risk_1.2": {
+      "A": {
+        "return_pct": 6.136305501455763,
+        "sharpe": 0.9901214372132751,
+        "max_dd_pct": -2.9527473032685103,
+        "trades": 48
+      },
+      "B": {
+        "return_pct": -2.9090582103437734,
+        "sharpe": -1.111952944917712,
+        "max_dd_pct": -3.7125402111347183,
+        "trades": 57
+      },
+      "C": {
+        "return_pct": -0.6550887536215688,
+        "sharpe": -0.7318230394836869,
+        "max_dd_pct": -1.1498455176322642,
+        "trades": 3
+      }
+    },
+    "stop_vol_0.8": {
+      "A": {
+        "return_pct": 6.3047348932302905,
+        "sharpe": 1.015503677478726,
+        "max_dd_pct": -3.004255761663055,
+        "trades": 49
+      },
+      "B": {
+        "return_pct": -2.475144645240379,
+        "sharpe": -1.0292992202536186,
+        "max_dd_pct": -3.3499355257293084,
+        "trades": 58
+      }
+    },
+    "stop_vol_1.2": {
+      "A": {
+        "return_pct": 4.328622274411953,
+        "sharpe": 0.9908796054788448,
+        "max_dd_pct": -2.091219164326308,
+        "trades": 48
+      },
+      "B": {
+        "return_pct": -3.6723460268412444,
+        "sharpe": -1.431477574470612,
+        "max_dd_pct": -4.189408507032722,
+        "trades": 57
+      }
+    },
+    "trail_0.8": {
+      "A": {
+        "return_pct": 1.073581499324261,
+        "sharpe": 0.22496337124762522,
+        "max_dd_pct": -3.768501453465556,
+        "trades": 66
+      }
+    },
+    "trail_1.2": {
+      "A": {
+        "return_pct": 4.775821143318626,
+        "sharpe": 0.940801946397452,
+        "max_dd_pct": -2.9741151071966065,
+        "trades": 42
+      }
+    },
+    "deviation_0.8": {
+      "B": {
+        "return_pct": -6.209286142894454,
+        "sharpe": -1.994071377160514,
+        "max_dd_pct": -6.265668790002799,
+        "trades": 108
+      }
+    },
+    "deviation_1.2": {
+      "B": {
+        "return_pct": -1.48852765789812,
+        "sharpe": -0.8883647460463864,
+        "max_dd_pct": -2.0298620410019286,
+        "trades": 25
+      }
+    },
+    "impulse_0.8": {
+      "C": {
+        "return_pct": -0.48123838978164635,
+        "sharpe": -0.6382478458545386,
+        "max_dd_pct": -1.0208157962444342,
+        "trades": 4
+      }
+    },
+    "impulse_1.2": {
+      "C": {
+        "return_pct": -0.5459196082719386,
+        "sharpe": -0.7318230394836637,
+        "max_dd_pct": -0.9587700695984913,
+        "trades": 3
+      }
+    },
+    "tail_0.8": {
+      "B": {
+        "return_pct": -2.579468487255543,
+        "sharpe": -1.0936915318192486,
+        "max_dd_pct": -3.3714892254221085,
+        "trades": 39
+      }
+    },
+    "tail_1.2": {
+      "B": {
+        "return_pct": -3.186135808126289,
+        "sharpe": -1.1788857675768432,
+        "max_dd_pct": -3.374694244501808,
+        "trades": 72
+      }
+    },
+    "holding_0.8": {
+      "A": {
+        "return_pct": 4.068861404454793,
+        "sharpe": 0.8031968366981208,
+        "max_dd_pct": -2.961044725021267,
+        "trades": 51
+      },
+      "B": {
+        "return_pct": -2.9670835333440837,
+        "sharpe": -1.235712751291638,
+        "max_dd_pct": -3.654351438341996,
+        "trades": 57
+      },
+      "C": {
+        "return_pct": -0.6370495006062238,
+        "sharpe": -0.8968411583532713,
+        "max_dd_pct": -0.9372388599370951,
+        "trades": 3
+      }
+    },
+    "holding_1.2": {
+      "A": {
+        "return_pct": 5.767450639964067,
+        "sharpe": 1.099612547006246,
+        "max_dd_pct": -2.4650361130629683,
+        "trades": 48
+      },
+      "B": {
+        "return_pct": -3.0262449903098565,
+        "sharpe": -1.2421694415657178,
+        "max_dd_pct": -3.6615300163421405,
+        "trades": 57
+      },
+      "C": {
+        "return_pct": -0.9217538028831074,
+        "sharpe": -1.013348338107995,
+        "max_dd_pct": -1.2229614458580174,
+        "trades": 3
+      }
+    },
+    "liquidity_0.8": {
+      "A": {
+        "return_pct": 5.1043892489151865,
+        "sharpe": 0.9900680090830883,
+        "max_dd_pct": -2.4650361130629905,
+        "trades": 48
+      },
+      "B": {
+        "return_pct": -2.3093073523718144,
+        "sharpe": -1.0821051139006133,
+        "max_dd_pct": -2.978929752279813,
+        "trades": 57
+      },
+      "C": {
+        "return_pct": -0.5459196082719386,
+        "sharpe": -0.7318230394836637,
+        "max_dd_pct": -0.9587700695984913,
+        "trades": 3
+      }
+    },
+    "liquidity_1.2": {
+      "A": {
+        "return_pct": 5.1043892489151865,
+        "sharpe": 0.9900680090830883,
+        "max_dd_pct": -2.4650361130629905,
+        "trades": 48
+      },
+      "B": {
+        "return_pct": -3.6624485113779914,
+        "sharpe": -1.366776281636558,
+        "max_dd_pct": -4.340432726120325,
+        "trades": 57
+      },
+      "C": {
+        "return_pct": -0.5459196082719386,
+        "sharpe": -0.7318230394836637,
+        "max_dd_pct": -0.9587700695984913,
+        "trades": 3
+      }
+    },
+    "all_0.8": {
+      "A": {
+        "return_pct": 0.5575500596862737,
+        "sharpe": 0.12772438029645491,
+        "max_dd_pct": -3.696701836065941,
+        "trades": 67
+      },
+      "B": {
+        "return_pct": -4.919903592121178,
+        "sharpe": -2.145983304668225,
+        "max_dd_pct": -5.064301097704993,
+        "trades": 87
+      },
+      "C": {
+        "return_pct": -0.6233621393557431,
+        "sharpe": -1.0622632239397085,
+        "max_dd_pct": -0.905076427460505,
+        "trades": 4
+      }
+    },
+    "all_1.2": {
+      "A": {
+        "return_pct": 4.685619392236173,
+        "sharpe": 0.8825228928961186,
+        "max_dd_pct": -3.296407930062062,
+        "trades": 42
+      },
+      "B": {
+        "return_pct": -1.6814264950009594,
+        "sharpe": -0.7150392294651347,
+        "max_dd_pct": -2.8188958735946845,
+        "trades": 32
+      },
+      "C": {
+        "return_pct": -1.105593817792594,
+        "sharpe": -1.0133483381079944,
+        "max_dd_pct": -1.466362105609853,
+        "trades": 3
+      }
+    }
+  },
+  "cost_stress": {
+    "A": {
+      "return_pct": 3.0584151556847683,
+      "sharpe": 0.6394021257642614,
+      "trades": 48
+    },
+    "B": {
+      "return_pct": -6.3111067041023645,
+      "sharpe": -2.3825305605480893,
+      "trades": 57
+    },
+    "C": {
+      "return_pct": -0.6284838845694529,
+      "sharpe": -0.8479543525328733,
+      "trades": 3
+    }
+  },
+  "B_execution_scenarios": {
+    "hypothetical_6bp_maker": {
+      "return_pct": -2.5175319894170545,
+      "sharpe": -1.0444185754943134,
+      "trades": 57,
+      "orders": 79,
+      "fills": 57
+    },
+    "10bp_penetration": {
+      "return_pct": -3.339071016573858,
+      "sharpe": -1.4185414465636672,
+      "trades": 50,
+      "orders": 79,
+      "fills": 50
+    }
+  }
+}
