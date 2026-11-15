@@ -104,8 +104,22 @@ class CouncilTests(unittest.TestCase):
         df.index=pd.date_range('2027-01-01',periods=len(df),freq='4h',tz='UTC')
         cards,market=gpt._summaries_from_outputs('BNBUSDT','4h',df,{},params,{})
         self.assertIn('research_available_after',market)
-        self.assertLess(cards['donchian20']['backtest_performance']['return_pct'],0)
+        self.assertNotIn('donchian20',cards)
+        self.assertIn('donchian20',market['excluded_strategies'])
         self.assertAlmostEqual(sum(c['weight'] for c in cards.values()),1.)
+
+    def test_asset_specific_removal_preserves_relative_weights(self):
+        row=council_features(self.prices()).iloc[-1]
+        old,_=council_cards(row)
+        btc,_=council_cards(row,'BTCUSDT')
+        bnb,market=council_cards(row,'BNBUSDT')
+        self.assertEqual(len(btc),6)
+        self.assertEqual(len(bnb),5)
+        self.assertNotIn('donchian20',bnb)
+        self.assertAlmostEqual(sum(x['weight'] for x in bnb.values()),1.)
+        self.assertAlmostEqual(bnb['keltner20']['weight']/bnb['band50']['weight'],
+                               old['keltner20']['weight']/old['band50']['weight'])
+        self.assertAlmostEqual(sum(market['group_budgets'].values()),1.)
 
 
 if __name__=='__main__': unittest.main()

@@ -346,7 +346,7 @@ def _summaries_from_outputs(
     if params.engine == "council_v1":
         if timeframe != "4h":
             raise ValueError("Council requires closed 4h bars")
-        cards, market = council_cards(council_features(ohlcv).iloc[-1])
+        cards, market = council_cards(council_features(ohlcv).iloc[-1], symbol)
         # Only attach research already available at decision time. This is
         # context for the arbiter, never an automatic fitted weight multiplier.
         report_path = Path(__file__).resolve().parents[1] / "research" / "council_evaluation.json"

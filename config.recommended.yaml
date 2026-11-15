@@ -1,4 +1,5 @@
 # Prepared for MANUAL activation. Not used unless BOT_CONFIG selects this file.
+# Asset roster: BTC six experts; BNB five (Donchian excluded after cost review).
 # Existing wallet holdings are excluded; only this strategy's confirmed buys
 # become managed positions. Backtests exclude Terra decisions and fixed lots.
 strategy:

@@ -98,7 +98,11 @@ def council_features(df):
     return f.reindex(idx)
 
 
-def council_cards(row):
+# Asset-specific evidence review, not a fixed strategy-count target.
+EXCLUDED = {'BNBUSDT': {'donchian20': 'Negative net return at normal and doubled costs; deep drawdown.'}}
+
+
+def council_cards(row, symbol=None):
     regime = row['regime']
     weights = WEIGHTS[regime]
     evidence = {k: (None if pd.isna(row[k]) else float(row[k])) for k in
@@ -114,8 +118,18 @@ def council_cards(row):
                        'evidence': evidence, 'ready': bool(row.ready),
                        'timeframe': '1d' if name in {'keltner20','pullback100'} else '4h',
                        'as_of': str(row.daily_as_of) if name in {'keltner20','pullback100'} else str(row.name+pd.Timedelta(hours=4))}
+    excluded = EXCLUDED.get(symbol, {})
+    cards = {name: card for name, card in cards.items() if name not in excluded}
+    # Preserve survivors' relative weights. Do not give a removed expert's
+    # entire budget to its remaining (possibly weak) sibling.
+    total = sum(card['weight'] for card in cards.values())
+    for card in cards.values():
+        card['weight'] /= total
+    budgets = {group: sum(card['weight'] for card in cards.values() if card['category']==group)
+               for group in weights}
     market = {'last_close': float(row.close), 'regime_label': regime, 'ready': bool(row.ready),
-              'group_budgets': weights, 'daily_as_of': str(row.daily_as_of), 'evidence': evidence,
+              'group_budgets': budgets, 'excluded_strategies': dict(excluded),
+              'daily_as_of': str(row.daily_as_of), 'evidence': evidence,
               'signal_semantics': 'BUY/SELL are entry/exit advice, HOLD means no evidence; no shorting or independent expert orders.'}
     return cards, market
 

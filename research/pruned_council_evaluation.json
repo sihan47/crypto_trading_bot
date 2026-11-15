@@ -1,0 +1,163 @@
+{
+  "method": "Remove BNB Donchian only; preserve survivor relative weights; same historical sample, no GPT, no unseen validation.",
+  "exclusions": {
+    "BNBUSDT": {
+      "donchian20": "Negative net return at normal and doubled costs; deep drawdown."
+    }
+  },
+  "assets": {
+    "BTCUSDT": {
+      "before": {
+        "return_pct": 278.4292565665666,
+        "max_drawdown_15m_pct": -25.830924392045674,
+        "sharpe_daily": 1.2242748024887837,
+        "round_trips": 90,
+        "double_cost": {
+          "return_pct": 188.88499802152813,
+          "max_drawdown_15m_pct": -33.023144861453076,
+          "sharpe_daily": 1.0059081370218261
+        },
+        "yearly_reset_cash": {
+          "2023": {
+            "return_pct": 125.7324190097592,
+            "max_drawdown_15m_pct": -19.55145078656245,
+            "sharpe_daily": 2.3019932806401786,
+            "round_trips": 17
+          },
+          "2024": {
+            "return_pct": 51.11364626536397,
+            "max_drawdown_15m_pct": -25.371332150337988,
+            "sharpe_daily": 1.204991782113144,
+            "round_trips": 36
+          },
+          "2025": {
+            "return_pct": -0.20162486059666085,
+            "max_drawdown_15m_pct": -21.313419811686142,
+            "sharpe_daily": 0.10379650144381519,
+            "round_trips": 20
+          },
+          "2026": {
+            "return_pct": 11.163858723715414,
+            "max_drawdown_15m_pct": -10.06421470417097,
+            "sharpe_daily": 0.7182001693406395,
+            "round_trips": 17
+          }
+        }
+      },
+      "after": {
+        "return_pct": 278.4292565665666,
+        "max_drawdown_15m_pct": -25.830924392045674,
+        "sharpe_daily": 1.2242748024887837,
+        "round_trips": 90,
+        "double_cost": {
+          "return_pct": 188.88499802152813,
+          "max_drawdown_15m_pct": -33.023144861453076,
+          "sharpe_daily": 1.0059081370218261
+        },
+        "yearly_reset_cash": {
+          "2023": {
+            "return_pct": 125.7324190097592,
+            "max_drawdown_15m_pct": -19.55145078656245,
+            "sharpe_daily": 2.3019932806401786,
+            "round_trips": 17
+          },
+          "2024": {
+            "return_pct": 51.11364626536397,
+            "max_drawdown_15m_pct": -25.371332150337988,
+            "sharpe_daily": 1.204991782113144,
+            "round_trips": 36
+          },
+          "2025": {
+            "return_pct": -0.20162486059666085,
+            "max_drawdown_15m_pct": -21.313419811686142,
+            "sharpe_daily": 0.10379650144381519,
+            "round_trips": 20
+          },
+          "2026": {
+            "return_pct": 11.163858723715414,
+            "max_drawdown_15m_pct": -10.06421470417097,
+            "sharpe_daily": 0.7182001693406395,
+            "round_trips": 17
+          }
+        }
+      }
+    },
+    "BNBUSDT": {
+      "before": {
+        "return_pct": 57.85545296185419,
+        "max_drawdown_15m_pct": -49.26276800977526,
+        "sharpe_daily": 0.503113379004144,
+        "round_trips": 105,
+        "double_cost": {
+          "return_pct": 15.201089809488844,
+          "max_drawdown_15m_pct": -52.848540879973726,
+          "sharpe_daily": 0.28170626172465124
+        },
+        "yearly_reset_cash": {
+          "2023": {
+            "return_pct": 33.11149015817563,
+            "max_drawdown_15m_pct": -15.630761685368789,
+            "sharpe_daily": 1.0763818163316903,
+            "round_trips": 17
+          },
+          "2024": {
+            "return_pct": 42.37492311518469,
+            "max_drawdown_15m_pct": -32.62869551210229,
+            "sharpe_daily": 0.9253450709992528,
+            "round_trips": 45
+          },
+          "2025": {
+            "return_pct": -0.40306591795191693,
+            "max_drawdown_15m_pct": -36.29898270131003,
+            "sharpe_daily": 0.16565097269113677,
+            "round_trips": 27
+          },
+          "2026": {
+            "return_pct": -16.560472573230946,
+            "max_drawdown_15m_pct": -23.34948479343273,
+            "sharpe_daily": -0.8159804204846118,
+            "round_trips": 18
+          }
+        }
+      },
+      "after": {
+        "return_pct": 60.14066642062732,
+        "max_drawdown_15m_pct": -48.91872170445911,
+        "sharpe_daily": 0.5132690514706422,
+        "round_trips": 102,
+        "double_cost": {
+          "return_pct": 17.92538083371886,
+          "max_drawdown_15m_pct": -51.79164506052947,
+          "sharpe_daily": 0.2980388898496349
+        },
+        "yearly_reset_cash": {
+          "2023": {
+            "return_pct": 33.11149015817563,
+            "max_drawdown_15m_pct": -15.630761685368789,
+            "sharpe_daily": 1.0763818163316903,
+            "round_trips": 17
+          },
+          "2024": {
+            "return_pct": 42.126018099940566,
+            "max_drawdown_15m_pct": -32.74647647523593,
+            "sharpe_daily": 0.9215803852372306,
+            "round_trips": 44
+          },
+          "2025": {
+            "return_pct": -1.2296752392769283,
+            "max_drawdown_15m_pct": -39.649321447535115,
+            "sharpe_daily": 0.14320489043222895,
+            "round_trips": 27
+          },
+          "2026": {
+            "return_pct": -14.49465174406701,
+            "max_drawdown_15m_pct": -22.183883551143012,
+            "sharpe_daily": -0.7034925338239822,
+            "round_trips": 16
+          }
+        }
+      }
+    }
+  },
+  "available_after": "2026-11-15T09:57:25.997253+00:00"
+}
