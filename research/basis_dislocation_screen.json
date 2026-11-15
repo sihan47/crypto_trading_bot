@@ -1,0 +1,110 @@
+{
+  "method": "Necessary cost feasibility screen only; no orders/funding simulation, no portfolio returns. Positive basis only; no spot borrowing.",
+  "round_trip_bps": 52,
+  "base_buffer": 1.25,
+  "periods": {
+    "development": {
+      "max_positive_basis_bps": 28.880516283797952,
+      "min_basis_bps": -185.75498575498565,
+      "scenarios": {
+        "base": {
+          "threshold_bps": 65,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "hurdle_0.8": {
+          "threshold_bps": 52,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "hurdle_1.2": {
+          "threshold_bps": 78,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "double_friction": {
+          "threshold_bps": 130,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        }
+      }
+    },
+    "holdout": {
+      "max_positive_basis_bps": 6.279858400821681,
+      "min_basis_bps": -17.475253380596634,
+      "scenarios": {
+        "base": {
+          "threshold_bps": 65,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "hurdle_0.8": {
+          "threshold_bps": 52,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "hurdle_1.2": {
+          "threshold_bps": 78,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "double_friction": {
+          "threshold_bps": 130,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        }
+      }
+    },
+    "full": {
+      "max_positive_basis_bps": 28.880516283797952,
+      "min_basis_bps": -185.75498575498565,
+      "scenarios": {
+        "base": {
+          "threshold_bps": 65,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "hurdle_0.8": {
+          "threshold_bps": 52,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "hurdle_1.2": {
+          "threshold_bps": 78,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        },
+        "double_friction": {
+          "threshold_bps": 130,
+          "candidate_hours": 0,
+          "day_separated_events": 0,
+          "first": null,
+          "last": null
+        }
+      }
+    }
+  },
+  "enough_events_for_full_backtest": false
+}

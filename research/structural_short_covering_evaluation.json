@@ -1,0 +1,577 @@
+{
+  "hypothesis": "short_covering",
+  "parameters": {
+    "day": 24,
+    "week": 168,
+    "price_shock": 2.0,
+    "oi_shock": 1.0,
+    "taker_ratio": 2.0,
+    "trail": 2.0,
+    "max_hours": 24,
+    "risk": 0.005,
+    "liquidity_cap": 0.001
+  },
+  "data_sha256": "86928bcf9b7a1633f817935715faeb43fe6f2236b1b2799ae666f806c2921fe6",
+  "zero_volume_bars_excluded": 4,
+  "method": "Spot only, next-15m-open fills, 10bp fee +5bp slippage EACH side, no funding. Exposed-history temporal holdout; not pristine OOS.",
+  "periods": {
+    "full": {
+      "return_pct": 0.5118430547281339,
+      "max_drawdown_pct": -1.1520661583267366,
+      "sharpe": 0.18962646058169497,
+      "profit_factor": 1.3775010751666792,
+      "trades": 6,
+      "net_pnl_excluding_top_5pct": -54.92100804055599,
+      "top_5pct_share_of_gross_profit": 0.5681023223779442,
+      "win_rate": 0.5,
+      "fees": 40.289719836963954,
+      "slippage_estimate": 20.144887823208173,
+      "funding": 0.0,
+      "gap_exits": 0,
+      "loss_diagnostics": {
+        "vol_regime": {
+          "high": {
+            "count": 4,
+            "sum": 136.16357462149654,
+            "mean": 34.040893655374134
+          },
+          "low": {
+            "count": 2,
+            "sum": -84.97926914868412,
+            "mean": -42.48963457434206
+          }
+        },
+        "prior_day_direction": {
+          "down": {
+            "count": 2,
+            "sum": 171.2950272519215,
+            "mean": 85.64751362596076
+          },
+          "up": {
+            "count": 4,
+            "sum": -120.1107217791091,
+            "mean": -30.027680444777275
+          }
+        },
+        "session": {
+          "Asia_UTC_00_08": {
+            "count": 1,
+            "sum": 106.1053135133684,
+            "mean": 106.1053135133684
+          },
+          "EU_UTC_08_16": {
+            "count": 1,
+            "sum": 15.47645621823267,
+            "mean": 15.47645621823267
+          },
+          "US_UTC_16_24": {
+            "count": 4,
+            "sum": -70.39746425878866,
+            "mean": -17.599366064697165
+          }
+        },
+        "weekend": {
+          "false": {
+            "count": 5,
+            "sum": 101.69276931940976,
+            "mean": 20.338553863881952
+          },
+          "true": {
+            "count": 1,
+            "sum": -50.50846384659735,
+            "mean": -50.50846384659735
+          }
+        },
+        "reason": {
+          "intrabar_stop": {
+            "count": 3,
+            "sum": -135.58717799734177,
+            "mean": -45.195725999113925
+          },
+          "time_exit": {
+            "count": 3,
+            "sum": 186.77148347015418,
+            "mean": 62.25716115671806
+          }
+        }
+      }
+    },
+    "development": {
+      "return_pct": 1.3616357462149509,
+      "max_drawdown_pct": -1.1520661583267366,
+      "sharpe": 0.7312089399522002,
+      "profit_factor": 3.690559197549381,
+      "trades": 4,
+      "net_pnl_excluding_top_5pct": 30.058261108128136,
+      "top_5pct_share_of_gross_profit": 0.5681023223779442,
+      "win_rate": 0.75,
+      "fees": 25.139591726250597,
+      "slippage_estimate": 12.56983933137494,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "holdout": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0,
+      "loss_diagnostics": {
+        "vol_regime": {
+          "low": {
+            "count": 2,
+            "sum": -84.2984512755761,
+            "mean": -42.14922563778805
+          }
+        },
+        "prior_day_direction": {
+          "up": {
+            "count": 2,
+            "sum": -84.2984512755761,
+            "mean": -42.14922563778805
+          }
+        },
+        "session": {
+          "US_UTC_16_24": {
+            "count": 2,
+            "sum": -84.2984512755761,
+            "mean": -42.14922563778805
+          }
+        },
+        "weekend": {
+          "false": {
+            "count": 1,
+            "sum": -34.470805302086774,
+            "mean": -34.470805302086774
+          },
+          "true": {
+            "count": 1,
+            "sum": -49.827645973489325,
+            "mean": -49.827645973489325
+          }
+        },
+        "reason": {
+          "intrabar_stop": {
+            "count": 2,
+            "sum": -84.2984512755761,
+            "mean": -42.14922563778805
+          }
+        }
+      }
+    },
+    "2023": {
+      "return_pct": 1.215817697316024,
+      "max_drawdown_pct": -0.5172485782122038,
+      "sharpe": 1.088317638745061,
+      "profit_factor": null,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": 15.47645621823267,
+      "top_5pct_share_of_gross_profit": 0.8727074276645433,
+      "win_rate": 1.0,
+      "fees": 14.299006905564557,
+      "slippage_estimate": 7.149539210360355,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "2024": {
+      "return_pct": 0.1440664633417521,
+      "max_drawdown_pct": -0.7605844542545648,
+      "sharpe": 0.20987513804137659,
+      "profit_factor": 1.2881329266835044,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.999999999999545,
+      "top_5pct_share_of_gross_profit": 1.0,
+      "win_rate": 0.5,
+      "fees": 10.710366291862208,
+      "slippage_estimate": 5.355190763981071,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "2025": {
+      "return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "sharpe": 0.0,
+      "profit_factor": null,
+      "trades": 0,
+      "net_pnl_excluding_top_5pct": 0.0,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 0.0,
+      "slippage_estimate": 0.0,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "2026": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.9671966898961397,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    }
+  },
+  "sensitivity": {
+    "base": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "day_0.8": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "day_1.2": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "week_0.8": {
+      "return_pct": -1.1175480606442911,
+      "max_drawdown_pct": -1.4656654497762656,
+      "sharpe": -1.1941551269945299,
+      "profit_factor": 0.0,
+      "trades": 3,
+      "net_pnl_excluding_top_5pct": -84.16047964347172,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 23.270519512872404,
+      "slippage_estimate": 11.635240544174065,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "week_1.2": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "price_shock_0.8": {
+      "return_pct": 2.6633857326589183,
+      "max_drawdown_pct": -0.7886080882185564,
+      "sharpe": 0.9354314416561103,
+      "profit_factor": 4.0947849388224595,
+      "trades": 4,
+      "net_pnl_excluding_top_5pct": 81.03930024097554,
+      "top_5pct_share_of_gross_profit": 0.5258223283776119,
+      "win_rate": 0.5,
+      "fees": 33.988642930008474,
+      "slippage_estimate": 16.994400795407998,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "price_shock_1.2": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "oi_shock_0.8": {
+      "return_pct": -1.1175480606442911,
+      "max_drawdown_pct": -1.4656654497762656,
+      "sharpe": -1.1941551269945299,
+      "profit_factor": 0.0,
+      "trades": 3,
+      "net_pnl_excluding_top_5pct": -84.16047964347172,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 23.270519512872404,
+      "slippage_estimate": 11.635240544174065,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "oi_shock_1.2": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "taker_ratio_0.8": {
+      "return_pct": -2.640218781436965,
+      "max_drawdown_pct": -3.9824694810400407,
+      "sharpe": -0.7882040516270165,
+      "profit_factor": 0.4586618140202549,
+      "trades": 17,
+      "net_pnl_excluding_top_5pct": -378.78107373180455,
+      "top_5pct_share_of_gross_profit": 0.5130074335810768,
+      "win_rate": 0.23529411764705882,
+      "fees": 110.43324442194161,
+      "slippage_estimate": 55.21659761795637,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "taker_ratio_1.2": {
+      "return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "sharpe": 0.0,
+      "profit_factor": null,
+      "trades": 0,
+      "net_pnl_excluding_top_5pct": 0.0,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 0.0,
+      "slippage_estimate": 0.0,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "trail_0.8": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "trail_1.2": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "max_hours_0.8": {
+      "return_pct": -0.7132194036579498,
+      "max_drawdown_pct": -0.7132194036579498,
+      "sharpe": -1.4298762051505656,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -36.851135063707716,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.05393927761435,
+      "slippage_estimate": 7.5269574535453865,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "max_hours_1.2": {
+      "return_pct": -0.8429845127557734,
+      "max_drawdown_pct": -0.8429845127557734,
+      "sharpe": -1.3385054293374932,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.827645973489325,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 15.04094977720416,
+      "slippage_estimate": 7.520459454341259,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "risk_0.8": {
+      "return_pct": -0.7433292208088083,
+      "max_drawdown_pct": -0.7433292208088083,
+      "sharpe": -1.3717950677582886,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -39.862116778791915,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 13.442842687200347,
+      "slippage_estimate": 6.721407801431968,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "risk_1.2": {
+      "return_pct": -0.9426398047027607,
+      "max_drawdown_pct": -0.9426398047027607,
+      "sharpe": -1.3039324618968462,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -59.7931751681881,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 16.639056867207973,
+      "slippage_estimate": 8.319511107250548,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "liquidity_cap_0.8": {
+      "return_pct": -0.7743876102046077,
+      "max_drawdown_pct": -0.7743876102046077,
+      "sharpe": -1.2956854081667482,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.862116778791915,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 13.636394770576759,
+      "slippage_estimate": 6.8181831392423495,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "liquidity_cap_1.2": {
+      "return_pct": -0.9115814153069168,
+      "max_drawdown_pct": -0.9115814153069168,
+      "sharpe": -1.366632887651305,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.793175168187645,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 16.445504783831566,
+      "slippage_estimate": 8.222735769440167,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "all_0.8": {
+      "return_pct": -0.9944855785171569,
+      "max_drawdown_pct": -3.944383113296257,
+      "sharpe": -0.29072467974519184,
+      "profit_factor": 0.8320718541407783,
+      "trades": 33,
+      "net_pnl_excluding_top_5pct": -285.63206963502785,
+      "top_5pct_share_of_gross_profit": 0.37783778726292816,
+      "win_rate": 0.3333333333333333,
+      "fees": 213.8192479780562,
+      "slippage_estimate": 106.90967930911022,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "all_1.2": {
+      "return_pct": 0.0,
+      "max_drawdown_pct": 0.0,
+      "sharpe": 0.0,
+      "profit_factor": null,
+      "trades": 0,
+      "net_pnl_excluding_top_5pct": 0.0,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 0.0,
+      "slippage_estimate": 0.0,
+      "funding": 0.0,
+      "gap_exits": 0
+    }
+  },
+  "double_cost_holdout": {
+    "return_pct": -0.9479882427265829,
+    "max_drawdown_pct": -0.9479882427265829,
+    "sharpe": -1.4058927482226344,
+    "profit_factor": 0.0,
+    "trades": 2,
+    "net_pnl_excluding_top_5pct": -49.77488028003745,
+    "top_5pct_share_of_gross_profit": null,
+    "win_rate": 0.0,
+    "fees": 26.96248774869695,
+    "slippage_estimate": 13.481189519200854,
+    "funding": 0.0,
+    "gap_exits": 0
+  },
+  "tests": {
+    "sharpe_at_least_1_5": false,
+    "pf_at_least_1_3": false,
+    "drawdown_at_most_15pct": true,
+    "at_least_30_trades": false,
+    "positive_without_top_5pct": false,
+    "all_sensitivity_positive": false,
+    "double_cost_positive": false,
+    "extra_data_delays_positive": false
+  },
+  "passed": false,
+  "extra_data_delays": {
+    "1": {
+      "return_pct": -0.8572199541393655,
+      "max_drawdown_pct": -0.9501367303151986,
+      "sharpe": -1.1424517225821205,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.820492485356226,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 19.567494995856276,
+      "slippage_estimate": 9.783733405235992,
+      "funding": 0.0,
+      "gap_exits": 0
+    },
+    "2": {
+      "return_pct": -0.9974999999999956,
+      "max_drawdown_pct": -0.9974999999999956,
+      "sharpe": -1.0548228810397198,
+      "profit_factor": 0.0,
+      "trades": 2,
+      "net_pnl_excluding_top_5pct": -49.99999999999909,
+      "top_5pct_share_of_gross_profit": null,
+      "win_rate": 0.0,
+      "fees": 21.25303355766728,
+      "slippage_estimate": 10.626499811216812,
+      "funding": 0.0,
+      "gap_exits": 0
+    }
+  }
+}
