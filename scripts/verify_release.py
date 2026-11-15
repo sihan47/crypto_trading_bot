@@ -10,7 +10,7 @@ sys.path.insert(0,str(ROOT))
 suite=unittest.TestSuite()
 for pattern in ['test_ensemble.py','test_decision_controls.py','test_runner_shadow.py',
                 'test_news_summary.py','test_intraday.py','test_research_candidates.py',
-                'test_forum_research.py','test_recommended.py','test_council.py']:
+                'test_forum_research.py','test_recommended.py','test_council.py','test_heartbeat.py']:
     suite.addTests(unittest.TestLoader().discover(str(ROOT/'tests'),pattern=pattern))
 result=unittest.TextTestRunner(verbosity=1).run(suite)
 raise SystemExit(0 if result.wasSuccessful() else 1)
