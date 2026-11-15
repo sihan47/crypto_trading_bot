@@ -1,0 +1,87 @@
+{
+  "selection": "Post-discovery diagnostics of 3 reported comparisons (2 feature families), same discovery sample; NOT independent confirmation.",
+  "controls": [
+    "log_prior_vol",
+    "log_volume",
+    "abs_current_return",
+    "past_24h_return",
+    "hour_sin",
+    "hour_cos",
+    "weekend"
+  ],
+  "results": [
+    {
+      "feature": "compression_x_flow_acceleration",
+      "side": "high",
+      "target": "vol_expansion",
+      "horizon_h": 4,
+      "regime": "bull",
+      "n": 16845,
+      "adjusted_difference": -0.07689069491231404,
+      "t_hac": -4.3982445248477475,
+      "p": 1.0912998625975007e-05,
+      "q_by_expanded_family": 0.0006697574893076705
+    },
+    {
+      "feature": "compression_x_flow_acceleration",
+      "side": "high",
+      "target": "vol_expansion",
+      "horizon_h": 4,
+      "regime": "bear",
+      "n": 6604,
+      "adjusted_difference": -0.07954560693043392,
+      "t_hac": -2.9347337339449804,
+      "p": 0.0033383402028622014,
+      "q_by_expanded_family": 0.10783269756673637
+    },
+    {
+      "feature": "signed_flow_low_impact",
+      "side": "low",
+      "target": "vol_expansion",
+      "horizon_h": 4,
+      "regime": "bull",
+      "n": 16845,
+      "adjusted_difference": -0.06752238474723256,
+      "t_hac": -4.138392722655259,
+      "p": 3.497473374634715e-05,
+      "q_by_expanded_family": 0.0019513501672302437
+    },
+    {
+      "feature": "signed_flow_low_impact",
+      "side": "low",
+      "target": "vol_expansion",
+      "horizon_h": 4,
+      "regime": "bear",
+      "n": 6604,
+      "adjusted_difference": -0.07515295323061273,
+      "t_hac": -2.637521359238281,
+      "p": 0.008351436599030475,
+      "q_by_expanded_family": 0.23656068258461557
+    },
+    {
+      "feature": "signed_flow_low_impact",
+      "side": "low",
+      "target": "lower_tail",
+      "horizon_h": 4,
+      "regime": "bull",
+      "n": 16845,
+      "adjusted_difference": -0.003246759811397777,
+      "t_hac": -0.9461822777337946,
+      "p": 0.34405562374818865,
+      "q_by_expanded_family": 1.0
+    },
+    {
+      "feature": "signed_flow_low_impact",
+      "side": "low",
+      "target": "lower_tail",
+      "horizon_h": 4,
+      "regime": "bear",
+      "n": 6604,
+      "adjusted_difference": -0.009824834979955135,
+      "t_hac": -1.9684936759175746,
+      "p": 0.049011263048402226,
+      "q_by_expanded_family": 1.0
+    }
+  ],
+  "expanded_family_tests": 294
+}
